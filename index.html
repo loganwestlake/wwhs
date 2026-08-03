@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>WWHS Schedule Share</title>
     <!-- Premium Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -14,16 +14,15 @@
             --primary: #10b981;
             --primary-dark: #059669;
             --primary-light: #d1fae5;
-            --bg-color: #f3f4f6;
-            --surface: #ffffff;
-            --text-main: #111827;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-color: #0f172a;
+            --surface: #1e293b;
+            --surface-glass: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
@@ -31,7 +30,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -46,32 +45,131 @@
 
         .hidden { display: none !important; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Abstract Animated Background */
+        .abstract-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            overflow: hidden;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.45;
+            animation: floatBlob 12s infinite alternate ease-in-out;
+        }
+        .blob-1 {
+            width: 450px;
+            height: 450px;
+            background: #10b981;
+            top: -100px;
+            left: -100px;
+        }
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #6366f1;
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: #0ea5e9;
+            top: 40%;
+            left: 30%;
+            animation-delay: -8s;
+        }
 
-        .fade-in { animation: fadeIn 0.4s ease forwards; }
-        .slide-up { animation: slideUp 0.5s ease forwards; }
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -40px) scale(0.95); }
+        }
+
+        /* Splash Screen (6 Seconds, Floating Logo) */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .floating-logo-container {
+            animation: floatLogo 3s ease-in-out infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
         .logo-box {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 20px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), #0ea5e9);
+            border-radius: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 30px;
+            font-size: 38px;
             font-weight: 800;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+            margin-bottom: 24px;
         }
 
-        h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-        h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
-        p.subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 24px; line-height: 1.5; }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
 
-        /* Auth Layout */
+        .splash-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .splash-loader-bar {
+            width: 160px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .splash-loader-progress {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transform: translateX(-100%);
+            animation: loadProgress 6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes loadProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0%); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Glassmorphism Auth / Cards */
         .auth-wrapper {
             width: 100%;
             height: 100%;
@@ -80,84 +178,96 @@
             align-items: center;
             padding: 20px;
             overflow-y: auto;
-            background: var(--bg-color);
             position: fixed;
             inset: 0;
-            z-index: 1000;
+            z-index: 100;
         }
-        .auth-card {
-            background: var(--surface);
+        
+        .glass-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
             padding: 40px;
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--border);
+            max-width: 440px;
         }
 
-        /* Forms */
+        h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; color: #fff; }
+        h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #fff; }
+        p.subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+
+        /* Form Controls */
         .input-group { position: relative; margin-bottom: 16px; }
         .input-group i {
-            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
             color: var(--text-muted); transition: var(--transition);
         }
         input {
-            width: 100%; background: var(--bg-color); border: 2px solid transparent;
-            padding: 14px 14px 14px 44px; border-radius: 12px; font-size: 15px;
+            width: 100%; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border);
+            padding: 16px 16px 16px 50px; border-radius: 14px; font-size: 15px;
             font-weight: 500; color: var(--text-main); transition: var(--transition);
             outline: none;
         }
+        input::placeholder { color: #64748b; }
         input:focus {
-            background: var(--surface); border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
+            background: rgba(15, 23, 42, 0.9); border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
         }
         input:focus + i, .input-group:focus-within i { color: var(--primary); }
 
         /* Buttons */
         .btn {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
-            font-size: 16px; font-weight: 600; cursor: pointer;
+            width: 100%; padding: 16px; border-radius: 14px; border: none;
+            font-size: 16px; font-weight: 700; cursor: pointer;
             transition: var(--transition); display: flex; justify-content: center;
-            align-items: center; gap: 8px;
+            align-items: center; gap: 10px;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-secondary { background: var(--bg-color); color: var(--text-main); }
-        .btn-secondary:hover { background: #e5e7eb; }
-        .btn-text { background: transparent; color: var(--primary); margin-top: 10px; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+            color: white; 
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); 
+        }
+        .btn-primary:hover { box-shadow: 0 15px 25px rgba(16, 185, 129, 0.4); transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn-text { background: transparent; color: var(--primary); margin-top: 12px; font-size: 14px; }
 
-        /* Progress Bar */
-        .progress-container { display: flex; gap: 8px; margin-bottom: 30px; }
-        .progress-bar { flex: 1; height: 6px; background: var(--bg-color); border-radius: 10px; transition: var(--transition); }
-        .progress-bar.active { background: var(--primary); }
+        /* Stepper */
+        .progress-container { display: flex; gap: 8px; margin-bottom: 28px; }
+        .progress-bar { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; transition: var(--transition); }
+        .progress-bar.active { background: var(--primary); box-shadow: 0 0 12px var(--primary); }
         .step-content { display: none; }
-        .step-content.active { display: block; animation: fadeIn 0.3s ease; }
-        .step-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .step-content.active { display: block; animation: fadeIn 0.4s ease; }
+        .step-actions { display: flex; gap: 12px; margin-top: 24px; }
 
-        /* Dashboard App Layout */
+        /* Dashboard Layout */
         .app-container {
-            flex: 1; display: flex; width: 100vw; height: 100vh; overflow: hidden; background: var(--bg-color);
+            flex: 1; display: flex; width: 100vw; height: 100vh; overflow: hidden;
         }
         
         .sidebar {
             display: none;
-            width: 260px;
-            background: var(--surface);
+            width: 280px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
             border-right: 1px solid var(--border);
-            padding: 30px 20px;
+            padding: 32px 24px;
             flex-direction: column;
         }
-        .sidebar-logo { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 40px; display: flex; align-items: center; gap: 12px;}
-        .sidebar-nav { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .sidebar-logo { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 40px; display: flex; align-items: center; gap: 14px;}
+        .sidebar-nav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         
         .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-            border-radius: 12px; color: var(--text-muted); font-weight: 600;
+            display: flex; align-items: center; gap: 14px; padding: 16px;
+            border-radius: 14px; color: var(--text-muted); font-weight: 600;
             cursor: pointer; transition: var(--transition); background: transparent; border: none; width: 100%; text-align: left; font-size: 15px;
         }
-        .nav-item:hover { background: var(--bg-color); color: var(--text-main); }
-        .nav-item.active { background: var(--primary-light); color: var(--primary-dark); }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .nav-item.active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
         
         .main-content-area {
             flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden;
@@ -165,70 +275,70 @@
         
         .mobile-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 24px; background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 20px 24px; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
         
         .main-content {
-            flex: 1; overflow-y: auto; padding: 24px;
-            padding-bottom: calc(100px + var(--safe-bottom));
+            flex: 1; overflow-y: auto; padding: 32px;
+            padding-bottom: calc(110px + var(--safe-bottom));
         }
         .content-max-width { max-width: 1000px; margin: 0 auto; }
 
         .card {
-            background: var(--surface); border-radius: var(--radius);
-            padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+            background: var(--surface-glass); backdrop-filter: blur(20px);
+            border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
             margin-bottom: 24px;
         }
 
         .toggle-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 16px; background: var(--surface); border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border);
+            padding: 20px; background: var(--surface-glass); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 24px;
         }
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch { position: relative; display: inline-block; width: 54px; height: 30px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; border: 1px solid var(--border); }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--primary); border-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
 
-        .timeline-item { display: flex; gap: 16px; margin-bottom: 16px; align-items: center; }
+        .timeline-item { display: flex; gap: 16px; margin-bottom: 18px; align-items: center; }
         .period-bubble {
-            width: 44px; height: 44px; border-radius: 12px; background: var(--primary-light);
-            color: var(--primary-dark); display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 14px; flex-shrink: 0;
+            width: 46px; height: 46px; border-radius: 14px; background: rgba(16, 185, 129, 0.15);
+            color: #34d399; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 15px; flex-shrink: 0; border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .class-info {
-            background: var(--bg-color); padding: 14px; border-radius: 12px;
-            flex: 1; font-weight: 600; font-size: 15px;
+            background: rgba(15, 23, 42, 0.5); padding: 16px; border-radius: 14px;
+            flex: 1; font-weight: 600; font-size: 15px; border: 1px solid var(--border); color: #e2e8f0;
         }
 
         .classmates-grid {
             display: grid; grid-template-columns: 1fr; gap: 20px;
         }
         .classmate-card {
-            background: var(--surface); border-radius: var(--radius); padding: 20px;
-            box-shadow: var(--shadow-md); border-top: 4px solid var(--primary); border: 1px solid var(--border);
+            background: var(--surface-glass); backdrop-filter: blur(20px); border-radius: var(--radius); padding: 24px;
+            box-shadow: var(--shadow-lg); border: 1px solid var(--border); border-top: 4px solid var(--primary);
         }
-        .cm-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--bg-color); }
+        .cm-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
         .cm-avatar {
-            width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light);
-            color: var(--primary-dark); display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; flex-shrink: 0;
+            width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #0ea5e9);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 800; flex-shrink: 0; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
         }
-        .cm-details h3 { font-size: 16px; margin: 0 0 2px 0; }
+        .cm-details h3 { font-size: 18px; margin: 0 0 4px 0; color: #fff; }
         .cm-details span { font-size: 13px; color: var(--text-muted); }
-        .cm-classes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .cm-classes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .cm-class {
-            background: var(--bg-color); padding: 8px 10px; border-radius: 8px;
-            font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+            background: rgba(15, 23, 42, 0.4); padding: 10px 12px; border-radius: 10px;
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); color: #cbd5e1;
         }
-        .cm-class i { color: var(--primary); font-size: 10px; }
+        .cm-class i { color: #34d399; font-size: 11px; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px);
             display: flex; justify-content: space-around;
-            padding: 10px 10px var(--safe-bottom) 10px;
+            padding: 12px 10px var(--safe-bottom) 10px;
             border-top: 1px solid var(--border); z-index: 100;
         }
         .bottom-nav .nav-item {
@@ -241,22 +351,39 @@
             .sidebar { display: flex; }
             .bottom-nav { display: none; }
             .mobile-header { display: none; }
-            .main-content { padding: 40px; }
-            .classmates-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+            .main-content { padding: 48px; }
+            .classmates-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Auth / Login & Signup Overlay -->
-    <div class="auth-wrapper" id="auth-view">
-        
-        <!-- Login Card -->
-        <div class="auth-card slide-up" id="login-card">
+    <!-- Abstract Animated Background -->
+    <div class="abstract-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob-2"></div>
+        <div class="blob-3"></div>
+    </div>
+
+    <!-- Stunning Splash Screen (6 Seconds with Floating Logo) -->
+    <div id="splash-screen">
+        <div class="floating-logo-container">
+            <div class="logo-box">W</div>
+            <div class="splash-title">WWHS</div>
+            <p style="color: var(--text-muted); font-weight: 500; font-size: 15px;">Schedule Share Experience</p>
+        </div>
+        <div class="splash-loader-bar">
+            <div class="splash-loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Auth Wrapper -->
+    <div class="auth-wrapper hidden" id="auth-view">
+        <div class="glass-card fade-in" id="login-card">
             <div style="text-align: center; margin-bottom: 30px;">
-                <div class="logo-box" style="margin: 0 auto 16px auto;">W</div>
+                <div class="logo-box" style="margin: 0 auto 16px auto; width: 70px; height: 70px; font-size: 26px; border-radius: 20px;">W</div>
                 <h2>Welcome Back</h2>
-                <p class="subtitle" style="margin-bottom:0;">Sign in to see your classes.</p>
+                <p class="subtitle" style="margin-bottom:0;">Sign in to securely access your classes.</p>
             </div>
             <div class="input-group">
                 <i class="fa-solid fa-envelope"></i>
@@ -270,8 +397,7 @@
             <button class="btn btn-text" id="link-to-signup">Create new account</button>
         </div>
 
-        <!-- Signup Card -->
-        <div class="auth-card slide-up hidden" id="signup-card">
+        <div class="glass-card fade-in hidden" id="signup-card">
             <h2 style="text-align: center; margin-bottom: 20px;">Join WWHS</h2>
             
             <div class="progress-container">
@@ -287,7 +413,7 @@
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="signup-password" placeholder="Create Password (min 6 chars)">
+                    <input type="password" id="signup-password" placeholder="Password (min 6 chars)">
                 </div>
                 <button class="btn btn-primary" id="btn-next-1" style="margin-top:20px;">Next</button>
                 <button class="btn btn-text" id="link-to-login">Back to Sign In</button>
@@ -329,11 +455,9 @@
 
     <!-- Main Dashboard Application -->
     <div class="app-container hidden" id="main-app">
-        
-        <!-- Desktop Sidebar -->
         <nav class="sidebar">
             <div class="sidebar-logo">
-                <div class="logo-box" style="width: 36px; height:36px; font-size:16px; margin:0; border-radius:10px;">W</div> 
+                <div class="logo-box" style="width: 38px; height:38px; font-size:16px; margin:0; border-radius:10px;">W</div> 
                 WWHS Schedule
             </div>
             <div class="sidebar-nav">
@@ -347,27 +471,23 @@
                     <i class="fa-solid fa-gear"></i> Settings
                 </button>
             </div>
-            <button class="btn btn-secondary" id="btn-logout-desk" style="color: #ef4444; margin-top: auto;">
+            <button class="btn btn-secondary" id="btn-logout-desk" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2); margin-top: auto;">
                 <i class="fa-solid fa-right-from-bracket"></i> Sign Out
             </button>
         </nav>
 
         <div class="main-content-area">
-            <!-- Mobile Header -->
             <div class="mobile-header">
-                <h2 style="margin: 0; color: var(--text-main); font-size: 18px;">WWHS Schedule</h2>
+                <h2 style="margin: 0; color: #fff; font-size: 18px;">WWHS Schedule</h2>
                 <div id="mobile-avatar" class="cm-avatar" style="width: 36px; height: 36px; font-size: 14px;">?</div>
             </div>
 
-            <!-- Scrollable Content Hub -->
             <main class="main-content">
                 <div class="content-max-width">
-                    
-                    <!-- Schedule Tab -->
                     <div id="tab-schedule" class="fade-in">
                         <div class="toggle-row">
                             <div>
-                                <strong style="display:block; margin-bottom:2px;">Public Schedule</strong>
+                                <strong style="display:block; margin-bottom:2px; color:#fff;">Public Schedule</strong>
                                 <span style="font-size: 13px; color: var(--text-muted);">Allow classmates to find your classes</span>
                             </div>
                             <label class="switch">
@@ -377,20 +497,14 @@
                         </div>
 
                         <h2>My Classes</h2>
-                        <div class="card" id="my-class-list" style="padding: 16px 20px;">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div class="card" id="my-class-list" style="padding: 16px 20px;"></div>
                     </div>
 
-                    <!-- Classmates Tab -->
                     <div id="tab-classmates" class="hidden fade-in">
                         <h2 style="margin-bottom: 20px;">WWHS Directory</h2>
-                        <div class="classmates-grid" id="classmates-container">
-                            <!-- Populated dynamically -->
-                        </div>
+                        <div class="classmates-grid" id="classmates-container"></div>
                     </div>
 
-                    <!-- Settings Tab -->
                     <div id="tab-settings" class="hidden fade-in">
                         <h2>Account Settings</h2>
                         <div class="card" style="text-align: center; padding: 40px 20px;">
@@ -398,17 +512,15 @@
                             <h2 id="profile-name" style="margin-bottom: 4px;">Loading...</h2>
                             <p id="profile-email" style="color: var(--text-muted); margin-bottom: 30px;">...</p>
                             
-                            <button class="btn btn-secondary" style="color: #ef4444; max-width: 250px; margin: 0 auto;" id="btn-logout-mob">
+                            <button class="btn btn-secondary" style="color: #f87171; border-color: rgba(248, 113, 113, 0.2); max-width: 250px; margin: 0 auto;" id="btn-logout-mob">
                                 <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                             </button>
                         </div>
                     </div>
-
                 </div>
             </main>
         </div>
 
-        <!-- Mobile Bottom Nav -->
         <nav class="bottom-nav">
             <button class="nav-item active" data-tab="schedule">
                 <i class="fa-solid fa-calendar-day"></i> Schedule
@@ -420,7 +532,6 @@
                 <i class="fa-solid fa-gear"></i> Settings
             </button>
         </nav>
-
     </div>
 
     <!-- Firebase System Logic -->
@@ -442,10 +553,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        const splashScreen = document.getElementById('splash-screen');
         const authView = document.getElementById('auth-view');
         const mainApp = document.getElementById('main-app');
         const loginCard = document.getElementById('login-card');
         const signupCard = document.getElementById('signup-card');
+
+        // Exactly 6-second premium splash screen timeout
+        setTimeout(() => {
+            splashScreen.style.opacity = '0';
+            setTimeout(() => splashScreen.classList.add('hidden'), 800);
+        }, 6000);
 
         function showScreen(screen) {
             if(screen === 'login') {
@@ -478,7 +596,7 @@
         document.getElementById('btn-next-1').addEventListener('click', () => {
             const email = document.getElementById('signup-email').value;
             const pass = document.getElementById('signup-password').value;
-            if(!email || pass.length < 6) return alert("Please enter a valid email and a password of at least 6 characters.");
+            if(!email || pass.length < 6) return alert("Please enter a valid email and password (min 6 chars).");
             setStep(2);
         });
         
@@ -536,7 +654,6 @@
             }
         });
 
-        // Tab Navigation Handling
         const navItems = document.querySelectorAll('.nav-item');
         const tabs = {
             'schedule': document.getElementById('tab-schedule'),
@@ -621,7 +738,7 @@
                     }
 
                     container.innerHTML += `
-                        <div class="classmate-card slide-up">
+                        <div class="classmate-card fade-in">
                             <div class="cm-header">
                                 <div class="cm-avatar">${data.name ? data.name.charAt(0).toUpperCase() : '?'}</div>
                                 <div class="cm-details">
@@ -634,7 +751,7 @@
                     `;
                 });
             } catch (err) {
-                container.innerHTML = '<div class="card" style="color:red; text-align:center;">Error loading classmates. Check permissions.</div>';
+                container.innerHTML = '<div class="card" style="color:#f87171; text-align:center;">Error loading classmates.</div>';
             }
         }
     </script>
