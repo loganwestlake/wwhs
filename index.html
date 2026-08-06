@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, theme-color=="#0a0f0a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, theme-color=#030f0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="WWHS Schedule">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
     <title>WWHS Schedule Share</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -24,29 +28,39 @@
             --emerald-900: #064e3b;
             --emerald-950: #022c22;
             
+            --bg-deep: #020a07;
             --bg-primary: #030f0a;
             --bg-secondary: #041712;
             --bg-tertiary: #052018;
-            --bg-card: rgba(5, 32, 24, 0.6);
-            --bg-card-hover: rgba(5, 32, 24, 0.8);
-            --bg-input: rgba(3, 15, 10, 0.6);
+            --bg-elevated: rgba(5, 32, 24, 0.55);
+            --bg-elevated-hover: rgba(5, 32, 24, 0.75);
+            --bg-input: rgba(2, 10, 7, 0.7);
+            --bg-input-focus: rgba(2, 10, 7, 0.9);
             
             --text-primary: #f0fdf4;
             --text-secondary: #a7f3d0;
             --text-tertiary: #6ee7b7;
             --text-muted: #4ade80;
+            --text-placeholder: rgba(74, 222, 128, 0.4);
             
+            --border-subtlest: rgba(52, 211, 153, 0.05);
             --border-subtle: rgba(52, 211, 153, 0.08);
             --border-medium: rgba(52, 211, 153, 0.15);
             --border-strong: rgba(52, 211, 153, 0.25);
             --border-accent: rgba(52, 211, 153, 0.4);
+            --border-glow: rgba(52, 211, 153, 0.6);
             
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
-            --shadow-glow-emerald: 0 0 30px rgba(16, 185, 129, 0.15);
-            --shadow-glow-amber: 0 0 30px rgba(245, 158, 11, 0.15);
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.7);
+            --shadow-2xl: 0 32px 80px rgba(0, 0, 0, 0.8);
+            --shadow-emerald-sm: 0 0 16px rgba(16, 185, 129, 0.1);
+            --shadow-emerald-md: 0 0 32px rgba(16, 185, 129, 0.15);
+            --shadow-emerald-lg: 0 0 48px rgba(16, 185, 129, 0.2);
+            --shadow-amber-sm: 0 0 16px rgba(245, 158, 11, 0.1);
+            --shadow-amber-md: 0 0 32px rgba(245, 158, 11, 0.15);
             
             --radius-xs: 6px;
             --radius-sm: 10px;
@@ -54,14 +68,19 @@
             --radius-lg: 18px;
             --radius-xl: 24px;
             --radius-2xl: 32px;
+            --radius-full: 9999px;
             
             --safe-bottom: env(safe-area-inset-bottom, 16px);
             --safe-top: env(safe-area-inset-top, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
             
-            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-out-overshoot: cubic-bezier(0.68, -0.4, 0.32, 1.6);
+            --ease-spring: cubic-bezier(0.43, 1.45, 0.69, 1.02);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         * {
@@ -73,9 +92,14 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
+        *::selection {
+            background: rgba(16, 185, 129, 0.3);
+            color: #fff;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-deep);
             color: var(--text-primary);
             height: 100dvh;
             width: 100vw;
@@ -91,110 +115,161 @@
             pointer-events: none !important;
         }
 
-        /* ========== ANIMATED BACKGROUND ========== */
-        .bg-canvas {
+        /* ========== ULTRA-PREMIUM BACKGROUND ========== */
+        .bg-master {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
             background: 
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 40% at 90% 90%, rgba(5, 150, 105, 0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 30% at 10% 50%, rgba(52, 211, 153, 0.04) 0%, transparent 70%),
-                linear-gradient(180deg, #030f0a 0%, #041712 40%, #030f0a 100%);
+                radial-gradient(ellipse 120% 80% at 50% -30%, rgba(16, 185, 129, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 50% at 100% 100%, rgba(5, 150, 105, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 0% 50%, rgba(52, 211, 153, 0.04) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(6, 78, 59, 0.03) 0%, transparent 100%),
+                linear-gradient(175deg, #020a07 0%, #030f0a 30%, #041712 60%, #020a07 100%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(rgba(52, 211, 153, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(52, 211, 153, 0.3) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 70%);
         }
 
         .bg-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
             pointer-events: none;
             z-index: 0;
-            opacity: 0.15;
+            will-change: transform;
         }
         .bg-orb-1 {
-            width: 500px; height: 500px;
-            background: var(--emerald-600);
-            top: -150px; right: -100px;
-            animation: orbFloat1 25s ease-in-out infinite;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+            top: -200px; right: -150px;
+            animation: orbFloat1 28s ease-in-out infinite;
+            filter: blur(80px);
         }
         .bg-orb-2 {
-            width: 400px; height: 400px;
-            background: var(--emerald-500);
-            bottom: -100px; left: -80px;
-            animation: orbFloat2 30s ease-in-out infinite;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+            bottom: -150px; left: -100px;
+            animation: orbFloat2 32s ease-in-out infinite;
+            filter: blur(70px);
         }
         .bg-orb-3 {
-            width: 300px; height: 300px;
-            background: var(--emerald-400);
-            top: 40%; left: 50%;
-            animation: orbFloat3 20s ease-in-out infinite;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 70%);
+            top: 40%; left: 45%;
+            animation: orbFloat3 22s ease-in-out infinite;
+            filter: blur(60px);
+        }
+        .bg-orb-4 {
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+            top: 20%; left: 10%;
+            animation: orbFloat4 24s ease-in-out infinite;
+            filter: blur(50px);
         }
 
         @keyframes orbFloat1 {
             0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            25% { transform: translate(-60px, 50px) scale(1.15) rotate(5deg); }
-            50% { transform: translate(30px, -30px) scale(0.9) rotate(-3deg); }
-            75% { transform: translate(50px, 20px) scale(1.1) rotate(2deg); }
+            20% { transform: translate(-80px, 60px) scale(1.2) rotate(8deg); }
+            40% { transform: translate(40px, -40px) scale(0.85) rotate(-5deg); }
+            60% { transform: translate(60px, 30px) scale(1.15) rotate(3deg); }
+            80% { transform: translate(-30px, -50px) scale(0.9) rotate(-7deg); }
         }
         @keyframes orbFloat2 {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -40px) scale(1.2); }
-            66% { transform: translate(-30px, 30px) scale(0.85); }
+            25% { transform: translate(60px, -50px) scale(1.25); }
+            50% { transform: translate(-40px, 40px) scale(0.8); }
+            75% { transform: translate(20px, 30px) scale(1.1); }
         }
         @keyframes orbFloat3 {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-40px, -50px) scale(1.3); }
+            50% { transform: translate(-50px, -60px) scale(1.35); }
+        }
+        @keyframes orbFloat4 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -30px) scale(1.3); }
+            66% { transform: translate(-30px, 40px) scale(0.85); }
         }
 
-        /* ========== CONNECTION STATUS BAR ========== */
-        .connection-status {
+        .bg-particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--emerald-400);
+            animation: particleFloat linear infinite;
+            opacity: 0;
+        }
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1.5); }
+        }
+
+        /* ========== CONNECTION BAR ========== */
+        .connection-bar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 10001;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.01em;
-            transform: translateY(-100%);
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            letter-spacing: 0.02em;
+            transform: translateY(-120%);
+            transition: transform 0.5s var(--ease-out-expo);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .connection-status.show {
-            transform: translateY(0);
-        }
-        .connection-status.online {
-            background: rgba(16, 185, 129, 0.9);
+        .connection-bar.show { transform: translateY(0); }
+        .connection-bar.online { 
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
             color: #fff;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
         }
-        .connection-status.offline {
-            background: rgba(239, 68, 68, 0.9);
+        .connection-bar.offline { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
             color: #fff;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
         }
-        .connection-status .status-dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
+        .connection-pulse {
+            width: 8px; height: 8px;
             border-radius: 50%;
-            margin-right: 8px;
-            animation: dotPulse 1.5s ease-in-out infinite;
+            animation: connectionPulse 1.5s ease-in-out infinite;
         }
-        .connection-status.online .status-dot { background: #fff; }
-        .connection-status.offline .status-dot { background: #fecaca; }
-        
-        @keyframes dotPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .online .connection-pulse { background: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.6); }
+        .offline .connection-pulse { background: #fecaca; box-shadow: 0 0 12px rgba(254,202,202,0.6); }
+        @keyframes connectionPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.8); opacity: 0.4; }
         }
 
-        /* ========== TOAST NOTIFICATIONS ========== */
-        .toast-container {
+        /* ========== TOAST SYSTEM ========== */
+        .toast-portal {
             position: fixed;
-            top: calc(var(--safe-top) + 20px);
+            top: calc(var(--safe-top) + 16px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 10000;
@@ -202,243 +277,297 @@
             flex-direction: column;
             gap: 10px;
             pointer-events: none;
-            width: calc(100% - 40px);
-            max-width: 420px;
+            width: calc(100% - 32px);
+            max-width: 440px;
         }
-        .toast {
-            background: rgba(3, 15, 10, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+        .toast-item {
+            background: rgba(2, 10, 7, 0.95);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid var(--border-medium);
-            padding: 16px 20px;
+            padding: 18px 22px;
             border-radius: var(--radius-lg);
             font-size: 14px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: var(--shadow-lg);
+            gap: 14px;
+            box-shadow: var(--shadow-xl), var(--shadow-emerald-sm);
             pointer-events: auto;
-            animation: toastSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation: toastEntry 0.6s var(--ease-out-overshoot) forwards;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
         }
-        .toast.fade-out {
-            animation: toastSlideOut 0.35s ease forwards;
+        .toast-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 3px;
+            border-radius: 3px 0 0 3px;
         }
-        .toast.success { border-left: 3px solid var(--emerald-500); }
-        .toast.error { border-left: 3px solid #ef4444; }
-        .toast.warning { border-left: 3px solid #f59e0b; }
-        .toast i { font-size: 18px; flex-shrink: 0; }
-        .toast.success i { color: var(--emerald-400); }
-        .toast.error i { color: #f87171; }
-        .toast.warning i { color: #fbbf24; }
-
-        @keyframes toastSlideIn {
-            from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+        .toast-item.success::before { background: linear-gradient(180deg, var(--emerald-400), var(--emerald-600)); }
+        .toast-item.error::before { background: linear-gradient(180deg, #f87171, #ef4444); }
+        .toast-item.warning::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+        .toast-item.exit {
+            animation: toastExit 0.35s ease forwards;
+        }
+        .toast-item:active { transform: scale(0.96); }
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            animation: toastIconPop 0.6s var(--ease-out-back) 0.1s both;
+        }
+        @keyframes toastIconPop {
+            0% { transform: scale(0) rotate(-180deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .toast-item.success .toast-icon { color: var(--emerald-400); }
+        .toast-item.error .toast-icon { color: #f87171; }
+        .toast-item.warning .toast-icon { color: #fbbf24; }
+        @keyframes toastEntry {
+            from { opacity: 0; transform: translateY(-40px) scale(0.85); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes toastSlideOut {
-            from { opacity: 1; transform: translateY(0) scale(1); }
-            to { opacity: 0; transform: translateY(-30px) scale(0.9); }
+        @keyframes toastExit {
+            from { opacity: 1; transform: translateX(0) scale(1); }
+            to { opacity: 0; transform: translateX(80px) scale(0.8); }
         }
 
         /* ========== SPLASH SCREEN ========== */
-        .splash-screen {
+        .splash-master {
             position: fixed;
             inset: 0;
-            background: var(--bg-primary);
+            background: var(--bg-deep);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.6s ease, visibility 0.6s;
+            transition: opacity 0.7s ease, visibility 0.7s;
+        }
+        .splash-logo-wrapper {
+            position: relative;
+            animation: splashLogoFloat 3.5s ease-in-out infinite;
+        }
+        @keyframes splashLogoFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            40% { transform: translateY(-16px) scale(1.04); }
+            60% { transform: translateY(-8px) scale(1.02); }
         }
         .splash-logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--emerald-400) 0%, var(--emerald-600) 50%, var(--emerald-800) 100%);
-            border-radius: 28px;
+            width: 110px; height: 110px;
+            background: linear-gradient(145deg, #34d399 0%, #10b981 40%, #059669 80%, #047857 100%);
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 42px;
+            font-size: 46px;
             font-weight: 900;
             color: #fff;
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-            animation: splashFloat 3s ease-in-out infinite;
+            box-shadow: 
+                0 24px 48px rgba(16, 185, 129, 0.35),
+                0 0 0 1px rgba(255,255,255,0.1) inset,
+                0 1px 0 rgba(255,255,255,0.2) inset;
             position: relative;
         }
         .splash-logo::after {
             content: '';
             position: absolute;
-            inset: -3px;
-            border-radius: 31px;
-            background: linear-gradient(135deg, var(--emerald-400), var(--emerald-600), var(--emerald-400));
+            inset: -4px;
+            border-radius: 34px;
+            background: linear-gradient(145deg, rgba(52, 211, 153, 0.5), rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.5));
             z-index: -1;
-            opacity: 0.5;
-            animation: splashGlow 3s ease-in-out infinite;
+            animation: splashGlowRing 3s ease-in-out infinite;
+            filter: blur(8px);
         }
-        @keyframes splashFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-12px) scale(1.03); }
+        @keyframes splashGlowRing {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.08); }
         }
-        @keyframes splashGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-        .splash-title {
-            font-size: 34px;
+        .splash-brand {
+            font-size: 38px;
             font-weight: 800;
-            margin-top: 24px;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fff, var(--emerald-200));
+            margin-top: 28px;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 0%, #d1fae5 40%, #6ee7b7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: splashTextShine 2.5s ease-in-out infinite;
         }
-        .splash-subtitle {
+        @keyframes splashTextShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+        .splash-tagline {
             font-size: 15px;
             color: var(--text-tertiary);
-            margin-top: 8px;
+            margin-top: 10px;
             font-weight: 500;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.04em;
+            opacity: 0.8;
+            animation: splashFadeInUp 0.8s ease 0.3s both;
         }
-        .splash-progress {
-            width: 160px;
-            height: 3px;
-            background: rgba(255,255,255,0.1);
+        @keyframes splashFadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 0.8; transform: translateY(0); }
+        }
+        .splash-loader-track {
+            width: 180px; height: 4px;
+            background: rgba(255,255,255,0.08);
             border-radius: 10px;
-            margin-top: 36px;
+            margin-top: 40px;
             overflow: hidden;
+            position: relative;
         }
-        .splash-progress-fill {
+        .splash-loader-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--emerald-400), var(--emerald-500));
+            background: linear-gradient(90deg, var(--emerald-400), var(--emerald-500), var(--emerald-600));
             border-radius: 10px;
-            animation: splashLoad 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: splashLoadProgress 2.8s var(--ease-out-expo) forwards;
             width: 0%;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
         }
-        @keyframes splashLoad {
+        @keyframes splashLoadProgress {
             0% { width: 0%; }
-            50% { width: 60%; }
+            30% { width: 25%; }
+            60% { width: 65%; }
+            85% { width: 90%; }
             100% { width: 100%; }
         }
 
-        /* ========== MODAL ========== */
-        .modal-overlay {
+        /* ========== MODAL SYSTEM ========== */
+        .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
             z-index: 10002;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
-            animation: modalFadeIn 0.3s ease;
+            animation: modalBackdropIn 0.35s ease;
         }
-        @keyframes modalFadeIn {
+        @keyframes modalBackdropIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .modal-dialog {
-            background: var(--bg-card);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+        .modal-panel {
+            background: var(--bg-elevated);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
             border: 1px solid var(--border-strong);
             border-radius: var(--radius-2xl);
-            padding: 36px 28px;
-            max-width: 400px;
+            padding: 40px 32px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
-            box-shadow: var(--shadow-xl), var(--shadow-glow-amber);
-            animation: modalScaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-2xl), var(--shadow-amber-md);
+            animation: modalPanelPop 0.5s var(--ease-out-back);
         }
-        @keyframes modalScaleIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes modalPanelPop {
+            from { transform: scale(0.8) translateY(30px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
-        .modal-icon {
-            font-size: 52px;
-            margin-bottom: 16px;
-            display: block;
-            animation: modalIconBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s both;
+        .modal-icon-wrap {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: rgba(245, 158, 11, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: modalIconBounce 0.7s var(--ease-bounce) 0.15s both;
         }
         @keyframes modalIconBounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% { transform: scale(0) rotate(-45deg); }
+            60% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
-        .modal-dialog h3 {
-            font-size: 22px;
+        .modal-icon-wrap i {
+            font-size: 36px;
+            color: #f59e0b;
+        }
+        .modal-panel h3 {
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.01em;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
-        .modal-dialog p {
+        .modal-panel .modal-desc {
             color: var(--text-secondary);
             font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
         }
-        .modal-warning-box {
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.2);
+        .modal-alert {
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.18);
             border-radius: var(--radius-md);
-            padding: 14px 16px;
-            margin-bottom: 24px;
+            padding: 16px;
+            margin-bottom: 28px;
             font-size: 13px;
             color: #fbbf24;
-            line-height: 1.5;
+            line-height: 1.6;
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
             text-align: left;
         }
-        .modal-warning-box i {
+        .modal-alert i {
             flex-shrink: 0;
             margin-top: 2px;
-            font-size: 16px;
+            font-size: 18px;
         }
-        .modal-actions {
+        .modal-buttons {
             display: flex;
             gap: 12px;
         }
         .btn-modal {
             flex: 1;
-            padding: 14px 20px;
+            padding: 15px 20px;
             border-radius: var(--radius-md);
             font-weight: 600;
             font-size: 15px;
             cursor: pointer;
             border: none;
-            transition: all var(--transition-fast);
+            transition: all 0.25s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-modal:active {
-            transform: scale(0.96);
+        .btn-modal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        .btn-modal:hover::after { opacity: 1; }
+        .btn-modal:active { transform: scale(0.95); }
         .btn-modal-cancel {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.05);
             color: var(--text-primary);
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .btn-modal-cancel:hover {
-            background: rgba(255,255,255,0.1);
-        }
         .btn-modal-danger {
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.12);
             color: #f87171;
             border: 1px solid rgba(239, 68, 68, 0.25);
         }
         .btn-modal-danger:hover {
-            background: rgba(239, 68, 68, 0.25);
+            background: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 24px rgba(239, 68, 68, 0.2);
         }
 
         /* ========== AUTH SCREENS ========== */
-        .auth-wrapper {
+        .auth-stage {
             position: fixed;
             inset: 0;
             z-index: 100;
@@ -449,113 +578,139 @@
             overflow-y: auto;
         }
         .auth-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: var(--bg-elevated);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
             border: 1px solid var(--border-medium);
             border-radius: var(--radius-2xl);
-            padding: 44px 32px;
+            padding: 48px 36px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: var(--shadow-xl), var(--shadow-glow-emerald);
-            animation: authCardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            max-width: 430px;
+            box-shadow: var(--shadow-2xl), var(--shadow-emerald-md);
+            animation: authCardEntry 0.7s var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes authCardIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            animation: authCardShine 8s ease-in-out infinite;
+        }
+        @keyframes authCardShine {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, -10px); }
+        }
+        @keyframes authCardEntry {
+            from { opacity: 0; transform: translateY(30px) scale(0.92); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .auth-logo {
-            width: 72px;
-            height: 72px;
-            background: linear-gradient(135deg, var(--emerald-400), var(--emerald-600));
-            border-radius: 22px;
+        .auth-emblem {
+            width: 80px; height: 80px;
+            background: linear-gradient(145deg, #34d399 0%, #10b981 50%, #059669 100%);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 900;
-            margin: 0 auto 24px;
+            margin: 0 auto 28px;
             color: #fff;
-            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.25);
+            box-shadow: 
+                0 16px 32px rgba(16, 185, 129, 0.3),
+                0 0 0 1px rgba(255,255,255,0.1) inset;
+            position: relative;
+            z-index: 1;
         }
         .auth-card h2 {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
         }
-        .auth-subtitle {
+        .auth-sub {
             color: var(--text-secondary);
             font-size: 14px;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 36px;
             font-weight: 400;
-        }
-        .input-group {
             position: relative;
-            margin-bottom: 18px;
+            z-index: 1;
         }
-        .input-group .input-icon {
+        .field-group {
+            position: relative;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+        .field-icon {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 16px;
             z-index: 1;
-            transition: color var(--transition-fast);
             pointer-events: none;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .input-group input,
-        .input-group select {
+        .field-group input,
+        .field-group select {
             width: 100%;
             background: var(--bg-input);
             border: 1px solid var(--border-subtle);
-            padding: 15px 16px 15px 46px;
+            padding: 16px 18px 16px 50px;
             border-radius: var(--radius-md);
             font-size: 15px;
             font-weight: 500;
             color: var(--text-primary);
             outline: none;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
         }
-        .input-group input::placeholder,
-        .input-group select::placeholder {
-            color: var(--text-muted);
-            opacity: 0.6;
+        .field-group input::placeholder {
+            color: var(--text-placeholder);
         }
-        .input-group input:focus,
-        .input-group select:focus {
+        .field-group input:focus,
+        .field-group select:focus {
             border-color: var(--emerald-400);
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.08);
-            background: rgba(3, 15, 10, 0.8);
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06), var(--shadow-emerald-sm);
+            background: var(--bg-input-focus);
+            transform: translateY(-1px);
         }
-        .input-group input:focus ~ .input-icon,
-        .input-group:focus-within .input-icon {
+        .field-group input:focus ~ .field-icon,
+        .field-group:focus-within .field-icon {
             color: var(--emerald-400);
+            transform: translateY(-50%) scale(1.1);
         }
-        .input-group select {
+        .field-group select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236ee7b7' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6 1.5-1.5L8 8.5l4.5-4.5L14 5.5z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236ee7b7' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6 1.5-1.5L8 8.5l4.5-4.5L14 5.5z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 44px;
+            background-position: right 18px center;
+            padding-right: 48px;
         }
-        .domain-hint {
+        .field-hint {
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: -12px;
-            margin-bottom: 18px;
-            padding-left: 16px;
+            margin-top: -14px;
+            margin-bottom: 20px;
+            padding-left: 18px;
             font-weight: 400;
+            opacity: 0.7;
+            z-index: 1;
+            position: relative;
         }
 
         .btn {
             width: 100%;
-            padding: 15px 20px;
+            padding: 16px 20px;
             border-radius: var(--radius-md);
             font-size: 15px;
             font-weight: 600;
@@ -565,201 +720,211 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
-        .btn:active {
-            transform: scale(0.97);
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
         }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+        .btn:hover::after { opacity: 1; }
+        .btn:active { transform: scale(0.96); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        
+        .btn-emerald {
+            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600), var(--emerald-700));
             color: #fff;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
-            margin-top: 8px;
+            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.3);
+            margin-top: 12px;
         }
-        .btn-primary:hover:not(:disabled) {
-            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
-            transform: translateY(-1px);
+        .btn-emerald:hover:not(:disabled) {
+            box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
         }
         .btn-ghost {
             background: transparent;
             color: var(--emerald-400);
             font-weight: 600;
-            margin-top: 12px;
+            margin-top: 16px;
         }
-        .btn-ghost:hover {
-            color: var(--emerald-300);
-        }
+        .btn-ghost:hover { color: var(--emerald-300); }
         .btn-outline {
             background: transparent;
             border: 1px solid rgba(255,255,255,0.1);
             color: var(--text-primary);
         }
         .btn-outline:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.04);
             border-color: rgba(255,255,255,0.2);
         }
 
-        /* Steps */
-        .step-indicator {
+        /* Step Indicator */
+        .step-track {
             display: flex;
             gap: 8px;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
             justify-content: center;
+            z-index: 1;
+            position: relative;
         }
-        .step-dot {
-            width: 8px;
-            height: 8px;
+        .step-pip {
+            width: 10px; height: 10px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255,255,255,0.12);
+            transition: all 0.5s var(--ease-out-back);
+            position: relative;
         }
-        .step-dot.active {
+        .step-pip.active {
             background: var(--emerald-400);
-            box-shadow: 0 0 16px rgba(52, 211, 153, 0.5);
-            width: 28px;
-            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
+            width: 32px;
+            border-radius: 20px;
         }
-        .step-dot.done {
+        .step-pip.done {
             background: var(--emerald-600);
+            box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
         }
-        .step-content {
+        .step-slide {
             display: none;
+            position: relative;
+            z-index: 1;
         }
-        .step-content.active {
+        .step-slide.active {
             display: block;
-            animation: stepFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            animation: stepSlideIn 0.5s var(--ease-out-expo);
         }
-        @keyframes stepFadeIn {
-            from { opacity: 0; transform: translateX(20px); }
+        @keyframes stepSlideIn {
+            from { opacity: 0; transform: translateX(25px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        .step-nav {
+        .step-actions {
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .step-nav button {
-            flex: 1;
+            gap: 14px;
+            margin-top: 28px;
         }
 
-        /* ========== MAIN APP LAYOUT ========== */
-        .app-shell {
+        /* ========== MAIN APP SHELL ========== */
+        .app-master {
             display: flex;
             width: 100vw;
             height: 100dvh;
             overflow: hidden;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s var(--ease-out-expo);
         }
-        .app-shell.visible {
-            opacity: 1;
-        }
+        .app-master.visible { opacity: 1; }
 
         /* Desktop Sidebar */
-        .desktop-sidebar {
+        .sidebar-desktop {
             display: none;
-            width: 280px;
-            background: rgba(4, 23, 18, 0.5);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            width: 290px;
+            background: rgba(3, 15, 10, 0.55);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-right: 1px solid var(--border-subtle);
-            padding: 36px 20px;
+            padding: 40px 22px;
             flex-direction: column;
             z-index: 10;
             flex-shrink: 0;
         }
-        .sidebar-brand {
+        .sidebar-brand-block {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 0 8px;
-            margin-bottom: 44px;
+            gap: 16px;
+            padding: 0 10px;
+            margin-bottom: 50px;
         }
-        .sidebar-brand-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--emerald-400), var(--emerald-600));
-            border-radius: 14px;
+        .sidebar-brand-block .brand-icon {
+            width: 46px; height: 46px;
+            background: linear-gradient(145deg, #34d399, #059669);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 18px;
+            font-size: 20px;
             color: #fff;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
             flex-shrink: 0;
         }
-        .sidebar-brand-text {
+        .sidebar-brand-text h3 {
             font-weight: 700;
             font-size: 18px;
             letter-spacing: -0.02em;
             line-height: 1.2;
         }
-        .sidebar-brand-text small {
-            display: block;
-            font-weight: 400;
+        .sidebar-brand-text span {
             font-size: 12px;
             color: var(--text-tertiary);
-            letter-spacing: 0.01em;
+            font-weight: 400;
+            letter-spacing: 0.02em;
         }
-        .sidebar-nav {
+        .sidebar-nav-list {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             flex: 1;
         }
-        .sidebar-nav-item {
+        .sidebar-nav-btn {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
+            gap: 16px;
+            padding: 15px 18px;
             border-radius: var(--radius-md);
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             color: var(--text-secondary);
             font-size: 15px;
             font-weight: 500;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             width: 100%;
             text-align: left;
             letter-spacing: -0.01em;
         }
-        .sidebar-nav-item i {
-            font-size: 18px;
-            width: 22px;
+        .sidebar-nav-btn i {
+            font-size: 19px;
+            width: 24px;
             text-align: center;
             flex-shrink: 0;
+            transition: all 0.3s var(--ease-bounce);
         }
-        .sidebar-nav-item:hover {
+        .sidebar-nav-btn:hover {
             background: rgba(255,255,255,0.03);
             color: var(--text-primary);
+            border-color: var(--border-subtle);
+            transform: translateX(4px);
         }
-        .sidebar-nav-item.active {
-            background: rgba(16, 185, 129, 0.1);
+        .sidebar-nav-btn.active {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
             color: var(--emerald-400);
             font-weight: 600;
-            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.15);
+            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.15), var(--shadow-emerald-sm);
         }
-        .sidebar-footer {
-            padding-top: 16px;
+        .sidebar-nav-btn.active i {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+        }
+        .sidebar-footer-area {
+            padding-top: 20px;
             border-top: 1px solid var(--border-subtle);
         }
-        .btn-signout {
+        .btn-logout-sidebar {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border-radius: var(--radius-md);
             background: transparent;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.15);
             color: #f87171;
             font-weight: 600;
             font-size: 14px;
@@ -767,594 +932,636 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all var(--transition-fast);
+            gap: 10px;
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
         }
-        .btn-signout:hover {
-            background: rgba(239, 68, 68, 0.08);
-        }
-        .btn-signout:active {
-            transform: scale(0.97);
+        .btn-logout-sidebar:hover {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
         }
 
-        /* Main Content Area */
-        .main-panel {
+        /* Main Panel */
+        .panel-primary {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             min-width: 0;
         }
-        .mobile-topbar {
+        .topbar-mobile {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 20px;
+            padding: 16px 22px;
             padding-top: calc(var(--safe-top) + 12px);
-            background: rgba(4, 23, 18, 0.6);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            background: rgba(3, 15, 10, 0.65);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-bottom: 1px solid var(--border-subtle);
             z-index: 20;
             flex-shrink: 0;
         }
-        .mobile-topbar h1 {
-            font-size: 18px;
+        .topbar-mobile h1 {
+            font-size: 19px;
             font-weight: 700;
             letter-spacing: -0.02em;
         }
-        .mobile-avatar-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+        .avatar-mobile-btn {
+            width: 40px; height: 40px;
+            border-radius: 14px;
+            background: linear-gradient(145deg, var(--emerald-500), var(--emerald-700));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             color: #fff;
             cursor: pointer;
             border: none;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-bounce);
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
-        .mobile-avatar-btn:active {
-            transform: scale(0.9);
+        .avatar-mobile-btn:active {
+            transform: scale(0.85) rotate(-10deg);
         }
-        .main-scroll-area {
+        .scroll-view {
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 20px;
-            padding-bottom: calc(100px + var(--safe-bottom));
+            padding: 24px 20px;
+            padding-bottom: calc(110px + var(--safe-bottom));
             -webkit-overflow-scrolling: touch;
         }
-        .content-wrapper {
-            max-width: 750px;
+        .content-inner {
+            max-width: 780px;
             margin: 0 auto;
         }
 
-        /* ========== CARDS & COMPONENTS ========== */
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+        /* ========== UI COMPONENTS ========== */
+        .card-elevated {
+            background: var(--bg-elevated);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl);
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: all var(--transition-smooth);
+            padding: 26px;
+            margin-bottom: 18px;
+            transition: all 0.4s var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
         }
-        .card:hover {
+        .card-elevated::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .card-elevated:hover::before { opacity: 1; }
+        .card-elevated:hover {
             border-color: var(--border-medium);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-emerald-sm);
         }
 
-        .section-header {
+        .section-header-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
         }
-        .section-title {
-            font-size: 20px;
+        .section-header-row h2 {
+            font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.02em;
         }
 
-        /* Discovery Banner */
-        .discovery-bar {
-            background: var(--bg-card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+        /* Discovery Bar */
+        .discovery-status-bar {
+            background: var(--bg-elevated);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl);
-            padding: 20px 24px;
-            margin-bottom: 20px;
+            padding: 22px 26px;
+            margin-bottom: 22px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
-            transition: all var(--transition-smooth);
+            gap: 18px;
+            transition: all 0.4s var(--ease-smooth);
         }
-        .discovery-info h3 {
+        .discovery-info-block h3 {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
-        .discovery-info h3 .indicator-dot {
-            width: 8px;
-            height: 8px;
+        .discovery-dot-live {
+            width: 9px; height: 9px;
             border-radius: 50%;
             flex-shrink: 0;
+            position: relative;
         }
-        .discovery-info h3 .indicator-dot.on {
+        .discovery-dot-live.on {
             background: var(--emerald-400);
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
-            animation: dotPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 16px rgba(52, 211, 153, 0.7);
+            animation: liveDotPulse 1.8s ease-in-out infinite;
         }
-        .discovery-info h3 .indicator-dot.off {
+        .discovery-dot-live.off {
             background: #f87171;
-            box-shadow: 0 0 10px rgba(248, 113, 113, 0.4);
+            box-shadow: 0 0 12px rgba(248, 113, 113, 0.5);
         }
-        .discovery-info p {
+        @keyframes liveDotPulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
+            50% { box-shadow: 0 0 24px rgba(52, 211, 153, 0.9); }
+        }
+        .discovery-info-block p {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-left: 16px;
+            margin-left: 19px;
         }
-        .status-chip {
-            padding: 8px 16px;
-            border-radius: 20px;
+        .status-pill {
+            padding: 9px 18px;
+            border-radius: var(--radius-full);
             font-size: 13px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-shrink: 0;
             letter-spacing: -0.01em;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .status-chip.on {
-            background: rgba(16, 185, 129, 0.12);
+        .status-pill.active-pill {
+            background: rgba(16, 185, 129, 0.1);
             color: var(--emerald-400);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.25);
         }
-        .status-chip.off {
-            background: rgba(239, 68, 68, 0.1);
+        .status-pill.inactive-pill {
+            background: rgba(239, 68, 68, 0.08);
             color: #f87171;
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        /* Action Chips */
-        .action-chips {
+        /* Chip Buttons */
+        .chips-row {
             display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 9px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
         }
-        .action-chip {
-            padding: 10px 18px;
-            border-radius: 22px;
+        .chip {
+            padding: 11px 20px;
+            border-radius: var(--radius-full);
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.02);
             color: var(--text-secondary);
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            transition: all var(--transition-fast);
+            gap: 8px;
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
             white-space: nowrap;
         }
-        .action-chip:hover {
-            background: rgba(255,255,255,0.06);
+        .chip:hover {
+            background: rgba(255,255,255,0.05);
             border-color: rgba(255,255,255,0.15);
             color: var(--text-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
-        .action-chip:active {
-            transform: scale(0.95);
-        }
-        .action-chip.accent {
-            background: rgba(16, 185, 129, 0.1);
+        .chip:active { transform: scale(0.94); }
+        .chip.accent-chip {
+            background: rgba(16, 185, 129, 0.08);
             border-color: rgba(16, 185, 129, 0.25);
             color: var(--emerald-400);
         }
-        .action-chip.accent:hover {
-            background: rgba(16, 185, 129, 0.18);
+        .chip.accent-chip:hover {
+            background: rgba(16, 185, 129, 0.15);
             border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: var(--shadow-emerald-sm);
         }
 
-        /* Schedule Timeline */
-        .schedule-list {
+        /* Schedule Rows */
+        .schedule-stack {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
-        .schedule-row {
+        .schedule-row-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px 18px;
-            background: rgba(3, 20, 15, 0.4);
+            gap: 18px;
+            padding: 18px 20px;
+            background: rgba(2, 15, 10, 0.45);
             border-radius: var(--radius-md);
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             border: 1px solid transparent;
             cursor: default;
         }
-        .schedule-row:hover {
-            background: rgba(3, 20, 15, 0.7);
+        .schedule-row-item:hover {
+            background: rgba(2, 15, 10, 0.7);
             border-color: var(--border-medium);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
         }
-        .period-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: rgba(16, 185, 129, 0.1);
+        .period-badge-num {
+            width: 50px; height: 50px;
+            border-radius: 16px;
+            background: rgba(16, 185, 129, 0.08);
             border: 1px solid rgba(16, 185, 129, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 17px;
             color: var(--emerald-400);
             flex-shrink: 0;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .period-details {
+        .schedule-row-item:hover .period-badge-num {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: var(--shadow-emerald-sm);
+            transform: scale(1.05);
+        }
+        .schedule-row-item .class-detail {
             flex: 1;
             min-width: 0;
         }
-        .period-details .class-name {
+        .schedule-row-item .class-name-text {
             font-weight: 600;
             font-size: 15px;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
-        .period-details .class-meta {
+        .schedule-row-item .class-sub-text {
             font-size: 12px;
             color: var(--text-muted);
         }
-        .schedule-row input.editable {
-            background: rgba(0,0,0,0.3);
+        .schedule-row-item input.edit-field {
+            background: rgba(0,0,0,0.35);
             border: 1px dashed var(--border-strong);
-            border-radius: 10px;
-            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            padding: 11px 15px;
             color: var(--text-primary);
             font-size: 14px;
             width: 100%;
             font-family: 'Inter', sans-serif;
             outline: none;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
         }
-        .schedule-row input.editable:focus {
+        .schedule-row-item input.edit-field:focus {
             border-color: var(--emerald-400);
             border-style: solid;
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.08);
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06);
+            background: rgba(0,0,0,0.5);
         }
-
-        /* Save Button */
-        .save-bar {
-            margin-top: 16px;
+        .save-button-bar {
+            margin-top: 18px;
             display: none;
         }
-        .save-bar.show {
+        .save-button-bar.visible {
             display: block;
-            animation: fadeUp 0.3s ease;
+            animation: fadeSlideUp 0.4s var(--ease-out-back);
         }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Search */
-        .search-wrapper {
+        .search-box-wrapper {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
-        .search-wrapper .search-icon {
+        .search-box-wrapper .search-prefix-icon {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 16px;
             pointer-events: none;
             z-index: 1;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .search-wrapper input {
+        .search-box-wrapper input {
             width: 100%;
             background: var(--bg-input);
             border: 1px solid var(--border-subtle);
-            padding: 15px 16px 15px 46px;
+            padding: 16px 18px 16px 50px;
             border-radius: var(--radius-lg);
             font-size: 15px;
             font-weight: 500;
             color: var(--text-primary);
             outline: none;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
         }
-        .search-wrapper input:focus {
+        .search-box-wrapper input:focus {
             border-color: var(--emerald-400);
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.08);
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06), var(--shadow-emerald-sm);
+            background: var(--bg-input-focus);
         }
-        .search-wrapper input::placeholder {
-            color: var(--text-muted);
-            opacity: 0.5;
+        .search-box-wrapper input:focus ~ .search-prefix-icon {
+            color: var(--emerald-400);
+            transform: translateY(-50%) scale(1.15);
         }
 
         /* Classmates Grid */
-        .classmates-grid {
+        .classmates-masonry {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 14px;
+            gap: 16px;
         }
-        .classmate-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+        .classmate-panel {
+            background: var(--bg-elevated);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-xl);
-            padding: 20px;
-            transition: all var(--transition-smooth);
+            padding: 22px;
+            transition: all 0.4s var(--ease-smooth);
             position: relative;
             overflow: hidden;
         }
-        .classmate-card::before {
+        .classmate-panel::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--emerald-500), var(--emerald-600));
             opacity: 0;
-            transition: opacity var(--transition-smooth);
+            transition: opacity 0.4s var(--ease-smooth);
         }
-        .classmate-card.shared::before {
+        .classmate-panel.has-shared::after {
             opacity: 1;
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+            background-size: 200% 100%;
+            animation: sharedBarShimmer 2s ease-in-out infinite;
         }
-        .classmate-card:hover {
+        @keyframes sharedBarShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .classmate-panel:hover {
             border-color: var(--border-medium);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg), var(--shadow-emerald-sm);
         }
-        .classmate-header {
+        .classmate-panel.has-shared:hover {
+            box-shadow: var(--shadow-lg), var(--shadow-amber-sm);
+        }
+        .classmate-top-row {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .cm-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+        .cm-avatar-circle {
+            width: 52px; height: 52px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, var(--emerald-500), var(--emerald-700));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 20px;
             color: #fff;
             flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+            transition: all 0.3s var(--ease-bounce);
         }
-        .cm-info {
+        .classmate-panel:hover .cm-avatar-circle {
+            transform: scale(1.08);
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);
+        }
+        .cm-meta {
             flex: 1;
             min-width: 0;
         }
-        .cm-info h4 {
-            font-size: 15px;
+        .cm-meta h4 {
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
-        .cm-info .grade-tag {
+        .cm-grade-tag {
             font-size: 12px;
             font-weight: 500;
             color: var(--text-tertiary);
-            background: rgba(255,255,255,0.04);
-            padding: 3px 10px;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(255,255,255,0.06);
         }
-        .shared-indicator {
+        .cm-shared-badge {
             font-size: 11px;
             font-weight: 600;
-            background: rgba(245, 158, 11, 0.12);
+            background: rgba(245, 158, 11, 0.1);
             color: #fbbf24;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
             white-space: nowrap;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            animation: badgeGlow 2s ease-in-out infinite;
         }
-        .cm-schedule-grid {
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+        }
+        .cm-classes-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 9px;
         }
-        .cm-class-pill {
-            background: rgba(3, 20, 15, 0.5);
-            padding: 10px 12px;
-            border-radius: 12px;
+        .cm-class-bubble {
+            background: rgba(2, 15, 10, 0.5);
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
             font-size: 12px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
             color: var(--text-secondary);
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
+            border: 1px solid transparent;
         }
-        .cm-class-pill i {
+        .cm-class-bubble i {
             color: var(--emerald-400);
             font-size: 10px;
             flex-shrink: 0;
         }
-        .cm-class-pill span {
+        .cm-class-bubble span {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .cm-class-pill.highlight {
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.2);
+        .cm-class-bubble.match-highlight {
+            background: rgba(245, 158, 11, 0.06);
+            border-color: rgba(245, 158, 11, 0.2);
             color: #fbbf24;
+            animation: matchPulse 1.5s ease-in-out infinite;
         }
-        .cm-class-pill.highlight i {
+        @keyframes matchPulse {
+            0%, 100% { border-color: rgba(245, 158, 11, 0.2); }
+            50% { border-color: rgba(245, 158, 11, 0.5); }
+        }
+        .cm-class-bubble.match-highlight i {
             color: #f59e0b;
         }
 
         /* Settings */
-        .profile-card {
+        .profile-hero-card {
             text-align: center;
-            padding: 36px 24px;
+            padding: 40px 28px;
         }
-        .profile-avatar-large {
-            width: 88px;
-            height: 88px;
-            border-radius: 26px;
-            background: linear-gradient(135deg, var(--emerald-400), var(--emerald-700));
+        .profile-avatar-xl {
+            width: 96px; height: 96px;
+            border-radius: 28px;
+            background: linear-gradient(145deg, var(--emerald-400), var(--emerald-700));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 40px;
             font-weight: 800;
             color: #fff;
-            margin: 0 auto 20px;
-            box-shadow: 0 16px 32px rgba(16, 185, 129, 0.25);
+            margin: 0 auto 24px;
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            transition: all 0.4s var(--ease-bounce);
         }
-        .profile-card h2 {
-            font-size: 24px;
+        .profile-hero-card:hover .profile-avatar-xl {
+            transform: scale(1.05) rotate(3deg);
+            box-shadow: 0 24px 48px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
+        }
+        .profile-hero-card h2 {
+            font-size: 26px;
             font-weight: 700;
             margin-bottom: 6px;
             letter-spacing: -0.02em;
         }
-        .profile-card .meta {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-        .profile-card .email {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-        .setting-row {
+        .setting-row-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 20px;
-            background: rgba(3, 20, 15, 0.5);
+            padding: 20px 22px;
+            background: rgba(2, 15, 10, 0.5);
             border-radius: var(--radius-md);
             border: 1px solid rgba(255,255,255,0.04);
-            gap: 16px;
+            gap: 18px;
+            transition: all 0.3s var(--ease-smooth);
         }
-        .setting-label h4 {
+        .setting-row-item:hover {
+            background: rgba(2, 15, 10, 0.7);
+            border-color: var(--border-medium);
+        }
+        .setting-label-group h4 {
             font-size: 15px;
             font-weight: 600;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
-        .setting-label p {
+        .setting-label-group p {
             font-size: 13px;
             color: var(--text-secondary);
         }
-        .toggle-switch {
-            width: 54px;
-            height: 32px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 32px;
+        .toggle-custom {
+            width: 56px; height: 32px;
+            background: rgba(255,255,255,0.06);
+            border-radius: var(--radius-full);
             cursor: pointer;
             position: relative;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s var(--ease-spring);
             flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.06);
         }
-        .toggle-switch.active {
+        .toggle-custom.active {
             background: var(--emerald-600);
             border-color: var(--emerald-400);
-            box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
-        .toggle-switch .toggle-knob {
-            width: 26px;
-            height: 26px;
+        .toggle-custom .toggle-thumb {
+            width: 26px; height: 26px;
             background: #fff;
             border-radius: 50%;
             position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            top: 2px; left: 2px;
+            transition: all 0.4s var(--ease-spring);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .toggle-switch.active .toggle-knob {
-            left: 24px;
-            box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
+        .toggle-custom.active .toggle-thumb {
+            left: 26px;
+            box-shadow: 0 2px 14px rgba(16, 185, 129, 0.5);
         }
 
         /* Empty States */
-        .empty-state {
+        .empty-panel {
             text-align: center;
-            padding: 48px 24px;
+            padding: 56px 28px;
+            grid-column: 1 / -1;
         }
-        .empty-state .empty-icon {
-            font-size: 56px;
-            margin-bottom: 16px;
+        .empty-panel .empty-icon-large {
+            font-size: 64px;
+            margin-bottom: 20px;
             display: block;
-            opacity: 0.3;
+            opacity: 0.25;
+            animation: emptyFloat 3s ease-in-out infinite;
         }
-        .empty-state h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .empty-state p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            max-width: 300px;
-            margin: 0 auto;
+        @keyframes emptyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
         }
 
-        /* Skeleton Loading */
-        .skeleton-pulse {
-            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+        /* Skeleton */
+        .skeleton-block {
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 75%);
             background-size: 200% 100%;
-            animation: shimmer 1.8s ease-in-out infinite;
+            animation: skeletonWave 2s ease-in-out infinite;
             border-radius: 8px;
         }
-        @keyframes shimmer {
+        @keyframes skeletonWave {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
 
-        /* Bottom Navigation (Mobile) */
-        .bottom-nav-bar {
+        /* Bottom Nav */
+        .bottom-nav-ios {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(4, 23, 18, 0.9);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            bottom: 0; left: 0; right: 0;
+            background: rgba(3, 15, 10, 0.88);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border-top: 1px solid rgba(255,255,255,0.05);
             display: flex;
             justify-content: space-around;
-            padding: 8px 8px calc(8px + var(--safe-bottom));
+            padding: 10px 10px calc(10px + var(--safe-bottom));
             z-index: 100;
         }
-        .bottom-nav-item {
+        .bottom-nav-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 5px;
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
             background: transparent;
             border: none;
@@ -1362,92 +1569,84 @@
             font-size: 11px;
             font-weight: 500;
             cursor: pointer;
-            transition: all var(--transition-fast);
+            transition: all 0.3s var(--ease-smooth);
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
-            min-width: 64px;
+            min-width: 68px;
+            position: relative;
         }
-        .bottom-nav-item i {
-            font-size: 20px;
-            transition: all var(--transition-bounce);
+        .bottom-nav-btn i {
+            font-size: 22px;
+            transition: all 0.4s var(--ease-bounce);
         }
-        .bottom-nav-item.active {
+        .bottom-nav-btn.active {
             color: var(--emerald-400);
         }
-        .bottom-nav-item.active i {
-            transform: translateY(-3px);
-            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.4));
+        .bottom-nav-btn.active i {
+            transform: translateY(-4px);
+            filter: drop-shadow(0 6px 12px rgba(16, 185, 129, 0.5));
         }
-        .bottom-nav-item:active {
-            transform: scale(0.9);
+        .bottom-nav-btn.active::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 20px; height: 3px;
+            background: var(--emerald-400);
+            border-radius: 0 0 3px 3px;
         }
 
         /* Responsive */
         @media (min-width: 768px) {
-            .desktop-sidebar {
-                display: flex;
+            .sidebar-desktop { display: flex; }
+            .topbar-mobile { display: none; }
+            .bottom-nav-ios { display: none; }
+            .scroll-view {
+                padding: 36px;
+                padding-bottom: 36px;
             }
-            .mobile-topbar {
-                display: none;
-            }
-            .bottom-nav-bar {
-                display: none;
-            }
-            .main-scroll-area {
-                padding: 32px;
-                padding-bottom: 32px;
-            }
-            .classmates-grid {
-                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            .classmates-masonry {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             }
         }
-
-        @media (max-width: 400px) {
-            .cm-schedule-grid {
-                grid-template-columns: 1fr;
-            }
-            .classmate-card {
-                padding: 16px;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .animate-in {
-            animation: fadeInScale 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        @media (max-width: 420px) {
+            .cm-classes-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Animated Background -->
-    <div class="bg-canvas"></div>
+    <!-- Master Background -->
+    <div class="bg-master"></div>
+    <div class="bg-grid"></div>
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
     <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-orb bg-orb-4"></div>
+    <div class="bg-particles" id="bg-particles"></div>
 
     <!-- Connection Status -->
-    <div class="connection-status" id="connection-bar">
-        <span class="status-dot"></span><span id="connection-text">Connected</span>
+    <div class="connection-bar" id="connection-bar">
+        <div class="connection-pulse"></div>
+        <span id="connection-text">Back Online</span>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toast-container"></div>
+    <!-- Toast Portal -->
+    <div class="toast-portal" id="toast-portal"></div>
 
     <!-- Confirmation Modal -->
-    <div class="modal-overlay hidden" id="confirm-modal">
-        <div class="modal-dialog">
-            <span class="modal-icon">⚠️</span>
-            <h3>Turn Off Discovery?</h3>
-            <p>This will hide your schedule from other students and remove you from the classmates directory.</p>
-            <div class="modal-warning-box">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span><strong>Important:</strong> Other students won't be able to see if they share classes with you. You'll disappear from the directory.</span>
+    <div class="modal-backdrop hidden" id="confirm-modal">
+        <div class="modal-panel">
+            <div class="modal-icon-wrap">
+                <i class="fa-solid fa-eye-slash"></i>
             </div>
-            <div class="modal-actions">
+            <h3>Turn Off Discovery?</h3>
+            <p class="modal-desc">This will hide your schedule from other students and remove you from the classmates directory entirely.</p>
+            <div class="modal-alert">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span><strong>Important:</strong> Other students won't be able to see if they share classes with you. You'll become invisible in the directory.</span>
+            </div>
+            <div class="modal-buttons">
                 <button class="btn-modal btn-modal-cancel" id="btn-cancel-discovery">Keep It On</button>
                 <button class="btn-modal btn-modal-danger" id="btn-confirm-discovery">Turn Off</button>
             </div>
@@ -1455,288 +1654,245 @@
     </div>
 
     <!-- Splash Screen -->
-    <div class="splash-screen" id="splash-screen">
-        <div class="splash-logo">W</div>
-        <div class="splash-title">WWHS Schedule</div>
-        <div class="splash-subtitle">Share & Discover</div>
-        <div class="splash-progress">
-            <div class="splash-progress-fill"></div>
+    <div class="splash-master" id="splash-screen">
+        <div class="splash-logo-wrapper">
+            <div class="splash-logo">W</div>
+        </div>
+        <div class="splash-brand">WWHS Schedule</div>
+        <div class="splash-tagline">Share & Discover Classes</div>
+        <div class="splash-loader-track">
+            <div class="splash-loader-fill"></div>
         </div>
     </div>
 
     <!-- Auth Screens -->
-    <div class="auth-wrapper hidden" id="auth-view">
-        <!-- Login Card -->
+    <div class="auth-stage hidden" id="auth-view">
+        <!-- Login -->
         <div class="auth-card" id="login-card">
-            <div class="auth-logo">W</div>
+            <div class="auth-emblem">W</div>
             <h2>Welcome Back</h2>
-            <p class="auth-subtitle">Sign in with your school email to continue</p>
-            <div class="input-group">
-                <i class="fa-solid fa-envelope input-icon"></i>
+            <p class="auth-sub">Sign in with your school email</p>
+            <div class="field-group">
+                <i class="fa-solid fa-envelope field-icon"></i>
                 <input type="email" id="login-email" placeholder="student@hernandoschools.org" autocomplete="email" inputmode="email">
             </div>
-            <div class="domain-hint">Use your @hernandoschools.org email</div>
-            <div class="input-group">
-                <i class="fa-solid fa-lock input-icon"></i>
+            <div class="field-hint">Use your @hernandoschools.org email</div>
+            <div class="field-group">
+                <i class="fa-solid fa-lock field-icon"></i>
                 <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
             </div>
-            <button class="btn btn-primary" id="btn-login">
+            <button class="btn btn-emerald" id="btn-login">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
             </button>
-            <button class="btn btn-ghost" id="link-to-signup">Don't have an account? <strong>Sign Up</strong></button>
+            <button class="btn btn-ghost" id="link-to-signup">New here? <strong>Create Account</strong></button>
         </div>
 
-        <!-- Signup Card -->
+        <!-- Signup -->
         <div class="auth-card hidden" id="signup-card">
-            <h2 style="text-align:center; margin-bottom:24px;">Create Your Account</h2>
-            <div class="step-indicator">
-                <div class="step-dot active" id="dot-1"></div>
-                <div class="step-dot" id="dot-2"></div>
-                <div class="step-dot" id="dot-3"></div>
+            <h2 style="text-align:center; margin-bottom:28px;">Create Account</h2>
+            <div class="step-track">
+                <div class="step-pip active" id="pip-1"></div>
+                <div class="step-pip" id="pip-2"></div>
+                <div class="step-pip" id="pip-3"></div>
             </div>
 
-            <!-- Step 1 -->
-            <div id="step-1" class="step-content active">
-                <div class="input-group">
-                    <i class="fa-solid fa-envelope input-icon"></i>
-                    <input type="email" id="signup-email" placeholder="student@hernandoschools.org" autocomplete="email" inputmode="email">
+            <div id="step-1" class="step-slide active">
+                <div class="field-group">
+                    <i class="fa-solid fa-envelope field-icon"></i>
+                    <input type="email" id="signup-email" placeholder="student@hernandoschools.org" autocomplete="email">
                 </div>
-                <div class="domain-hint">Must be a valid @hernandoschools.org email</div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock input-icon"></i>
-                    <input type="password" id="signup-password" placeholder="Create a password (6+ characters)" autocomplete="new-password">
+                <div class="field-hint">Must be @hernandoschools.org</div>
+                <div class="field-group">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" id="signup-password" placeholder="Password (6+ characters)" autocomplete="new-password">
                 </div>
-                <button class="btn btn-primary" id="btn-next-1">
-                    Continue <i class="fa-solid fa-arrow-right"></i>
-                </button>
-                <button class="btn btn-ghost" id="link-to-login">Already have an account? <strong>Sign In</strong></button>
+                <button class="btn btn-emerald" id="btn-next-1">Continue <i class="fa-solid fa-arrow-right"></i></button>
+                <button class="btn btn-ghost" id="link-to-login">Have an account? <strong>Sign In</strong></button>
             </div>
 
-            <!-- Step 2 -->
-            <div id="step-2" class="step-content">
-                <div class="input-group">
-                    <i class="fa-solid fa-user input-icon"></i>
-                    <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name">
+            <div id="step-2" class="step-slide">
+                <div class="field-group">
+                    <i class="fa-solid fa-user field-icon"></i>
+                    <input type="text" id="signup-name" placeholder="Full Name" autocomplete="name">
                 </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-graduation-cap input-icon"></i>
+                <div class="field-group">
+                    <i class="fa-solid fa-graduation-cap field-icon"></i>
                     <select id="signup-grade">
-                        <option value="" disabled selected>Select your grade level</option>
-                        <option value="9">9th Grade (Freshman)</option>
-                        <option value="10">10th Grade (Sophomore)</option>
-                        <option value="11">11th Grade (Junior)</option>
-                        <option value="12">12th Grade (Senior)</option>
+                        <option value="" disabled selected>Grade Level</option>
+                        <option value="9">9th Grade</option>
+                        <option value="10">10th Grade</option>
+                        <option value="11">11th Grade</option>
+                        <option value="12">12th Grade</option>
                     </select>
                 </div>
-                <div class="step-nav">
+                <div class="step-actions">
                     <button class="btn btn-outline btn-prev" data-target="1">Back</button>
-                    <button class="btn btn-primary" id="btn-next-2">Continue</button>
+                    <button class="btn btn-emerald" id="btn-next-2">Continue</button>
                 </div>
             </div>
 
-            <!-- Step 3 -->
-            <div id="step-3" class="step-content">
-                <p style="font-size:13px; color:var(--text-secondary); text-align:center; margin-bottom:16px;">
-                    Enter your class names for each period
-                </p>
-                <div style="max-height:240px; overflow-y:auto; padding-right:4px;">
-                    <div class="input-group"><i class="fa-solid fa-1 input-icon"></i><input type="text" id="p1" placeholder="Period 1 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-2 input-icon"></i><input type="text" id="p2" placeholder="Period 2 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-3 input-icon"></i><input type="text" id="p3" placeholder="Period 3 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-4 input-icon"></i><input type="text" id="p4" placeholder="Period 4 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-5 input-icon"></i><input type="text" id="p5" placeholder="Period 5 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-6 input-icon"></i><input type="text" id="p6" placeholder="Period 6 class"></div>
-                    <div class="input-group"><i class="fa-solid fa-7 input-icon"></i><input type="text" id="p7" placeholder="Period 7 class"></div>
+            <div id="step-3" class="step-slide">
+                <p style="font-size:13px; color:var(--text-secondary); text-align:center; margin-bottom:18px;">Enter your classes for each period</p>
+                <div style="max-height:230px; overflow-y:auto; padding-right:4px;">
+                    <div class="field-group"><i class="fa-solid fa-1 field-icon"></i><input type="text" id="p1" placeholder="Period 1"></div>
+                    <div class="field-group"><i class="fa-solid fa-2 field-icon"></i><input type="text" id="p2" placeholder="Period 2"></div>
+                    <div class="field-group"><i class="fa-solid fa-3 field-icon"></i><input type="text" id="p3" placeholder="Period 3"></div>
+                    <div class="field-group"><i class="fa-solid fa-4 field-icon"></i><input type="text" id="p4" placeholder="Period 4"></div>
+                    <div class="field-group"><i class="fa-solid fa-5 field-icon"></i><input type="text" id="p5" placeholder="Period 5"></div>
+                    <div class="field-group"><i class="fa-solid fa-6 field-icon"></i><input type="text" id="p6" placeholder="Period 6"></div>
+                    <div class="field-group"><i class="fa-solid fa-7 field-icon"></i><input type="text" id="p7" placeholder="Period 7"></div>
                 </div>
-                <div class="step-nav">
+                <div class="step-actions">
                     <button class="btn btn-outline btn-prev" data-target="2">Back</button>
-                    <button class="btn btn-primary" id="btn-finish">Complete Setup</button>
+                    <button class="btn btn-emerald" id="btn-finish">Complete Setup</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Application Shell -->
-    <div class="app-shell hidden" id="main-app">
-        <!-- Desktop Sidebar -->
-        <aside class="desktop-sidebar">
-            <div class="sidebar-brand">
-                <div class="sidebar-brand-icon">W</div>
-                <div class="sidebar-brand-text">WWHS Schedule<small>Share & Discover</small></div>
+    <!-- Main App -->
+    <div class="app-master hidden" id="main-app">
+        <aside class="sidebar-desktop">
+            <div class="sidebar-brand-block">
+                <div class="brand-icon">W</div>
+                <div class="sidebar-brand-text">
+                    <h3>WWHS Schedule</h3>
+                    <span>Share & Discover</span>
+                </div>
             </div>
-            <nav class="sidebar-nav">
-                <button class="sidebar-nav-item active" data-tab="schedule">
+            <nav class="sidebar-nav-list">
+                <button class="sidebar-nav-btn active" data-tab="schedule">
                     <i class="fa-solid fa-calendar-days"></i> My Schedule
                 </button>
-                <button class="sidebar-nav-item" data-tab="classmates">
+                <button class="sidebar-nav-btn" data-tab="classmates">
                     <i class="fa-solid fa-users"></i> Classmates
                 </button>
-                <button class="sidebar-nav-item" data-tab="settings">
+                <button class="sidebar-nav-btn" data-tab="settings">
                     <i class="fa-solid fa-gear"></i> Settings
                 </button>
             </nav>
-            <div class="sidebar-footer">
-                <button class="btn-signout" id="btn-logout-desk">
+            <div class="sidebar-footer-area">
+                <button class="btn-logout-sidebar" id="btn-logout-desk">
                     <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                 </button>
             </div>
         </aside>
 
-        <!-- Main Panel -->
-        <div class="main-panel">
-            <!-- Mobile Header -->
-            <header class="mobile-topbar">
+        <div class="panel-primary">
+            <header class="topbar-mobile">
                 <h1>WWHS Schedule</h1>
-                <button class="mobile-avatar-btn" id="mobile-avatar-btn">?</button>
+                <button class="avatar-mobile-btn" id="mobile-avatar-btn">?</button>
             </header>
 
-            <!-- Scrollable Content -->
-            <div class="main-scroll-area" id="main-scroll">
-                <div class="content-wrapper">
+            <div class="scroll-view" id="main-scroll">
+                <div class="content-inner">
                     
-                    <!-- ===== SCHEDULE TAB ===== -->
                     <div id="tab-schedule" class="animate-in">
-                        <!-- Discovery Status -->
-                        <div class="discovery-bar" id="discovery-bar">
-                            <div class="discovery-info">
+                        <div class="discovery-status-bar" id="discovery-bar">
+                            <div class="discovery-info-block">
                                 <h3>
-                                    <span class="indicator-dot on" id="discovery-dot"></span>
+                                    <span class="discovery-dot-live on" id="discovery-dot"></span>
                                     <span id="discovery-title">Discovery Active</span>
                                 </h3>
                                 <p id="discovery-desc">Classmates can see your schedule and find you in the directory</p>
                             </div>
-                            <span class="status-chip on" id="discovery-chip">
+                            <span class="status-pill active-pill" id="discovery-chip">
                                 <i class="fa-solid fa-check-circle"></i> Visible
                             </span>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="action-chips">
-                            <button class="action-chip accent" id="btn-edit-schedule">
+                        <div class="chips-row">
+                            <button class="chip accent-chip" id="btn-edit-schedule">
                                 <i class="fa-solid fa-pen-to-square"></i> Edit Schedule
                             </button>
-                            <button class="action-chip" id="btn-copy-schedule">
+                            <button class="chip" id="btn-copy-schedule">
                                 <i class="fa-solid fa-copy"></i> Copy
                             </button>
                         </div>
 
-                        <!-- Schedule Card -->
-                        <div class="card">
-                            <div class="schedule-list" id="schedule-container">
-                                <!-- Rendered by JS -->
-                            </div>
+                        <div class="card-elevated">
+                            <div class="schedule-stack" id="schedule-container"></div>
                         </div>
 
-                        <!-- Save Button -->
-                        <div class="save-bar" id="save-bar">
-                            <button class="btn btn-primary" id="btn-save-schedule">
+                        <div class="save-button-bar" id="save-bar">
+                            <button class="btn btn-emerald" id="btn-save-schedule">
                                 <i class="fa-solid fa-check"></i> Save Changes
                             </button>
                         </div>
                     </div>
 
-                    <!-- ===== CLASSMATES TAB ===== -->
                     <div id="tab-classmates" class="hidden animate-in">
-                        <div class="section-header">
-                            <h2 class="section-title">Classmates Directory</h2>
-                            <button class="action-chip" id="btn-refresh-dir">
+                        <div class="section-header-row">
+                            <h2>Classmates</h2>
+                            <button class="chip" id="btn-refresh-dir">
                                 <i class="fa-solid fa-arrows-rotate"></i> Refresh
                             </button>
                         </div>
-                        <div class="search-wrapper">
-                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <div class="search-box-wrapper">
+                            <i class="fa-solid fa-magnifying-glass search-prefix-icon"></i>
                             <input type="text" id="class-search" placeholder="Search by name, class, or period...">
                         </div>
-                        <div class="classmates-grid" id="classmates-container">
-                            <!-- Rendered by JS -->
-                        </div>
+                        <div class="classmates-masonry" id="classmates-container"></div>
                     </div>
 
-                    <!-- ===== SETTINGS TAB ===== -->
                     <div id="tab-settings" class="hidden animate-in">
-                        <!-- Profile Card -->
-                        <div class="card profile-card">
-                            <div class="profile-avatar-large" id="profile-avatar">?</div>
+                        <div class="card-elevated profile-hero-card">
+                            <div class="profile-avatar-xl" id="profile-avatar">?</div>
                             <h2 id="profile-name">Loading...</h2>
-                            <p class="meta">Grade <span id="profile-grade">--</span></p>
-                            <p class="email" id="profile-email">loading@hernandoschools.org</p>
-                            <span class="status-chip on" id="settings-status-chip">
+                            <p style="color:var(--text-secondary); margin-bottom:4px;">Grade <span id="profile-grade">--</span></p>
+                            <p style="color:var(--text-muted); font-size:13px; margin-bottom:18px;" id="profile-email">...</p>
+                            <span class="status-pill active-pill" id="settings-chip">
                                 <i class="fa-solid fa-check-circle"></i> Discoverable
                             </span>
                         </div>
 
-                        <!-- Discovery Settings -->
-                        <div class="card">
-                            <h3 style="font-size:16px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
-                                <i class="fa-solid fa-user-group" style="color:var(--emerald-400);"></i>
+                        <div class="card-elevated">
+                            <h3 style="font-size:16px; font-weight:600; margin-bottom:18px;">
+                                <i class="fa-solid fa-user-group" style="color:var(--emerald-400); margin-right:8px;"></i>
                                 Discovery Settings
                             </h3>
-                            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:18px; line-height:1.6;">
-                                Discovery mode lets classmates see your schedule and find you in the directory. 
-                                When turned off, your profile is hidden from everyone.
+                            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:20px; line-height:1.6;">
+                                When discovery is on, your schedule is visible to classmates. Turn it off to become invisible.
                             </p>
-                            <div class="setting-row">
-                                <div class="setting-label">
+                            <div class="setting-row-item">
+                                <div class="setting-label-group">
                                     <h4>Discovery Mode</h4>
-                                    <p id="settings-discovery-desc">Your schedule is visible to classmates</p>
+                                    <p id="settings-desc">Visible to classmates</p>
                                 </div>
-                                <div class="toggle-switch active" id="toggle-discovery" role="switch" aria-checked="true" tabindex="0">
-                                    <div class="toggle-knob"></div>
+                                <div class="toggle-custom active" id="toggle-discovery" role="switch" tabindex="0">
+                                    <div class="toggle-thumb"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sign Out -->
-                        <button class="btn btn-outline" style="color:#f87171; border-color:rgba(239,68,68,0.2); width:100%; margin-top:8px;" id="btn-logout-mob">
+                        <button class="btn btn-outline" style="color:#f87171; border-color:rgba(239,68,68,0.2); width:100%; margin-top:12px;" id="btn-logout-mob">
                             <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Bottom Navigation -->
-        <nav class="bottom-nav-bar">
-            <button class="bottom-nav-item active" data-tab="schedule">
-                <i class="fa-solid fa-calendar-days"></i>
-                <span>Schedule</span>
+        <nav class="bottom-nav-ios">
+            <button class="bottom-nav-btn active" data-tab="schedule">
+                <i class="fa-solid fa-calendar-days"></i> Schedule
             </button>
-            <button class="bottom-nav-item" data-tab="classmates">
-                <i class="fa-solid fa-users"></i>
-                <span>Directory</span>
+            <button class="bottom-nav-btn" data-tab="classmates">
+                <i class="fa-solid fa-users"></i> Directory
             </button>
-            <button class="bottom-nav-item" data-tab="settings">
-                <i class="fa-solid fa-gear"></i>
-                <span>Profile</span>
+            <button class="bottom-nav-btn" data-tab="settings">
+                <i class="fa-solid fa-gear"></i> Profile
             </button>
         </nav>
     </div>
 
-    <!-- ==================== APPLICATION LOGIC ==================== -->
     <script type="module">
-        // ========== FIREBASE IMPORTS ==========
+        // ==================== FIREBASE IMPORTS ====================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            collection, 
-            query, 
-            where, 
-            onSnapshot, 
-            updateDoc 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ========== FIREBASE CONFIG ==========
+        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyDhbKywSRayDsHPpfBVSojVm5ESMQly6do",
             authDomain: "wwhs-schedule.firebaseapp.com",
@@ -1746,822 +1902,425 @@
             appId: "1:281839558316:web:f5cc21aad4383ba8458909"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
-        // ========== CONSTANTS ==========
         const SCHOOL_DOMAIN = 'hernandoschools.org';
-        
-        // ========== GLOBAL STATE ==========
+
+        // ==================== GLOBAL STATE ====================
         let currentUserData = null;
-        let isEditMode = false;
-        let classmatesUnsubscribe = null;
-        let allClassmatesData = [];
+        let editModeActive = false;
+        let classmatesListener = null;
+        let allClassmatesCache = [];
 
-        // ========== DOM REFERENCES ==========
-        const splashScreen = document.getElementById('splash-screen');
-        const authView = document.getElementById('auth-view');
-        const mainApp = document.getElementById('main-app');
-        const connectionBar = document.getElementById('connection-bar');
-        const connectionText = document.getElementById('connection-text');
-        const confirmModal = document.getElementById('confirm-modal');
-        const toastContainer = document.getElementById('toast-container');
-
-        // ========== TOAST SYSTEM ==========
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const icons = {
-                success: 'fa-circle-check',
-                error: 'fa-circle-xmark',
-                warning: 'fa-triangle-exclamation'
-            };
-            toast.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}"></i> <span>${message}</span>`;
-            toastContainer.appendChild(toast);
-            
-            // Auto dismiss
-            setTimeout(() => {
-                toast.classList.add('fade-out');
-                setTimeout(() => {
-                    if (toast.parentNode) toast.remove();
-                }, 350);
-            }, 3800);
-            
-            // Tap to dismiss
-            toast.addEventListener('click', () => {
-                toast.classList.add('fade-out');
-                setTimeout(() => {
-                    if (toast.parentNode) toast.remove();
-                }, 350);
-            });
-        }
-
-        // ========== CONNECTION STATUS ==========
-        function updateConnectionStatus(online) {
-            connectionBar.className = `connection-status ${online ? 'online' : 'offline'} show`;
-            connectionText.textContent = online ? 'Back Online' : 'No Internet Connection';
-            if (online) {
-                setTimeout(() => connectionBar.classList.remove('show'), 3000);
+        // ==================== BACKGROUND PARTICLES ====================
+        function createParticles() {
+            const container = document.getElementById('bg-particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                const size = Math.random() * 3 + 1;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(particle);
             }
         }
-        window.addEventListener('online', () => updateConnectionStatus(true));
-        window.addEventListener('offline', () => updateConnectionStatus(false));
-        updateConnectionStatus(navigator.onLine);
+        createParticles();
 
-        // ========== SPLASH SCREEN ==========
+        // ==================== TOAST SYSTEM ====================
+        function showToast(message, type = 'success') {
+            const portal = document.getElementById('toast-portal');
+            const toast = document.createElement('div');
+            toast.className = `toast-item ${type}`;
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', warning: 'fa-triangle-exclamation' };
+            toast.innerHTML = `
+                <i class="fa-solid ${icons[type]} toast-icon"></i>
+                <span>${message}</span>
+            `;
+            portal.appendChild(toast);
+            
+            const dismiss = () => {
+                toast.classList.add('exit');
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 350);
+            };
+            
+            setTimeout(dismiss, 4000);
+            toast.addEventListener('click', dismiss);
+        }
+
+        // ==================== CONNECTION STATUS ====================
+        function updateConnection(online) {
+            const bar = document.getElementById('connection-bar');
+            const text = document.getElementById('connection-text');
+            bar.className = `connection-bar ${online ? 'online' : 'offline'} show`;
+            text.textContent = online ? 'Back Online' : 'No Internet Connection';
+            if (online) setTimeout(() => bar.classList.remove('show'), 3000);
+        }
+        window.addEventListener('online', () => updateConnection(true));
+        window.addEventListener('offline', () => updateConnection(false));
+        updateConnection(navigator.onLine);
+
+        // ==================== SPLASH ====================
         setTimeout(() => {
-            splashScreen.style.opacity = '0';
-            setTimeout(() => splashScreen.classList.add('hidden'), 600);
-        }, 2500);
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash-screen').classList.add('hidden'), 700);
+        }, 2700);
 
-        // ========== SCREEN MANAGEMENT ==========
-        function showScreen(screenName) {
+        // ==================== SCREEN MANAGEMENT ====================
+        function showScreen(name) {
+            const authView = document.getElementById('auth-view');
+            const mainApp = document.getElementById('main-app');
             const loginCard = document.getElementById('login-card');
             const signupCard = document.getElementById('signup-card');
             
-            if (screenName === 'login') {
+            if (name === 'login') {
                 authView.classList.remove('hidden');
                 loginCard.classList.remove('hidden');
                 signupCard.classList.add('hidden');
                 mainApp.classList.remove('visible');
-                setTimeout(() => mainApp.classList.add('hidden'), 400);
-            } else if (screenName === 'signup') {
+                setTimeout(() => mainApp.classList.add('hidden'), 500);
+            } else if (name === 'signup') {
                 authView.classList.remove('hidden');
                 signupCard.classList.remove('hidden');
                 loginCard.classList.add('hidden');
                 mainApp.classList.remove('visible');
-                setTimeout(() => mainApp.classList.add('hidden'), 400);
-                setStep(1);
-            } else if (screenName === 'app') {
+                setTimeout(() => mainApp.classList.add('hidden'), 500);
+                setStepUI(1);
+            } else {
                 authView.classList.add('hidden');
                 mainApp.classList.remove('hidden');
                 requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        mainApp.classList.add('visible');
-                    });
+                    requestAnimationFrame(() => mainApp.classList.add('visible'));
                 });
-                loadCurrentUserData();
+                loadUserProfile();
             }
         }
 
-        // ========== EMAIL VALIDATION ==========
-        function isValidSchoolEmail(email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!regex.test(email)) return false;
-            const domain = email.split('@')[1].toLowerCase();
-            return domain === SCHOOL_DOMAIN;
+        // ==================== EMAIL VALIDATION ====================
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.split('@')[1].toLowerCase() === SCHOOL_DOMAIN;
         }
 
-        // ========== NAVIGATION ==========
+        // ==================== NAVIGATION ====================
         document.getElementById('link-to-signup').addEventListener('click', () => showScreen('signup'));
         document.getElementById('link-to-login').addEventListener('click', () => showScreen('login'));
         document.getElementById('mobile-avatar-btn').addEventListener('click', () => switchTab('settings'));
 
-        // ========== STEPPER LOGIC ==========
-        function setStep(stepNum) {
-            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.step-dot').forEach(el => el.classList.remove('active', 'done'));
-            
-            const stepEl = document.getElementById('step-' + stepNum);
-            if (stepEl) stepEl.classList.add('active');
-            
+        // ==================== STEPPER ====================
+        function setStepUI(n) {
+            document.querySelectorAll('.step-slide').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.step-pip').forEach(el => el.classList.remove('active', 'done'));
+            document.getElementById('step-' + n)?.classList.add('active');
             for (let i = 1; i <= 3; i++) {
-                const dot = document.getElementById('dot-' + i);
-                if (dot) {
-                    if (i < stepNum) dot.classList.add('done');
-                    if (i === stepNum) dot.classList.add('active');
+                const pip = document.getElementById('pip-' + i);
+                if (pip) {
+                    if (i < n) pip.classList.add('done');
+                    if (i === n) pip.classList.add('active');
                 }
             }
         }
 
         document.getElementById('btn-next-1').addEventListener('click', () => {
             const email = document.getElementById('signup-email').value.trim();
-            const password = document.getElementById('signup-password').value;
-            
-            if (!isValidSchoolEmail(email)) {
-                return showToast(`Please use a valid @${SCHOOL_DOMAIN} email address`, 'error');
-            }
-            if (password.length < 6) {
-                return showToast('Password must be at least 6 characters', 'error');
-            }
-            setStep(2);
+            if (!isValidEmail(email)) return showToast(`Use @${SCHOOL_DOMAIN} email`, 'error');
+            if (document.getElementById('signup-password').value.length < 6) return showToast('Password too short', 'error');
+            setStepUI(2);
         });
-
         document.getElementById('btn-next-2').addEventListener('click', () => {
-            const name = document.getElementById('signup-name').value.trim();
-            const grade = document.getElementById('signup-grade').value;
-            
-            if (!name) return showToast('Please enter your full name', 'error');
-            if (!grade) return showToast('Please select your grade level', 'error');
-            setStep(3);
+            if (!document.getElementById('signup-name').value.trim()) return showToast('Enter your name', 'error');
+            if (!document.getElementById('signup-grade').value) return showToast('Select grade', 'error');
+            setStepUI(3);
+        });
+        document.querySelectorAll('.btn-prev').forEach(b => {
+            b.addEventListener('click', e => setStepUI(parseInt(e.currentTarget.dataset.target)));
         });
 
-        document.querySelectorAll('.btn-prev').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const target = parseInt(e.currentTarget.getAttribute('data-target'));
-                setStep(target);
-            });
-        });
-
-        // ========== AUTHENTICATION ==========
-        function setButtonLoading(btnId, isLoading) {
-            const btn = document.getElementById(btnId);
+        // ==================== AUTH ====================
+        function btnLoading(id, loading) {
+            const btn = document.getElementById(id);
             if (!btn) return;
-            if (isLoading) {
-                btn.setAttribute('data-original-html', btn.innerHTML);
+            if (loading) {
+                btn.dataset.orig = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Please wait...';
             } else {
                 btn.disabled = false;
-                const original = btn.getAttribute('data-original-html');
-                if (original) btn.innerHTML = original;
+                if (btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
             }
         }
 
-        // Sign Up
         document.getElementById('btn-finish').addEventListener('click', async () => {
-            setButtonLoading('btn-finish', true);
+            btnLoading('btn-finish', true);
             try {
                 const schedule = {};
-                for (let i = 1; i <= 7; i++) {
-                    const val = document.getElementById('p' + i).value.trim();
-                    schedule[i] = val || 'Free Period';
-                }
-                
+                for (let i = 1; i <= 7; i++) schedule[i] = document.getElementById('p' + i).value.trim() || 'Free Period';
                 const email = document.getElementById('signup-email').value.trim();
-                const password = document.getElementById('signup-password').value;
-                const name = document.getElementById('signup-name').value.trim();
-                const grade = document.getElementById('signup-grade').value;
-
-                if (!isValidSchoolEmail(email)) {
-                    setButtonLoading('btn-finish', false);
-                    return showToast(`Only @${SCHOOL_DOMAIN} emails allowed`, 'error');
-                }
-
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                if (!isValidEmail(email)) { btnLoading('btn-finish', false); return showToast('Invalid email', 'error'); }
                 
-                await setDoc(doc(db, "students", userCredential.user.uid), {
-                    name,
-                    grade,
-                    email,
-                    shared: true,
-                    schedule,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
+                const uc = await createUserWithEmailAndPassword(auth, email, document.getElementById('signup-password').value);
+                await setDoc(doc(db, "students", uc.user.uid), {
+                    name: document.getElementById('signup-name').value.trim(),
+                    grade: document.getElementById('signup-grade').value,
+                    email, shared: true, schedule,
+                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
                 });
-
-                showToast('Account created successfully! Welcome! 🎉');
-            } catch (error) {
-                console.error('Signup error:', error);
-                let message = 'An error occurred during signup';
-                if (error.code === 'auth/email-already-in-use') message = 'This email is already registered';
-                else if (error.code === 'auth/weak-password') message = 'Password is too weak';
-                else if (error.code === 'auth/invalid-email') message = 'Invalid email address';
-                showToast(message, 'error');
-                setButtonLoading('btn-finish', false);
+                showToast('Account created! Welcome! 🎉');
+            } catch (e) {
+                showToast(e.message || 'Signup failed', 'error');
+                btnLoading('btn-finish', false);
             }
         });
 
-        // Sign In
         document.getElementById('btn-login').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) return showToast('Please fill in all fields', 'error');
-            if (!isValidSchoolEmail(email)) {
-                return showToast(`Please use your @${SCHOOL_DOMAIN} email`, 'warning');
-            }
-            
-            setButtonLoading('btn-login', true);
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                showToast('Welcome back! 👋');
-            } catch (error) {
-                console.error('Login error:', error);
-                let message = 'Invalid email or password';
-                if (error.code === 'auth/too-many-requests') message = 'Too many attempts. Try again later';
-                else if (error.code === 'auth/user-not-found') message = 'No account found with this email';
-                showToast(message, 'error');
-                setButtonLoading('btn-login', false);
-            }
+            const pass = document.getElementById('login-password').value;
+            if (!email || !pass) return showToast('Fill all fields', 'error');
+            if (!isValidEmail(email)) return showToast(`@${SCHOOL_DOMAIN} required`, 'warning');
+            btnLoading('btn-login', true);
+            try { await signInWithEmailAndPassword(auth, email, pass); showToast('Welcome! 👋'); }
+            catch { showToast('Invalid credentials', 'error'); btnLoading('btn-login', false); }
         });
 
-        // Sign Out
-        async function performSignOut() {
-            try {
-                if (classmatesUnsubscribe) {
-                    classmatesUnsubscribe();
-                    classmatesUnsubscribe = null;
-                }
-                localStorage.removeItem('wwhs_user_cache');
-                await signOut(auth);
-                showToast('Signed out successfully');
-            } catch (error) {
-                console.error('Logout error:', error);
-                showToast('Error signing out', 'error');
-            }
+        async function doLogout() {
+            if (classmatesListener) { classmatesListener(); classmatesListener = null; }
+            localStorage.removeItem('wwhs_cache');
+            await signOut(auth);
         }
-        document.getElementById('btn-logout-desk').addEventListener('click', performSignOut);
-        document.getElementById('btn-logout-mob').addEventListener('click', performSignOut);
+        document.getElementById('btn-logout-desk').addEventListener('click', doLogout);
+        document.getElementById('btn-logout-mob').addEventListener('click', doLogout);
 
-        // Auth State Listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const loginBtn = document.getElementById('btn-login');
-                if (loginBtn) {
-                    loginBtn.disabled = false;
-                    const original = loginBtn.getAttribute('data-original-html');
-                    if (original) loginBtn.innerHTML = original;
-                }
-                showScreen('app');
-            } else {
-                if (classmatesUnsubscribe) {
-                    classmatesUnsubscribe();
-                    classmatesUnsubscribe = null;
-                }
-                showScreen('login');
-            }
+        onAuthStateChanged(auth, u => {
+            if (u) { showScreen('app'); }
+            else { if (classmatesListener) { classmatesListener(); classmatesListener = null; } showScreen('login'); }
         });
 
-        // ========== TAB SWITCHING ==========
-        function switchTab(tabId) {
-            // Update desktop sidebar
-            document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-                item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
+        // ==================== TAB SWITCHING ====================
+        function switchTab(id) {
+            document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === id);
             });
-            
-            // Update mobile bottom nav
-            document.querySelectorAll('.bottom-nav-item').forEach(item => {
-                item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
-            });
-            
-            // Show/hide tab content
-            ['schedule', 'classmates', 'settings'].forEach(id => {
-                const tabEl = document.getElementById('tab-' + id);
-                if (tabEl) {
-                    if (id === tabId) {
-                        tabEl.classList.remove('hidden');
-                        // Trigger animation
-                        tabEl.classList.remove('animate-in');
-                        void tabEl.offsetWidth; // Force reflow
-                        tabEl.classList.add('animate-in');
-                    } else {
-                        tabEl.classList.add('hidden');
-                    }
+            ['schedule','classmates','settings'].forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                if (el) {
+                    if (t === id) { el.classList.remove('hidden'); el.classList.add('animate-in'); }
+                    else el.classList.add('hidden');
                 }
             });
-            
-            // Scroll to top
-            const scrollArea = document.getElementById('main-scroll');
-            if (scrollArea) scrollArea.scrollTop = 0;
-            
-            // Load data for specific tabs
-            if (tabId === 'classmates') loadClassmatesDirectory();
-            if (tabId === 'settings') refreshSettingsUI();
+            document.getElementById('main-scroll').scrollTop = 0;
+            if (id === 'classmates') loadClassmates();
+            if (id === 'settings') refreshSettingsDisplay();
         }
-
-        // Attach tab switching to all nav buttons
-        document.querySelectorAll('.sidebar-nav-item, .bottom-nav-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.getAttribute('data-tab');
-                if (tabId) switchTab(tabId);
-            });
+        document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => {
+            b.addEventListener('click', () => b.dataset.tab && switchTab(b.dataset.tab));
         });
 
-        // ========== DISCOVERY MODE MANAGEMENT ==========
-        async function updateDiscoveryMode(shouldShare) {
+        // ==================== DISCOVERY ====================
+        async function setDiscovery(shared) {
             if (!auth.currentUser) return;
-            
             try {
-                await updateDoc(doc(db, "students", auth.currentUser.uid), {
-                    shared: shouldShare,
-                    updatedAt: new Date().toISOString()
-                });
-                
-                if (currentUserData) currentUserData.shared = shouldShare;
-                
-                // Update local cache
-                const cached = localStorage.getItem('wwhs_user_cache');
-                if (cached) {
-                    const data = JSON.parse(cached);
-                    data.shared = shouldShare;
-                    localStorage.setItem('wwhs_user_cache', JSON.stringify(data));
-                }
-                
-                refreshDiscoveryUI(shouldShare);
-                
-                if (shouldShare) {
-                    showToast('Discovery mode activated ✨');
-                } else {
-                    showToast('Discovery mode turned off 🔒');
-                }
-            } catch (error) {
-                console.error('Discovery update error:', error);
-                showToast('Failed to update settings. Check connection.', 'error');
-                // Revert UI
-                refreshDiscoveryUI(!shouldShare);
-            }
+                await updateDoc(doc(db, "students", auth.currentUser.uid), { shared, updatedAt: new Date().toISOString() });
+                if (currentUserData) currentUserData.shared = shared;
+                updateDiscoveryDisplay(shared);
+                showToast(shared ? 'Discovery ON ✨' : 'Discovery OFF 🔒');
+            } catch { showToast('Update failed', 'error'); updateDiscoveryDisplay(!shared); }
         }
 
-        function refreshDiscoveryUI(isShared) {
-            // Schedule tab elements
+        function updateDiscoveryDisplay(shared) {
             const dot = document.getElementById('discovery-dot');
             const title = document.getElementById('discovery-title');
             const desc = document.getElementById('discovery-desc');
             const chip = document.getElementById('discovery-chip');
+            const sChip = document.getElementById('settings-chip');
+            const sDesc = document.getElementById('settings-desc');
+            const toggle = document.getElementById('toggle-discovery');
             
-            // Settings tab elements
-            const settingsChip = document.getElementById('settings-status-chip');
-            const settingsDesc = document.getElementById('settings-discovery-desc');
-            const toggleSwitch = document.getElementById('toggle-discovery');
-            
-            if (isShared) {
-                if (dot) { dot.className = 'indicator-dot on'; }
+            if (shared) {
+                if (dot) { dot.className = 'discovery-dot-live on'; }
                 if (title) title.textContent = 'Discovery Active';
                 if (desc) desc.textContent = 'Classmates can see your schedule and find you in the directory';
-                if (chip) {
-                    chip.className = 'status-chip on';
-                    chip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Visible';
-                }
-                if (settingsChip) {
-                    settingsChip.className = 'status-chip on';
-                    settingsChip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Discoverable';
-                }
-                if (settingsDesc) settingsDesc.textContent = 'Your schedule is visible to classmates';
-                if (toggleSwitch) toggleSwitch.classList.add('active');
+                if (chip) { chip.className = 'status-pill active-pill'; chip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Visible'; }
+                if (sChip) { sChip.className = 'status-pill active-pill'; sChip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Discoverable'; }
+                if (sDesc) sDesc.textContent = 'Visible to classmates';
+                if (toggle) toggle.classList.add('active');
             } else {
-                if (dot) { dot.className = 'indicator-dot off'; }
+                if (dot) { dot.className = 'discovery-dot-live off'; }
                 if (title) title.textContent = 'Discovery Off';
                 if (desc) desc.textContent = 'Your schedule is hidden. Classmates cannot find you.';
-                if (chip) {
-                    chip.className = 'status-chip off';
-                    chip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden';
-                }
-                if (settingsChip) {
-                    settingsChip.className = 'status-chip off';
-                    settingsChip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden';
-                }
-                if (settingsDesc) settingsDesc.textContent = 'Your schedule is hidden from classmates';
-                if (toggleSwitch) toggleSwitch.classList.remove('active');
+                if (chip) { chip.className = 'status-pill inactive-pill'; chip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
+                if (sChip) { sChip.className = 'status-pill inactive-pill'; sChip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
+                if (sDesc) sDesc.textContent = 'Hidden from classmates';
+                if (toggle) toggle.classList.remove('active');
             }
         }
 
-        // Toggle Discovery from Settings
         document.getElementById('toggle-discovery').addEventListener('click', function() {
-            const isCurrentlyActive = this.classList.contains('active');
-            
-            if (isCurrentlyActive) {
-                // Show confirmation modal before turning off
-                confirmModal.classList.remove('hidden');
+            if (this.classList.contains('active')) {
+                document.getElementById('confirm-modal').classList.remove('hidden');
             } else {
-                // Turn on immediately
-                updateDiscoveryMode(true);
+                setDiscovery(true);
             }
         });
-
-        // Modal buttons
-        document.getElementById('btn-cancel-discovery').addEventListener('click', () => {
-            confirmModal.classList.add('hidden');
-        });
-
+        document.getElementById('btn-cancel-discovery').addEventListener('click', () => document.getElementById('confirm-modal').classList.add('hidden'));
         document.getElementById('btn-confirm-discovery').addEventListener('click', async () => {
-            confirmModal.classList.add('hidden');
-            await updateDiscoveryMode(false);
+            document.getElementById('confirm-modal').classList.add('hidden');
+            await setDiscovery(false);
+        });
+        document.getElementById('confirm-modal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.add('hidden');
         });
 
-        // Close modal on overlay click
-        confirmModal.addEventListener('click', function(e) {
-            if (e.target === confirmModal) {
-                confirmModal.classList.add('hidden');
-            }
-        });
-
-        // ========== LOAD USER DATA ==========
-        async function loadCurrentUserData() {
+        // ==================== LOAD USER ====================
+        async function loadUserProfile() {
             if (!auth.currentUser) return;
-            
             try {
-                const docSnap = await getDoc(doc(db, "students", auth.currentUser.uid));
-                
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Ensure shared field exists
-                    if (data.shared === undefined) {
-                        data.shared = true;
-                        await updateDoc(doc(db, "students", auth.currentUser.uid), { shared: true });
-                    }
-                    
-                    currentUserData = data;
-                    renderUserInterface(data);
-                    
-                    // Cache for offline
-                    localStorage.setItem('wwhs_user_cache', JSON.stringify(data));
+                const snap = await getDoc(doc(db, "students", auth.currentUser.uid));
+                if (snap.exists()) {
+                    const d = snap.data();
+                    if (d.shared === undefined) { d.shared = true; await updateDoc(doc(db, "students", auth.currentUser.uid), { shared: true }); }
+                    currentUserData = d;
+                    renderProfileUI(d);
+                    localStorage.setItem('wwhs_cache', JSON.stringify(d));
                 } else {
-                    // Try cache
-                    const cached = localStorage.getItem('wwhs_user_cache');
-                    if (cached) {
-                        currentUserData = JSON.parse(cached);
-                        if (currentUserData.shared === undefined) currentUserData.shared = true;
-                        renderUserInterface(currentUserData);
-                        showToast('Using cached data. Some features limited.', 'warning');
-                    } else {
-                        showToast('Profile not found. Please re-register.', 'error');
-                    }
+                    const cached = localStorage.getItem('wwhs_cache');
+                    if (cached) { currentUserData = JSON.parse(cached); renderProfileUI(currentUserData); showToast('Offline mode', 'warning'); }
+                    else showToast('Profile not found', 'error');
                 }
-            } catch (error) {
-                console.error('Load user error:', error);
-                
-                // Fallback to cache
-                const cached = localStorage.getItem('wwhs_user_cache');
-                if (cached) {
-                    currentUserData = JSON.parse(cached);
-                    renderUserInterface(currentUserData);
-                    showToast('Offline mode - using cached data', 'warning');
-                } else {
-                    showToast('Unable to load profile. Check connection.', 'error');
-                }
+            } catch {
+                const cached = localStorage.getItem('wwhs_cache');
+                if (cached) { currentUserData = JSON.parse(cached); renderProfileUI(currentUserData); showToast('Offline', 'warning'); }
             }
         }
 
-        function renderUserInterface(data) {
-            if (!data) return;
-            
-            const initial = (data.name || '?').charAt(0).toUpperCase();
-            
-            // Profile info
-            document.getElementById('profile-name').textContent = data.name || 'Student';
-            document.getElementById('profile-email').textContent = data.email || '';
-            document.getElementById('profile-grade').textContent = data.grade || '--';
-            document.getElementById('profile-avatar').textContent = initial;
-            document.getElementById('mobile-avatar-btn').textContent = initial;
-            
-            // Discovery UI
-            refreshDiscoveryUI(!!data.shared);
-            
-            // Render schedule
-            renderScheduleList(data.schedule, false);
+        function renderProfileUI(d) {
+            const init = (d.name || '?')[0].toUpperCase();
+            document.getElementById('profile-name').textContent = d.name || 'Student';
+            document.getElementById('profile-email').textContent = d.email || '';
+            document.getElementById('profile-grade').textContent = d.grade || '--';
+            document.getElementById('profile-avatar').textContent = init;
+            document.getElementById('mobile-avatar-btn').textContent = init;
+            updateDiscoveryDisplay(!!d.shared);
+            renderSchedule(d.schedule, false);
         }
 
-        function renderScheduleList(scheduleData, editMode = false) {
-            const container = document.getElementById('schedule-container');
-            if (!container) return;
-            
-            let html = '';
+        function renderSchedule(sched, edit = false) {
+            const c = document.getElementById('schedule-container');
+            let h = '';
             for (let i = 1; i <= 7; i++) {
-                const className = (scheduleData && scheduleData[i]) ? scheduleData[i] : 'Free Period';
-                
-                html += `
-                    <div class="schedule-row">
-                        <div class="period-badge">P${i}</div>
-                        <div class="period-details">
-                            ${editMode 
-                                ? `<input type="text" id="edit-p${i}" class="editable" value="${className}" placeholder="Period ${i} class">`
-                                : `<div class="class-name">${className}</div>`
-                            }
-                            ${!editMode ? '<div class="class-meta">Period ' + i + '</div>' : ''}
-                        </div>
+                const name = sched?.[i] || 'Free Period';
+                h += `<div class="schedule-row-item">
+                    <div class="period-badge-num">P${i}</div>
+                    <div class="class-detail">
+                        ${edit ? `<input type="text" id="edit-p${i}" class="edit-field" value="${name}">` : `<div class="class-name-text">${name}</div><div class="class-sub-text">Period ${i}</div>`}
                     </div>
-                `;
+                </div>`;
             }
-            container.innerHTML = html;
-            
-            // Show/hide save button
-            const saveBar = document.getElementById('save-bar');
-            if (saveBar) {
-                if (editMode) {
-                    saveBar.classList.add('show');
-                } else {
-                    saveBar.classList.remove('show');
-                }
-            }
+            c.innerHTML = h;
+            document.getElementById('save-bar').classList.toggle('visible', edit);
         }
 
-        // ========== EDIT SCHEDULE ==========
+        // ==================== EDIT SCHEDULE ====================
         document.getElementById('btn-edit-schedule').addEventListener('click', function() {
-            isEditMode = !isEditMode;
-            
-            if (isEditMode) {
-                this.innerHTML = '<i class="fa-solid fa-xmark"></i> Cancel Editing';
-                this.classList.remove('accent');
-                renderScheduleList(currentUserData?.schedule, true);
-            } else {
-                this.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
-                this.classList.add('accent');
-                renderScheduleList(currentUserData?.schedule, false);
-            }
+            editModeActive = !editModeActive;
+            this.innerHTML = editModeActive ? '<i class="fa-solid fa-xmark"></i> Cancel' : '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
+            renderSchedule(currentUserData?.schedule, editModeActive);
         });
 
         document.getElementById('btn-save-schedule').addEventListener('click', async () => {
-            if (!auth.currentUser || !isEditMode) return;
-            
-            const updatedSchedule = {};
-            let hasChanged = false;
-            
+            if (!auth.currentUser || !editModeActive) return;
+            const updated = {};
             for (let i = 1; i <= 7; i++) {
-                const input = document.getElementById('edit-p' + i);
-                const newValue = input ? (input.value.trim() || 'Free Period') : 'Free Period';
-                updatedSchedule[i] = newValue;
-                
-                const oldValue = currentUserData?.schedule?.[i] || 'Free Period';
-                if (newValue !== oldValue) hasChanged = true;
+                updated[i] = document.getElementById('edit-p' + i)?.value.trim() || 'Free Period';
             }
-            
-            if (!hasChanged) {
-                showToast('No changes detected', 'warning');
-                return;
-            }
-            
             try {
-                setButtonLoading('btn-save-schedule', true);
-                
-                await updateDoc(doc(db, "students", auth.currentUser.uid), {
-                    schedule: updatedSchedule,
-                    updatedAt: new Date().toISOString()
-                });
-                
-                currentUserData.schedule = updatedSchedule;
-                
-                // Update cache
-                const cached = localStorage.getItem('wwhs_user_cache');
-                if (cached) {
-                    const data = JSON.parse(cached);
-                    data.schedule = updatedSchedule;
-                    localStorage.setItem('wwhs_user_cache', JSON.stringify(data));
-                }
-                
-                // Exit edit mode
-                isEditMode = false;
-                const editBtn = document.getElementById('btn-edit-schedule');
-                editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
-                editBtn.classList.add('accent');
-                
-                renderScheduleList(updatedSchedule, false);
-                showToast('Schedule updated! ✅');
-            } catch (error) {
-                console.error('Save schedule error:', error);
-                showToast('Failed to save. Check connection.', 'error');
-            } finally {
-                setButtonLoading('btn-save-schedule', false);
-            }
+                await updateDoc(doc(db, "students", auth.currentUser.uid), { schedule: updated, updatedAt: new Date().toISOString() });
+                currentUserData.schedule = updated;
+                editModeActive = false;
+                document.getElementById('btn-edit-schedule').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
+                renderSchedule(updated, false);
+                showToast('Schedule saved! ✅');
+            } catch { showToast('Save failed', 'error'); }
         });
 
-        // ========== COPY SCHEDULE ==========
+        // ==================== COPY ====================
         document.getElementById('btn-copy-schedule').addEventListener('click', () => {
-            if (!currentUserData?.schedule) {
-                return showToast('No schedule to copy', 'error');
-            }
-            
-            let text = `📚 ${currentUserData.name}'s Schedule\n`;
-            text += `Grade: ${currentUserData.grade}\n`;
-            text += `Email: ${currentUserData.email}\n`;
-            text += '─'.repeat(30) + '\n';
-            
-            for (let i = 1; i <= 7; i++) {
-                text += `Period ${i}: ${currentUserData.schedule[i] || 'Free Period'}\n`;
-            }
-            
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('Schedule copied to clipboard! 📋');
-            }).catch(() => {
-                showToast('Failed to copy', 'error');
-            });
+            if (!currentUserData?.schedule) return showToast('Nothing to copy', 'error');
+            let t = `📚 ${currentUserData.name}'s Schedule\nGrade: ${currentUserData.grade}\n\n`;
+            for (let i = 1; i <= 7; i++) t += `P${i}: ${currentUserData.schedule[i] || 'Free'}\n`;
+            navigator.clipboard.writeText(t).then(() => showToast('Copied! 📋'));
         });
 
-        // ========== CLASSMATES DIRECTORY ==========
-        function generateSkeletonHTML() {
-            let html = '';
-            for (let i = 0; i < 6; i++) {
-                html += `
-                    <div class="classmate-card" style="pointer-events:none;">
-                        <div class="classmate-header">
-                            <div class="skeleton-pulse" style="width:48px;height:48px;border-radius:16px;"></div>
-                            <div style="flex:1;">
-                                <div class="skeleton-pulse" style="width:60%;height:18px;margin-bottom:8px;"></div>
-                                <div class="skeleton-pulse" style="width:40%;height:14px;"></div>
-                            </div>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                            ${Array(4).fill('<div class="skeleton-pulse" style="height:38px;border-radius:12px;"></div>').join('')}
-                        </div>
-                    </div>
-                `;
-            }
-            return html;
-        }
+        // ==================== CLASSMATES ====================
+        document.getElementById('btn-refresh-dir').addEventListener('click', () => loadClassmates(true));
 
-        document.getElementById('btn-refresh-dir').addEventListener('click', () => {
-            loadClassmatesDirectory(true);
-        });
-
-        function loadClassmatesDirectory(forceRefresh = false) {
-            const container = document.getElementById('classmates-container');
-            if (!container) return;
-            
-            // Show skeletons
-            if (forceRefresh || allClassmatesData.length === 0) {
-                container.innerHTML = generateSkeletonHTML();
+        function loadClassmates(force = false) {
+            const c = document.getElementById('classmates-container');
+            if (force || !allClassmatesCache.length) {
+                c.innerHTML = Array(4).fill('<div class="classmate-panel"><div class="skeleton-block" style="height:180px;border-radius:18px;"></div></div>').join('');
             }
-            
-            // Check if user has discovery off
             if (currentUserData && !currentUserData.shared) {
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;">
-                        <span class="empty-icon">🔒</span>
-                        <h3>Discovery Mode is Off</h3>
-                        <p>Enable discovery mode in Settings to see your classmates.</p>
-                    </div>
-                `;
+                c.innerHTML = '<div class="empty-panel"><span class="empty-icon-large">🔒</span><h3>Discovery Off</h3><p>Enable discovery in Settings.</p></div>';
                 return;
             }
-            
-            // Unsubscribe from previous listener
-            if (classmatesUnsubscribe) {
-                classmatesUnsubscribe();
-                classmatesUnsubscribe = null;
-            }
-            
-            try {
-                const q = query(
-                    collection(db, "students"),
-                    where("shared", "==", true)
-                );
-                
-                classmatesUnsubscribe = onSnapshot(q, (snapshot) => {
-                    allClassmatesData = [];
-                    
-                    snapshot.forEach((docSnap) => {
-                        // Skip current user
-                        if (auth.currentUser && docSnap.id === auth.currentUser.uid) return;
-                        
-                        allClassmatesData.push({
-                            id: docSnap.id,
-                            ...docSnap.data()
-                        });
-                    });
-                    
-                    renderClassmatesList(allClassmatesData);
-                    
-                }, (error) => {
-                    console.error('Classmates listener error:', error);
-                    container.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;">
-                            <span class="empty-icon">📡</span>
-                            <h3>Connection Error</h3>
-                            <p>Unable to load directory. Check your internet connection.</p>
-                            <button class="action-chip" style="margin-top:16px;" onclick="document.getElementById('btn-refresh-dir').click()">
-                                <i class="fa-solid fa-arrows-rotate"></i> Retry
-                            </button>
-                        </div>
-                    `;
-                });
-                
-            } catch (error) {
-                console.error('Directory setup error:', error);
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;">
-                        <span class="empty-icon">⚠️</span>
-                        <h3>Something Went Wrong</h3>
-                        <p>Please try again later.</p>
-                    </div>
-                `;
-            }
+            if (classmatesListener) classmatesListener();
+            const q = query(collection(db, "students"), where("shared", "==", true));
+            classmatesListener = onSnapshot(q, snap => {
+                allClassmatesCache = [];
+                snap.forEach(d => { if (d.id !== auth.currentUser?.uid) allClassmatesCache.push({ id: d.id, ...d.data() }); });
+                renderClassmates(allClassmatesCache);
+            }, () => {
+                c.innerHTML = '<div class="empty-panel"><span class="empty-icon-large">📡</span><h3>Connection Error</h3></div>';
+            });
         }
 
-        function renderClassmatesList(classmates, searchTerm = '') {
-            const container = document.getElementById('classmates-container');
-            if (!container) return;
-            
-            // Apply search filter
-            let filtered = classmates;
-            if (searchTerm && searchTerm.trim()) {
-                const term = searchTerm.toLowerCase().trim();
-                filtered = classmates.filter(cm => {
-                    if (cm.name?.toLowerCase().includes(term)) return true;
-                    if (cm.grade?.toString().includes(term)) return true;
-                    if (cm.schedule) {
-                        for (let i = 1; i <= 7; i++) {
-                            if (cm.schedule[i]?.toLowerCase().includes(term)) return true;
-                        }
-                    }
+        function renderClassmates(list, search = '') {
+            const c = document.getElementById('classmates-container');
+            let filtered = list;
+            if (search) {
+                const t = search.toLowerCase();
+                filtered = list.filter(cm => {
+                    if (cm.name?.toLowerCase().includes(t)) return true;
+                    if (cm.grade?.toString().includes(t)) return true;
+                    if (cm.schedule) for (let i = 1; i <= 7; i++) if (cm.schedule[i]?.toLowerCase().includes(t)) return true;
                     return false;
                 });
             }
-            
-            // Empty state
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;">
-                        <span class="empty-icon">${searchTerm ? '🔍' : '👥'}</span>
-                        <h3>${searchTerm ? 'No Results Found' : 'No Classmates Yet'}</h3>
-                        <p>${searchTerm ? `No one matches "${searchTerm}". Try a different search.` : 'Be the first to share your schedule! Invite friends to join.'}</p>
-                    </div>
-                `;
+            if (!filtered.length) {
+                c.innerHTML = `<div class="empty-panel"><span class="empty-icon-large">${search ? '🔍' : '👥'}</span><h3>${search ? 'No Results' : 'No Classmates'}</h3><p>${search ? 'Try another search' : 'Invite friends!'}</p></div>`;
                 return;
             }
-            
-            // Render cards
-            container.innerHTML = filtered.map((classmate, index) => {
-                // Calculate shared classes
-                let sharedCount = 0;
-                if (currentUserData?.schedule && classmate.schedule) {
-                    for (let i = 1; i <= 7; i++) {
-                        const myClass = (currentUserData.schedule[i] || '').toLowerCase().trim();
-                        const theirClass = (classmate.schedule[i] || '').toLowerCase().trim();
-                        if (myClass && theirClass && myClass === theirClass) {
-                            sharedCount++;
-                        }
+            c.innerHTML = filtered.map((cm, i) => {
+                let shared = 0;
+                if (currentUserData?.schedule && cm.schedule) {
+                    for (let j = 1; j <= 7; j++) {
+                        if ((currentUserData.schedule[j]||'').toLowerCase() === (cm.schedule[j]||'').toLowerCase() && currentUserData.schedule[j]) shared++;
                     }
                 }
-                
-                // Build schedule pills
-                let scheduleHTML = '';
-                for (let i = 1; i <= 7; i++) {
-                    const className = classmate.schedule?.[i] || 'Free';
-                    const isMatch = searchTerm && className.toLowerCase().includes(searchTerm.toLowerCase());
-                    scheduleHTML += `
-                        <div class="cm-class-pill ${isMatch ? 'highlight' : ''}" title="Period ${i}: ${className}">
-                            <i class="fa-solid fa-circle"></i>
-                            <span>P${i}: ${className}</span>
-                        </div>
-                    `;
+                let pills = '';
+                for (let j = 1; j <= 7; j++) {
+                    const cn = cm.schedule?.[j] || 'Free';
+                    const match = search && cn.toLowerCase().includes(search.toLowerCase());
+                    pills += `<div class="cm-class-bubble ${match ? 'match-highlight' : ''}"><i class="fa-solid fa-circle"></i><span>P${j}: ${cn}</span></div>`;
                 }
-                
-                const initial = (classmate.name || '?').charAt(0).toUpperCase();
-                
-                return `
-                    <div class="classmate-card ${sharedCount > 0 ? 'shared' : ''}" 
-                         style="animation: fadeInScale 0.4s ${index * 0.06}s cubic-bezier(0.22, 1, 0.36, 1) both;">
-                        <div class="classmate-header">
-                            <div class="cm-avatar">${initial}</div>
-                            <div class="cm-info">
-                                <h4>
-                                    ${classmate.name || 'Student'}
-                                    ${sharedCount > 0 ? `<span class="shared-indicator">🔗 ${sharedCount} shared class${sharedCount > 1 ? 'es' : ''}</span>` : ''}
-                                </h4>
-                                <span class="grade-tag">Grade ${classmate.grade || '--'}</span>
-                            </div>
-                        </div>
-                        <div class="cm-schedule-grid">
-                            ${scheduleHTML}
+                return `<div class="classmate-panel ${shared ? 'has-shared' : ''}" style="animation:fadeInScale 0.5s ${i*0.06}s var(--ease-out-expo) both;">
+                    <div class="classmate-top-row">
+                        <div class="cm-avatar-circle">${(cm.name||'?')[0].toUpperCase()}</div>
+                        <div class="cm-meta">
+                            <h4>${cm.name||'Student'} ${shared ? `<span class="cm-shared-badge">🔗 ${shared} shared</span>` : ''}</h4>
+                            <span class="cm-grade-tag">Grade ${cm.grade||'--'}</span>
                         </div>
                     </div>
-                `;
+                    <div class="cm-classes-grid">${pills}</div>
+                </div>`;
             }).join('');
         }
 
-        // Search functionality
-        document.getElementById('class-search').addEventListener('input', (e) => {
-            renderClassmatesList(allClassmatesData, e.target.value);
-        });
+        document.getElementById('class-search').addEventListener('input', e => renderClassmates(allClassmatesCache, e.target.value));
 
-        // ========== SETTINGS UI REFRESH ==========
-        function refreshSettingsUI() {
-            if (currentUserData) {
-                refreshDiscoveryUI(!!currentUserData.shared);
-            }
+        function refreshSettingsDisplay() {
+            if (currentUserData) updateDiscoveryDisplay(!!currentUserData.shared);
         }
 
     </script>
