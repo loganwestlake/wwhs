@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, theme-color=#030f0a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, theme-color=#010805">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="WWHS Schedule">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-    <title>WWHS Schedule Share</title>
+    <title>WWHS Schedule Share Pro</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,1635 +14,908 @@
     
     <style>
         :root {
-            --emerald-50: #ecfdf5;
-            --emerald-100: #d1fae5;
-            --emerald-200: #a7f3d0;
-            --emerald-300: #6ee7b7;
-            --emerald-400: #34d399;
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --emerald-700: #047857;
-            --emerald-800: #065f46;
-            --emerald-900: #064e3b;
-            --emerald-950: #022c22;
-            
-            --bg-deep: #020a07;
-            --bg-primary: #030f0a;
-            --bg-secondary: #041712;
-            --bg-tertiary: #052018;
-            --bg-elevated: rgba(5, 32, 24, 0.55);
-            --bg-elevated-hover: rgba(5, 32, 24, 0.75);
-            --bg-input: rgba(2, 10, 7, 0.7);
-            --bg-input-focus: rgba(2, 10, 7, 0.9);
-            
-            --text-primary: #f0fdf4;
-            --text-secondary: #a7f3d0;
-            --text-tertiary: #6ee7b7;
-            --text-muted: #4ade80;
-            --text-placeholder: rgba(74, 222, 128, 0.4);
-            
-            --border-subtlest: rgba(52, 211, 153, 0.05);
-            --border-subtle: rgba(52, 211, 153, 0.08);
-            --border-medium: rgba(52, 211, 153, 0.15);
-            --border-strong: rgba(52, 211, 153, 0.25);
-            --border-accent: rgba(52, 211, 153, 0.4);
-            --border-glow: rgba(52, 211, 153, 0.6);
-            
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
-            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.7);
-            --shadow-2xl: 0 32px 80px rgba(0, 0, 0, 0.8);
-            --shadow-emerald-sm: 0 0 16px rgba(16, 185, 129, 0.1);
-            --shadow-emerald-md: 0 0 32px rgba(16, 185, 129, 0.15);
-            --shadow-emerald-lg: 0 0 48px rgba(16, 185, 129, 0.2);
-            --shadow-amber-sm: 0 0 16px rgba(245, 158, 11, 0.1);
-            --shadow-amber-md: 0 0 32px rgba(245, 158, 11, 0.15);
-            
-            --radius-xs: 6px;
-            --radius-sm: 10px;
-            --radius-md: 14px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
-            --radius-2xl: 32px;
-            --radius-full: 9999px;
-            
-            --safe-bottom: env(safe-area-inset-bottom, 16px);
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-left: env(safe-area-inset-left, 0px);
-            --safe-right: env(safe-area-inset-right, 0px);
-            
+            --emerald-50: #ecfdf5; --emerald-100: #d1fae5; --emerald-200: #a7f3d0;
+            --emerald-300: #6ee7b7; --emerald-400: #34d399; --emerald-500: #10b981;
+            --emerald-600: #059669; --emerald-700: #047857; --emerald-800: #065f46;
+            --emerald-900: #064e3b; --emerald-950: #022c22;
+            --bg-abyss: #010805; --bg-deep: #020a07; --bg-primary: #030f0a;
+            --bg-glass: rgba(4, 23, 18, 0.5); --bg-glass-hover: rgba(4, 23, 18, 0.7);
+            --bg-input: rgba(2, 10, 7, 0.7); --bg-input-focus: rgba(2, 10, 7, 0.92);
+            --text-primary: #f0fdf4; --text-secondary: #a7f3d0;
+            --text-tertiary: #6ee7b7; --text-muted: #4ade80;
+            --border-subtle: rgba(52, 211, 153, 0.06); --border-medium: rgba(52, 211, 153, 0.12);
+            --border-strong: rgba(52, 211, 153, 0.2); --border-accent: rgba(52, 211, 153, 0.35);
+            --shadow-xs: 0 1px 3px rgba(0,0,0,0.4); --shadow-sm: 0 4px 8px rgba(0,0,0,0.5);
+            --shadow-md: 0 8px 20px rgba(0,0,0,0.6); --shadow-lg: 0 16px 40px rgba(0,0,0,0.7);
+            --shadow-xl: 0 24px 56px rgba(0,0,0,0.8);
+            --shadow-emerald-sm: 0 0 20px rgba(16,185,129,0.1); --shadow-emerald-md: 0 0 35px rgba(16,185,129,0.15);
+            --shadow-emerald-lg: 0 0 50px rgba(16,185,129,0.2);
+            --radius-xs: 6px; --radius-sm: 10px; --radius-md: 14px; --radius-lg: 18px;
+            --radius-xl: 24px; --radius-2xl: 32px; --radius-full: 9999px;
+            --safe-bottom: env(safe-area-inset-bottom, 16px); --safe-top: env(safe-area-inset-top, 0px);
             --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
             --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --ease-out-overshoot: cubic-bezier(0.68, -0.4, 0.32, 1.6);
             --ease-spring: cubic-bezier(0.43, 1.45, 0.69, 1.02);
             --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
-        *::selection {
-            background: rgba(16, 185, 129, 0.3);
-            color: #fff;
-        }
+        *::selection { background: rgba(16, 185, 129, 0.3); color: #fff; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            height: 100dvh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
-            line-height: 1.5;
-            letter-spacing: -0.01em;
+            background: var(--bg-abyss); color: var(--text-primary);
+            height: 100dvh; width: 100vw; overflow: hidden;
+            line-height: 1.5; letter-spacing: -0.01em;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         }
 
-        .hidden {
-            display: none !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
+        .hidden { display: none !important; opacity: 0 !important; pointer-events: none !important; }
 
-        /* ========== ULTRA-PREMIUM BACKGROUND ========== */
-        .bg-master {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
+        /* ==================== BACKGROUND SYSTEM ==================== */
+        .bg-universe {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background: 
-                radial-gradient(ellipse 120% 80% at 50% -30%, rgba(16, 185, 129, 0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 80% 50% at 100% 100%, rgba(5, 150, 105, 0.05) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 0% 50%, rgba(52, 211, 153, 0.04) 0%, transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(6, 78, 59, 0.03) 0%, transparent 100%),
-                linear-gradient(175deg, #020a07 0%, #030f0a 30%, #041712 60%, #020a07 100%);
+                radial-gradient(ellipse 140% 90% at 50% -40%, rgba(16,185,129,0.07) 0%, transparent 65%),
+                radial-gradient(ellipse 90% 60% at 100% 100%, rgba(5,150,105,0.05) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 50% at 0% 60%, rgba(52,211,153,0.04) 0%, transparent 55%),
+                radial-gradient(circle at 50% 50%, rgba(6,78,59,0.03) 0%, transparent 100%),
+                linear-gradient(178deg, #010805 0%, #020a07 25%, #030f0a 50%, #020a07 75%, #010805 100%);
         }
-
         .bg-grid {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.03;
-            background-image: 
-                linear-gradient(rgba(52, 211, 153, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(52, 211, 153, 0.3) 1px, transparent 1px);
+            position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02;
+            background-image: linear-gradient(rgba(52,211,153,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,0.3) 1px, transparent 1px);
             background-size: 60px 60px;
             mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 70%);
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 0%, transparent 70%);
         }
-
         .bg-orb {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-            will-change: transform;
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; will-change: transform;
         }
         .bg-orb-1 {
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
-            top: -200px; right: -150px;
-            animation: orbFloat1 28s ease-in-out infinite;
-            filter: blur(80px);
+            width: 650px; height: 650px;
+            background: radial-gradient(circle at 40% 40%, rgba(16,185,129,0.12) 0%, transparent 70%);
+            top: -250px; right: -180px;
+            animation: orbFloat1 30s ease-in-out infinite; filter: blur(90px);
         }
         .bg-orb-2 {
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
-            bottom: -150px; left: -100px;
-            animation: orbFloat2 32s ease-in-out infinite;
-            filter: blur(70px);
+            width: 520px; height: 520px;
+            background: radial-gradient(circle at 60% 60%, rgba(5,150,105,0.1) 0%, transparent 70%);
+            bottom: -180px; left: -130px;
+            animation: orbFloat2 34s ease-in-out infinite; filter: blur(80px);
         }
         .bg-orb-3 {
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 70%);
-            top: 40%; left: 45%;
-            animation: orbFloat3 22s ease-in-out infinite;
-            filter: blur(60px);
+            width: 380px; height: 380px;
+            background: radial-gradient(circle at 50% 50%, rgba(52,211,153,0.08) 0%, transparent 70%);
+            top: 35%; left: 40%;
+            animation: orbFloat3 24s ease-in-out infinite; filter: blur(65px);
         }
         .bg-orb-4 {
             width: 250px; height: 250px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
-            top: 20%; left: 10%;
-            animation: orbFloat4 24s ease-in-out infinite;
-            filter: blur(50px);
+            background: radial-gradient(circle at 50% 50%, rgba(16,185,129,0.06) 0%, transparent 70%);
+            top: 15%; left: 8%;
+            animation: orbFloat4 26s ease-in-out infinite; filter: blur(55px);
         }
 
         @keyframes orbFloat1 {
-            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            20% { transform: translate(-80px, 60px) scale(1.2) rotate(8deg); }
-            40% { transform: translate(40px, -40px) scale(0.85) rotate(-5deg); }
-            60% { transform: translate(60px, 30px) scale(1.15) rotate(3deg); }
-            80% { transform: translate(-30px, -50px) scale(0.9) rotate(-7deg); }
+            0%,100%{transform:translate(0,0) scale(1) rotate(0deg)}
+            20%{transform:translate(-90px,70px) scale(1.22) rotate(10deg)}
+            40%{transform:translate(50px,-50px) scale(0.84) rotate(-6deg)}
+            60%{transform:translate(70px,40px) scale(1.18) rotate(4deg)}
+            80%{transform:translate(-40px,-60px) scale(0.88) rotate(-8deg)}
         }
         @keyframes orbFloat2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(60px, -50px) scale(1.25); }
-            50% { transform: translate(-40px, 40px) scale(0.8); }
-            75% { transform: translate(20px, 30px) scale(1.1); }
+            0%,100%{transform:translate(0,0) scale(1)}
+            25%{transform:translate(70px,-60px) scale(1.28)}
+            50%{transform:translate(-50px,50px) scale(0.78)}
+            75%{transform:translate(30px,40px) scale(1.12)}
         }
         @keyframes orbFloat3 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-50px, -60px) scale(1.35); }
+            0%,100%{transform:translate(0,0) scale(1)}
+            50%{transform:translate(-60px,-70px) scale(1.38)}
         }
         @keyframes orbFloat4 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(40px, -30px) scale(1.3); }
-            66% { transform: translate(-30px, 40px) scale(0.85); }
+            0%,100%{transform:translate(0,0) scale(1) rotate(0deg)}
+            33%{transform:translate(50px,-40px) scale(1.32) rotate(5deg)}
+            66%{transform:translate(-40px,50px) scale(0.82) rotate(-3deg)}
         }
 
-        .bg-particles {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .bg-particle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--emerald-400);
-            animation: particleFloat linear infinite;
-            opacity: 0;
-        }
-        @keyframes particleFloat {
-            0% { opacity: 0; transform: translateY(100vh) scale(0); }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.3; }
-            100% { opacity: 0; transform: translateY(-100vh) scale(1.5); }
-        }
-
-        /* ========== CONNECTION BAR ========== */
-        .connection-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10001;
-            padding: 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            transform: translateY(-120%);
-            transition: transform 0.5s var(--ease-out-expo);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .connection-bar.show { transform: translateY(0); }
-        .connection-bar.online { 
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-        .connection-bar.offline { 
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-        }
-        .connection-pulse {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            animation: connectionPulse 1.5s ease-in-out infinite;
-        }
-        .online .connection-pulse { background: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.6); }
-        .offline .connection-pulse { background: #fecaca; box-shadow: 0 0 12px rgba(254,202,202,0.6); }
-        @keyframes connectionPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.8); opacity: 0.4; }
-        }
-
-        /* ========== TOAST SYSTEM ========== */
+        /* ==================== TOAST SYSTEM ==================== */
         .toast-portal {
-            position: fixed;
-            top: calc(var(--safe-top) + 16px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-            width: calc(100% - 32px);
-            max-width: 440px;
+            position: fixed; top: calc(var(--safe-top) + 16px); left: 50%; transform: translateX(-50%);
+            z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+            width: calc(100% - 32px); max-width: 440px;
         }
         .toast-item {
-            background: rgba(2, 10, 7, 0.95);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid var(--border-medium);
-            padding: 18px 22px;
-            border-radius: var(--radius-lg);
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: var(--shadow-xl), var(--shadow-emerald-sm);
-            pointer-events: auto;
-            animation: toastEntry 0.6s var(--ease-out-overshoot) forwards;
-            cursor: pointer;
-            transition: all 0.2s var(--ease-smooth);
-            position: relative;
-            overflow: hidden;
+            background: rgba(2,10,7,0.96); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border: 1px solid var(--border-medium); padding: 18px 22px; border-radius: var(--radius-lg);
+            font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 14px;
+            box-shadow: var(--shadow-xl), var(--shadow-emerald-sm); pointer-events: auto;
+            animation: toastSlideIn 0.6s var(--ease-out-back) forwards;
+            cursor: pointer; transition: all 0.2s var(--ease-smooth); position: relative; overflow: hidden;
         }
         .toast-item::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; bottom: 0;
-            width: 3px;
-            border-radius: 3px 0 0 3px;
+            content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px;
         }
         .toast-item.success::before { background: linear-gradient(180deg, var(--emerald-400), var(--emerald-600)); }
         .toast-item.error::before { background: linear-gradient(180deg, #f87171, #ef4444); }
         .toast-item.warning::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
-        .toast-item.exit {
-            animation: toastExit 0.35s ease forwards;
-        }
+        .toast-item.info::before { background: linear-gradient(180deg, #60a5fa, #3b82f6); }
+        .toast-item.exiting { animation: toastSlideOut 0.35s ease forwards; }
         .toast-item:active { transform: scale(0.96); }
-        .toast-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-            animation: toastIconPop 0.6s var(--ease-out-back) 0.1s both;
+        .toast-icon-pop {
+            font-size: 20px; flex-shrink: 0;
+            animation: toastIconBounce 0.65s var(--ease-out-back) 0.1s both;
         }
-        @keyframes toastIconPop {
+        @keyframes toastIconBounce {
             0% { transform: scale(0) rotate(-180deg); }
             100% { transform: scale(1) rotate(0deg); }
         }
-        .toast-item.success .toast-icon { color: var(--emerald-400); }
-        .toast-item.error .toast-icon { color: #f87171; }
-        .toast-item.warning .toast-icon { color: #fbbf24; }
-        @keyframes toastEntry {
+        .toast-item.success .toast-icon-pop { color: var(--emerald-400); }
+        .toast-item.error .toast-icon-pop { color: #f87171; }
+        .toast-item.warning .toast-icon-pop { color: #fbbf24; }
+        .toast-item.info .toast-icon-pop { color: #60a5fa; }
+
+        @keyframes toastSlideIn {
             from { opacity: 0; transform: translateY(-40px) scale(0.85); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes toastExit {
+        @keyframes toastSlideOut {
             from { opacity: 1; transform: translateX(0) scale(1); }
-            to { opacity: 0; transform: translateX(80px) scale(0.8); }
+            to { opacity: 0; transform: translateX(100px) scale(0.8); }
         }
 
-        /* ========== SPLASH SCREEN ========== */
+        /* ==================== SPLASH SCREEN ==================== */
         .splash-master {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-deep);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; background: var(--bg-abyss); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.7s ease, visibility 0.7s;
         }
-        .splash-logo-wrapper {
-            position: relative;
-            animation: splashLogoFloat 3.5s ease-in-out infinite;
+        .splash-logo-wrap { position: relative; animation: splashFloat 3.5s ease-in-out infinite; }
+        @keyframes splashFloat {
+            0%,100%{transform:translateY(0) scale(1)}
+            40%{transform:translateY(-16px) scale(1.04)}
+            60%{transform:translateY(-8px) scale(1.02)}
         }
-        @keyframes splashLogoFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            40% { transform: translateY(-16px) scale(1.04); }
-            60% { transform: translateY(-8px) scale(1.02); }
-        }
-        .splash-logo {
-            width: 110px; height: 110px;
-            background: linear-gradient(145deg, #34d399 0%, #10b981 40%, #059669 80%, #047857 100%);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 46px;
-            font-weight: 900;
-            color: #fff;
-            box-shadow: 
-                0 24px 48px rgba(16, 185, 129, 0.35),
-                0 0 0 1px rgba(255,255,255,0.1) inset,
-                0 1px 0 rgba(255,255,255,0.2) inset;
+        .splash-logo-emblem {
+            width: 115px; height: 115px;
+            background: linear-gradient(150deg, #34d399 0%, #10b981 35%, #059669 65%, #047857 100%);
+            border-radius: 32px; display: flex; align-items: center; justify-content: center;
+            font-size: 48px; font-weight: 900; color: #fff;
+            box-shadow: 0 28px 56px rgba(16,185,129,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
             position: relative;
         }
-        .splash-logo::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 34px;
-            background: linear-gradient(145deg, rgba(52, 211, 153, 0.5), rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.5));
-            z-index: -1;
-            animation: splashGlowRing 3s ease-in-out infinite;
-            filter: blur(8px);
+        .splash-logo-emblem::after {
+            content: ''; position: absolute; inset: -4px; border-radius: 36px;
+            background: linear-gradient(150deg, rgba(52,211,153,0.5), rgba(16,185,129,0.3), rgba(5,150,105,0.5));
+            z-index: -1; animation: splashGlowRing 3s ease-in-out infinite; filter: blur(10px);
         }
         @keyframes splashGlowRing {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.08); }
+            0%,100%{opacity:0.4;transform:scale(1)}
+            50%{opacity:0.8;transform:scale(1.08)}
         }
-        .splash-brand {
-            font-size: 38px;
-            font-weight: 800;
-            margin-top: 28px;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff 0%, #d1fae5 40%, #6ee7b7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: splashTextShine 2.5s ease-in-out infinite;
+        .splash-brand-name {
+            font-size: 40px; font-weight: 800; margin-top: 28px; letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #ffffff 0%, #d1fae5 35%, #6ee7b7 70%, #34d399 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: splashTextShimmer 3s ease-in-out infinite; background-size: 200% 100%;
         }
-        @keyframes splashTextShine {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
+        @keyframes splashTextShimmer {
+            0%,100%{background-position:0% 50%;filter:brightness(1)}
+            50%{background-position:100% 50%;filter:brightness(1.4)}
         }
         .splash-tagline {
-            font-size: 15px;
-            color: var(--text-tertiary);
-            margin-top: 10px;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            opacity: 0.8;
-            animation: splashFadeInUp 0.8s ease 0.3s both;
+            font-size: 15px; color: var(--text-tertiary); margin-top: 10px;
+            font-weight: 500; letter-spacing: 0.04em;
+            opacity: 0; animation: splashFadeIn 0.8s ease 0.35s forwards;
         }
-        @keyframes splashFadeInUp {
+        @keyframes splashFadeIn {
             from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 0.8; transform: translateY(0); }
+            to { opacity: 0.75; transform: translateY(0); }
         }
-        .splash-loader-track {
-            width: 180px; height: 4px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 10px;
-            margin-top: 40px;
-            overflow: hidden;
-            position: relative;
+        .splash-progress-track {
+            width: 180px; height: 4px; background: rgba(255,255,255,0.08);
+            border-radius: 10px; margin-top: 40px; overflow: hidden;
         }
-        .splash-loader-fill {
+        .splash-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--emerald-400), var(--emerald-500), var(--emerald-600));
-            border-radius: 10px;
-            animation: splashLoadProgress 2.8s var(--ease-out-expo) forwards;
-            width: 0%;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            border-radius: 10px; animation: splashLoad 2.8s var(--ease-out-expo) forwards;
+            width: 0%; box-shadow: 0 0 20px rgba(16,185,129,0.5);
         }
-        @keyframes splashLoadProgress {
-            0% { width: 0%; }
-            30% { width: 25%; }
-            60% { width: 65%; }
-            85% { width: 90%; }
-            100% { width: 100%; }
+        @keyframes splashLoad {
+            0%{width:0%} 30%{width:25%} 60%{width:65%} 85%{width:90%} 100%{width:100%}
         }
 
-        /* ========== MODAL SYSTEM ========== */
+        /* ==================== MODAL ==================== */
         .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(12px) saturate(150%);
-            -webkit-backdrop-filter: blur(12px) saturate(150%);
-            z-index: 10002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            animation: modalBackdropIn 0.35s ease;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.78);
+            backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%);
+            z-index: 10002; display: flex; align-items: center; justify-content: center;
+            padding: 24px; animation: modalFadeIn 0.35s ease;
         }
-        @keyframes modalBackdropIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes modalFadeIn { from{opacity:0} to{opacity:1} }
+        .modal-dialog {
+            background: var(--bg-glass); backdrop-filter: blur(55px) saturate(210%);
+            -webkit-backdrop-filter: blur(55px) saturate(210%);
+            border: 1px solid var(--border-strong); border-radius: var(--radius-2xl);
+            padding: 44px 34px; max-width: 430px; width: 100%; text-align: center;
+            box-shadow: var(--shadow-xl), var(--shadow-emerald-md);
+            animation: modalPopIn 0.55s var(--ease-out-back);
         }
-        .modal-panel {
-            background: var(--bg-elevated);
-            backdrop-filter: blur(50px) saturate(200%);
-            -webkit-backdrop-filter: blur(50px) saturate(200%);
-            border: 1px solid var(--border-strong);
-            border-radius: var(--radius-2xl);
-            padding: 40px 32px;
-            max-width: 420px;
-            width: 100%;
-            text-align: center;
-            box-shadow: var(--shadow-2xl), var(--shadow-amber-md);
-            animation: modalPanelPop 0.5s var(--ease-out-back);
-        }
-        @keyframes modalPanelPop {
+        @keyframes modalPopIn {
             from { transform: scale(0.8) translateY(30px); opacity: 0; }
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
-        .modal-icon-wrap {
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            background: rgba(245, 158, 11, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            animation: modalIconBounce 0.7s var(--ease-bounce) 0.15s both;
+        .modal-icon-circle {
+            width: 84px; height: 84px; border-radius: 50%;
+            background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 22px; animation: modalIconBounce 0.7s var(--ease-out-back) 0.15s both;
         }
         @keyframes modalIconBounce {
-            0% { transform: scale(0) rotate(-45deg); }
-            60% { transform: scale(1.2) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
+            0%{transform:scale(0) rotate(-45deg)}
+            60%{transform:scale(1.2) rotate(5deg)}
+            100%{transform:scale(1) rotate(0deg)}
         }
-        .modal-icon-wrap i {
-            font-size: 36px;
-            color: #f59e0b;
+        .modal-icon-circle i { font-size: 38px; color: #f59e0b; }
+        .modal-dialog h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.02em; }
+        .modal-dialog .modal-desc {
+            color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px;
         }
-        .modal-panel h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            letter-spacing: -0.02em;
+        .modal-alert-box {
+            background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);
+            border-radius: var(--radius-md); padding: 16px; margin-bottom: 28px;
+            font-size: 13px; color: #fbbf24; line-height: 1.6;
+            display: flex; align-items: flex-start; gap: 12px; text-align: left;
         }
-        .modal-panel .modal-desc {
-            color: var(--text-secondary);
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-        .modal-alert {
-            background: rgba(245, 158, 11, 0.06);
-            border: 1px solid rgba(245, 158, 11, 0.18);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 28px;
-            font-size: 13px;
-            color: #fbbf24;
-            line-height: 1.6;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            text-align: left;
-        }
-        .modal-alert i {
-            flex-shrink: 0;
-            margin-top: 2px;
-            font-size: 18px;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
+        .modal-alert-box i { flex-shrink: 0; margin-top: 2px; font-size: 18px; }
+        .modal-buttons { display: flex; gap: 12px; }
         .btn-modal {
-            flex: 1;
-            padding: 15px 20px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.25s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
+            flex: 1; padding: 15px 20px; border-radius: var(--radius-md);
+            font-weight: 600; font-size: 15px; cursor: pointer; border: none;
+            transition: all 0.25s var(--ease-smooth); font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
-            position: relative;
-            overflow: hidden;
         }
-        .btn-modal::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .btn-modal:hover::after { opacity: 1; }
         .btn-modal:active { transform: scale(0.95); }
         .btn-modal-cancel {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-primary);
+            background: rgba(255,255,255,0.06); color: var(--text-primary);
             border: 1px solid rgba(255,255,255,0.1);
         }
+        .btn-modal-cancel:hover { background: rgba(255,255,255,0.1); }
         .btn-modal-danger {
-            background: rgba(239, 68, 68, 0.12);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(239,68,68,0.14); color: #f87171;
+            border: 1px solid rgba(239,68,68,0.28);
         }
         .btn-modal-danger:hover {
-            background: rgba(239, 68, 68, 0.2);
-            box-shadow: 0 0 24px rgba(239, 68, 68, 0.2);
+            background: rgba(239,68,68,0.22);
+            box-shadow: 0 0 24px rgba(239,68,68,0.2);
         }
 
-        /* ========== AUTH SCREENS ========== */
+        /* ==================== AUTH SCREENS ==================== */
         .auth-stage {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
             overflow-y: auto;
         }
         .auth-card {
-            background: var(--bg-elevated);
-            backdrop-filter: blur(50px) saturate(200%);
-            -webkit-backdrop-filter: blur(50px) saturate(200%);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-2xl);
-            padding: 48px 36px;
-            width: 100%;
-            max-width: 430px;
-            box-shadow: var(--shadow-2xl), var(--shadow-emerald-md);
-            animation: authCardEntry 0.7s var(--ease-out-expo);
-            position: relative;
-            overflow: hidden;
+            background: var(--bg-glass); backdrop-filter: blur(55px) saturate(210%);
+            -webkit-backdrop-filter: blur(55px) saturate(210%);
+            border: 1px solid var(--border-medium); border-radius: var(--radius-2xl);
+            padding: 50px 38px; width: 100%; max-width: 440px;
+            box-shadow: var(--shadow-xl), var(--shadow-emerald-md);
+            animation: authCardSlideUp 0.75s var(--ease-out-expo);
+            position: relative; overflow: hidden;
         }
         .auth-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
-            pointer-events: none;
-            animation: authCardShine 8s ease-in-out infinite;
+            content: ''; position: absolute; top: -60%; left: -60%; width: 220%; height: 220%;
+            background: radial-gradient(circle at 35% 25%, rgba(16,185,129,0.05) 0%, transparent 55%);
+            pointer-events: none; animation: authShine 9s ease-in-out infinite;
         }
-        @keyframes authCardShine {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(10px, -10px); }
+        @keyframes authShine {
+            0%,100%{transform:translate(0,0)} 50%{transform:translate(15px,-12px)}
         }
-        @keyframes authCardEntry {
-            from { opacity: 0; transform: translateY(30px) scale(0.92); }
+        @keyframes authCardSlideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .auth-emblem {
-            width: 80px; height: 80px;
-            background: linear-gradient(145deg, #34d399 0%, #10b981 50%, #059669 100%);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34px;
-            font-weight: 900;
-            margin: 0 auto 28px;
-            color: #fff;
-            box-shadow: 
-                0 16px 32px rgba(16, 185, 129, 0.3),
-                0 0 0 1px rgba(255,255,255,0.1) inset;
-            position: relative;
-            z-index: 1;
+            width: 82px; height: 82px;
+            background: linear-gradient(150deg, #34d399 0%, #10b981 45%, #059669 100%);
+            border-radius: 26px; display: flex; align-items: center; justify-content: center;
+            font-size: 35px; font-weight: 900; margin: 0 auto 28px; color: #fff;
+            box-shadow: 0 18px 36px rgba(16,185,129,0.35), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            position: relative; z-index: 1;
         }
         .auth-card h2 {
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
-            position: relative;
-            z-index: 1;
+            font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 10px;
+            letter-spacing: -0.03em; position: relative; z-index: 1;
         }
         .auth-sub {
-            color: var(--text-secondary);
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 36px;
-            font-weight: 400;
-            position: relative;
-            z-index: 1;
+            color: var(--text-secondary); font-size: 14px; text-align: center;
+            margin-bottom: 36px; font-weight: 400; position: relative; z-index: 1;
         }
-        .field-group {
-            position: relative;
-            margin-bottom: 20px;
-            z-index: 1;
+        .field-wrap {
+            position: relative; margin-bottom: 20px; z-index: 1;
         }
-        .field-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-            z-index: 1;
-            pointer-events: none;
-            transition: all 0.3s var(--ease-smooth);
+        .field-wrap .field-icon {
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 16px; pointer-events: none;
+            transition: all 0.3s var(--ease-smooth); z-index: 1;
         }
-        .field-group input,
-        .field-group select {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            padding: 16px 18px 16px 50px;
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            outline: none;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
+        .field-wrap input, .field-wrap select {
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border-subtle);
+            padding: 16px 18px 16px 50px; border-radius: var(--radius-md);
+            font-size: 15px; font-weight: 500; color: var(--text-primary); outline: none;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
             letter-spacing: -0.01em;
         }
-        .field-group input::placeholder {
-            color: var(--text-placeholder);
-        }
-        .field-group input:focus,
-        .field-group select:focus {
+        .field-wrap input::placeholder { color: rgba(74,222,128,0.35); }
+        .field-wrap input:focus, .field-wrap select:focus {
             border-color: var(--emerald-400);
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06), var(--shadow-emerald-sm);
-            background: var(--bg-input-focus);
-            transform: translateY(-1px);
+            box-shadow: 0 0 0 5px rgba(52,211,153,0.07), var(--shadow-emerald-sm);
+            background: var(--bg-input-focus); transform: translateY(-1px);
         }
-        .field-group input:focus ~ .field-icon,
-        .field-group:focus-within .field-icon {
-            color: var(--emerald-400);
-            transform: translateY(-50%) scale(1.1);
+        .field-wrap input:focus ~ .field-icon, .field-wrap:focus-within .field-icon {
+            color: var(--emerald-400); transform: translateY(-50%) scale(1.15);
         }
-        .field-group select {
+        .field-wrap select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%236ee7b7' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6 1.5-1.5L8 8.5l4.5-4.5L14 5.5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            padding-right: 48px;
+            background-repeat: no-repeat; background-position: right 18px center; padding-right: 48px;
         }
         .field-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: -14px;
-            margin-bottom: 20px;
-            padding-left: 18px;
-            font-weight: 400;
-            opacity: 0.7;
-            z-index: 1;
-            position: relative;
+            font-size: 12px; color: var(--text-muted); margin-top: -14px; margin-bottom: 20px;
+            padding-left: 18px; opacity: 0.7; position: relative; z-index: 1;
         }
-
         .btn {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
-            letter-spacing: -0.01em;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            width: 100%; padding: 16px 22px; border-radius: var(--radius-md);
+            font-size: 15px; font-weight: 600; cursor: pointer; border: none;
+            display: flex; align-items: center; justify-content: center; gap: 11px;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em; position: relative; overflow: hidden; z-index: 1;
         }
         .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+            content: ''; position: absolute; inset: 0;
             background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.4s;
+            opacity: 0; transition: opacity 0.4s;
         }
         .btn:hover::after { opacity: 1; }
         .btn:active { transform: scale(0.96); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
-        
-        .btn-emerald {
+        .btn-primary {
             background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600), var(--emerald-700));
-            color: #fff;
-            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.3);
-            margin-top: 12px;
+            color: #fff; box-shadow: 0 12px 28px rgba(16,185,129,0.35); margin-top: 10px;
         }
-        .btn-emerald:hover:not(:disabled) {
-            box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 16px 38px rgba(16,185,129,0.5); transform: translateY(-2px);
         }
         .btn-ghost {
-            background: transparent;
-            color: var(--emerald-400);
-            font-weight: 600;
-            margin-top: 16px;
+            background: transparent; color: var(--emerald-400); font-weight: 600; margin-top: 14px;
         }
         .btn-ghost:hover { color: var(--emerald-300); }
         .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-primary);
+            background: transparent; border: 1px solid rgba(255,255,255,0.12); color: var(--text-primary);
         }
-        .btn-outline:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(255,255,255,0.2);
+        .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+        .btn-microsoft {
+            background: #fff; color: #1a1a1a; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .btn-microsoft:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .ms-logo {
+            width: 21px; height: 21px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; flex-shrink: 0;
+        }
+        .ms-logo span { display: block; }
+        .ms-sq1 { background: #f25022; } .ms-sq2 { background: #7fba00; }
+        .ms-sq3 { background: #00a4ef; } .ms-sq4 { background: #ffb900; }
+        .divider-text {
+            display: flex; align-items: center; gap: 16px; margin: 24px 0;
+            color: var(--text-muted); font-size: 13px; position: relative; z-index: 1;
+        }
+        .divider-text::before, .divider-text::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
         }
 
         /* Step Indicator */
         .step-track {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 32px;
-            justify-content: center;
-            z-index: 1;
-            position: relative;
+            display: flex; gap: 9px; margin-bottom: 34px; justify-content: center; z-index: 1; position: relative;
         }
-        .step-pip {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.12);
+        .step-dot {
+            width: 11px; height: 11px; border-radius: 50%; background: rgba(255,255,255,0.1);
             transition: all 0.5s var(--ease-out-back);
-            position: relative;
         }
-        .step-pip.active {
-            background: var(--emerald-400);
-            box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
-            width: 32px;
-            border-radius: 20px;
+        .step-dot.current {
+            background: var(--emerald-400); box-shadow: 0 0 22px rgba(52,211,153,0.7);
+            width: 34px; border-radius: 20px;
         }
-        .step-pip.done {
-            background: var(--emerald-600);
-            box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
-        }
+        .step-dot.done { background: var(--emerald-600); box-shadow: 0 0 14px rgba(5,150,105,0.5); }
         .step-slide {
-            display: none;
-            position: relative;
-            z-index: 1;
+            display: none; position: relative; z-index: 1;
         }
         .step-slide.active {
-            display: block;
-            animation: stepSlideIn 0.5s var(--ease-out-expo);
+            display: block; animation: stepSlideIn 0.5s var(--ease-out-expo);
         }
         @keyframes stepSlideIn {
             from { opacity: 0; transform: translateX(25px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        .step-actions {
-            display: flex;
-            gap: 14px;
-            margin-top: 28px;
-        }
+        .step-nav-btns { display: flex; gap: 14px; margin-top: 26px; }
+        .step-nav-btns button { flex: 1; }
 
-        /* ========== MAIN APP SHELL ========== */
-        .app-master {
-            display: flex;
-            width: 100vw;
-            height: 100dvh;
-            overflow: hidden;
-            opacity: 0;
-            transition: opacity 0.6s var(--ease-out-expo);
+        /* ==================== MAIN APP SHELL ==================== */
+        .app-shell {
+            display: flex; width: 100vw; height: 100dvh; overflow: hidden;
+            opacity: 0; transition: opacity 0.6s var(--ease-out-expo);
         }
-        .app-master.visible { opacity: 1; }
+        .app-shell.visible { opacity: 1; }
 
         /* Desktop Sidebar */
         .sidebar-desktop {
-            display: none;
-            width: 290px;
-            background: rgba(3, 15, 10, 0.55);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-right: 1px solid var(--border-subtle);
-            padding: 40px 22px;
-            flex-direction: column;
-            z-index: 10;
-            flex-shrink: 0;
+            display: none; width: 290px;
+            background: rgba(3,15,10,0.55); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border-right: 1px solid var(--border-subtle); padding: 42px 22px;
+            flex-direction: column; z-index: 10; flex-shrink: 0;
         }
-        .sidebar-brand-block {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 0 10px;
-            margin-bottom: 50px;
+        .sidebar-brand {
+            display: flex; align-items: center; gap: 16px; padding: 0 10px; margin-bottom: 50px;
         }
-        .sidebar-brand-block .brand-icon {
-            width: 46px; height: 46px;
-            background: linear-gradient(145deg, #34d399, #059669);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 20px;
-            color: #fff;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-            flex-shrink: 0;
+        .sidebar-brand-icon {
+            width: 48px; height: 48px; background: linear-gradient(150deg, #34d399, #059669);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 20px; color: #fff;
+            box-shadow: 0 10px 24px rgba(16,185,129,0.35); flex-shrink: 0;
+            transition: all 0.3s var(--ease-out-back);
         }
-        .sidebar-brand-text h3 {
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-        }
-        .sidebar-brand-text span {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            font-weight: 400;
-            letter-spacing: 0.02em;
-        }
-        .sidebar-nav-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-        }
+        .sidebar-brand:hover .sidebar-brand-icon { transform: scale(1.08) rotate(5deg); }
+        .sidebar-brand h3 { font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+        .sidebar-brand span { font-size: 12px; color: var(--text-tertiary); font-weight: 400; }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
         .sidebar-nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 15px 18px;
-            border-radius: var(--radius-md);
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-secondary);
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            text-align: left;
-            letter-spacing: -0.01em;
+            display: flex; align-items: center; gap: 16px; padding: 15px 18px;
+            border-radius: var(--radius-md); background: transparent; border: 1px solid transparent;
+            color: var(--text-secondary); font-size: 15px; font-weight: 500; cursor: pointer;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
+            width: 100%; text-align: left; letter-spacing: -0.01em;
         }
-        .sidebar-nav-btn i {
-            font-size: 19px;
-            width: 24px;
-            text-align: center;
-            flex-shrink: 0;
-            transition: all 0.3s var(--ease-bounce);
-        }
+        .sidebar-nav-btn i { font-size: 19px; width: 24px; text-align: center; transition: all 0.3s var(--ease-out-back); }
         .sidebar-nav-btn:hover {
-            background: rgba(255,255,255,0.03);
-            color: var(--text-primary);
-            border-color: var(--border-subtle);
-            transform: translateX(4px);
+            background: rgba(255,255,255,0.03); color: var(--text-primary);
+            border-color: var(--border-subtle); transform: translateX(5px);
         }
         .sidebar-nav-btn.active {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.2);
-            color: var(--emerald-400);
-            font-weight: 600;
-            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.15), var(--shadow-emerald-sm);
+            background: rgba(16,185,129,0.09); border-color: rgba(16,185,129,0.22);
+            color: var(--emerald-400); font-weight: 600;
+            box-shadow: inset 0 0 0 1px rgba(16,185,129,0.15), var(--shadow-emerald-sm);
         }
         .sidebar-nav-btn.active i {
-            transform: scale(1.15);
-            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+            transform: scale(1.18); filter: drop-shadow(0 0 8px rgba(16,185,129,0.5));
         }
-        .sidebar-footer-area {
-            padding-top: 20px;
-            border-top: 1px solid var(--border-subtle);
+        .sidebar-footer { padding-top: 20px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 10px; }
+        .btn-logout-side {
+            width: 100%; padding: 15px; border-radius: var(--radius-md); background: transparent;
+            border: 1px solid rgba(239,68,68,0.18); color: #f87171; font-weight: 600; font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
         }
-        .btn-logout-sidebar {
-            width: 100%;
-            padding: 15px;
-            border-radius: var(--radius-md);
-            background: transparent;
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
+        .btn-logout-side:hover {
+            background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.35);
+            box-shadow: 0 0 20px rgba(239,68,68,0.1);
         }
-        .btn-logout-sidebar:hover {
-            background: rgba(239, 68, 68, 0.06);
-            border-color: rgba(239, 68, 68, 0.3);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
-        }
+        .btn-logout-side:active { transform: scale(0.95); }
 
         /* Main Panel */
-        .panel-primary {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            min-width: 0;
+        .main-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+        .mobile-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 17px 22px; padding-top: calc(var(--safe-top) + 13px);
+            background: rgba(3,15,10,0.65); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border-bottom: 1px solid var(--border-subtle); z-index: 20; flex-shrink: 0;
         }
-        .topbar-mobile {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 22px;
-            padding-top: calc(var(--safe-top) + 12px);
-            background: rgba(3, 15, 10, 0.65);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-bottom: 1px solid var(--border-subtle);
-            z-index: 20;
-            flex-shrink: 0;
+        .mobile-topbar h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+        .mobile-avatar-btn {
+            width: 42px; height: 42px; border-radius: 15px;
+            background: linear-gradient(150deg, var(--emerald-500), var(--emerald-700));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 17px; color: #fff; cursor: pointer; border: none;
+            transition: all 0.3s var(--ease-out-back); flex-shrink: 0;
+            box-shadow: 0 6px 16px rgba(16,185,129,0.25);
         }
-        .topbar-mobile h1 {
-            font-size: 19px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .avatar-mobile-btn {
-            width: 40px; height: 40px;
-            border-radius: 14px;
-            background: linear-gradient(145deg, var(--emerald-500), var(--emerald-700));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 16px;
-            color: #fff;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s var(--ease-bounce);
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-        .avatar-mobile-btn:active {
-            transform: scale(0.85) rotate(-10deg);
-        }
-        .scroll-view {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 24px 20px;
-            padding-bottom: calc(110px + var(--safe-bottom));
+        .mobile-avatar-btn:active { transform: scale(0.85) rotate(-10deg); }
+        .scroll-area {
+            flex: 1; overflow-y: auto; overflow-x: hidden;
+            padding: 24px 20px; padding-bottom: calc(110px + var(--safe-bottom));
             -webkit-overflow-scrolling: touch;
         }
-        .content-inner {
-            max-width: 780px;
-            margin: 0 auto;
-        }
+        .content-wrap { max-width: 780px; margin: 0 auto; }
 
-        /* ========== UI COMPONENTS ========== */
-        .card-elevated {
-            background: var(--bg-elevated);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 26px;
-            margin-bottom: 18px;
-            transition: all 0.4s var(--ease-smooth);
-            position: relative;
-            overflow: hidden;
+        /* ==================== UI COMPONENTS ==================== */
+        .card {
+            background: var(--bg-glass); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+            padding: 26px; margin-bottom: 18px;
+            transition: all 0.4s var(--ease-smooth); position: relative; overflow: hidden;
         }
-        .card-elevated::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
+            opacity: 0; transition: opacity 0.4s;
         }
-        .card-elevated:hover::before { opacity: 1; }
-        .card-elevated:hover {
-            border-color: var(--border-medium);
-            transform: translateY(-2px);
+        .card:hover::before { opacity: 1; }
+        .card:hover {
+            border-color: var(--border-medium); transform: translateY(-2px);
             box-shadow: var(--shadow-lg), var(--shadow-emerald-sm);
         }
-
-        .section-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 14px;
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 18px; flex-wrap: wrap; gap: 14px;
         }
-        .section-header-row h2 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
+        .section-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 
         /* Discovery Bar */
-        .discovery-status-bar {
-            background: var(--bg-elevated);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 22px 26px;
-            margin-bottom: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
+        .disc-bar {
+            background: var(--bg-glass); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+            padding: 22px 26px; margin-bottom: 22px;
+            display: flex; align-items: center; justify-content: space-between; gap: 18px;
             transition: all 0.4s var(--ease-smooth);
         }
-        .discovery-info-block h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .disc-info h3 {
+            font-size: 16px; font-weight: 600; margin-bottom: 5px;
+            display: flex; align-items: center; gap: 10px;
         }
-        .discovery-dot-live {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            position: relative;
+        .disc-dot {
+            width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
         }
-        .discovery-dot-live.on {
-            background: var(--emerald-400);
-            box-shadow: 0 0 16px rgba(52, 211, 153, 0.7);
-            animation: liveDotPulse 1.8s ease-in-out infinite;
+        .disc-dot.on {
+            background: var(--emerald-400); box-shadow: 0 0 16px rgba(52,211,153,0.7);
+            animation: discPulse 1.8s ease-in-out infinite;
         }
-        .discovery-dot-live.off {
-            background: #f87171;
-            box-shadow: 0 0 12px rgba(248, 113, 113, 0.5);
+        .disc-dot.off { background: #f87171; box-shadow: 0 0 12px rgba(248,113,113,0.5); }
+        @keyframes discPulse {
+            0%,100%{box-shadow:0 0 8px rgba(52,211,153,0.4)}
+            50%{box-shadow:0 0 24px rgba(52,211,153,0.9)}
         }
-        @keyframes liveDotPulse {
-            0%, 100% { box-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
-            50% { box-shadow: 0 0 24px rgba(52, 211, 153, 0.9); }
+        .disc-info p { font-size: 13px; color: var(--text-secondary); margin-left: 19px; }
+        .status-chip {
+            padding: 9px 18px; border-radius: var(--radius-full); font-size: 13px;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
+            flex-shrink: 0; letter-spacing: -0.01em; transition: all 0.3s var(--ease-smooth);
         }
-        .discovery-info-block p {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-left: 19px;
+        .status-chip.on-chip {
+            background: rgba(16,185,129,0.1); color: var(--emerald-400);
+            border: 1px solid rgba(16,185,129,0.25);
         }
-        .status-pill {
-            padding: 9px 18px;
-            border-radius: var(--radius-full);
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            letter-spacing: -0.01em;
-            transition: all 0.3s var(--ease-smooth);
-        }
-        .status-pill.active-pill {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--emerald-400);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-        }
-        .status-pill.inactive-pill {
-            background: rgba(239, 68, 68, 0.08);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+        .status-chip.off-chip {
+            background: rgba(239,68,68,0.08); color: #f87171;
+            border: 1px solid rgba(239,68,68,0.2);
         }
 
-        /* Chip Buttons */
-        .chips-row {
-            display: flex;
-            gap: 9px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+        /* Chips */
+        .chip-row { display: flex; gap: 9px; margin-bottom: 18px; flex-wrap: wrap; }
+        .chip-btn {
+            padding: 11px 20px; border-radius: var(--radius-full); font-size: 13px;
+            font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.02); color: var(--text-secondary);
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em; white-space: nowrap;
         }
-        .chip {
-            padding: 11px 20px;
-            border-radius: var(--radius-full);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.07);
-            background: rgba(255,255,255,0.02);
-            color: var(--text-secondary);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
-            letter-spacing: -0.01em;
-            white-space: nowrap;
+        .chip-btn:hover {
+            background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15);
+            color: var(--text-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm);
         }
-        .chip:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.15);
-            color: var(--text-primary);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-        }
-        .chip:active { transform: scale(0.94); }
-        .chip.accent-chip {
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.25);
+        .chip-btn:active { transform: scale(0.94); }
+        .chip-btn.accent {
+            background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25);
             color: var(--emerald-400);
         }
-        .chip.accent-chip:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(16, 185, 129, 0.4);
+        .chip-btn.accent:hover {
+            background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4);
             box-shadow: var(--shadow-emerald-sm);
         }
-
-        /* Schedule Rows */
-        .schedule-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        .chip-btn.danger {
+            background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.18); color: #f87171;
         }
-        .schedule-row-item {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding: 18px 20px;
-            background: rgba(2, 15, 10, 0.45);
-            border-radius: var(--radius-md);
-            transition: all 0.3s var(--ease-smooth);
+        .chip-btn.danger:hover {
+            background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3);
+            box-shadow: 0 0 16px rgba(239,68,68,0.15);
+        }
+
+        /* Schedule */
+        .schedule-list { display: flex; flex-direction: column; gap: 4px; }
+        .sched-row {
+            display: flex; align-items: center; gap: 18px;
+            padding: 18px 20px; background: rgba(2,15,10,0.45);
+            border-radius: var(--radius-md); transition: all 0.3s var(--ease-smooth);
             border: 1px solid transparent;
-            cursor: default;
         }
-        .schedule-row-item:hover {
-            background: rgba(2, 15, 10, 0.7);
-            border-color: var(--border-medium);
-            transform: translateX(4px);
-            box-shadow: var(--shadow-sm);
+        .sched-row:hover {
+            background: rgba(2,15,10,0.7); border-color: var(--border-medium);
+            transform: translateX(4px); box-shadow: var(--shadow-sm);
         }
-        .period-badge-num {
-            width: 50px; height: 50px;
-            border-radius: 16px;
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 17px;
-            color: var(--emerald-400);
-            flex-shrink: 0;
+        .period-num {
+            width: 50px; height: 50px; border-radius: 16px;
+            background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 17px; color: var(--emerald-400); flex-shrink: 0;
             transition: all 0.3s var(--ease-smooth);
         }
-        .schedule-row-item:hover .period-badge-num {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(16, 185, 129, 0.4);
-            box-shadow: var(--shadow-emerald-sm);
-            transform: scale(1.05);
+        .sched-row:hover .period-num {
+            background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4);
+            box-shadow: var(--shadow-emerald-sm); transform: scale(1.05);
         }
-        .schedule-row-item .class-detail {
-            flex: 1;
-            min-width: 0;
-        }
-        .schedule-row-item .class-name-text {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 3px;
-        }
-        .schedule-row-item .class-sub-text {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .schedule-row-item input.edit-field {
-            background: rgba(0,0,0,0.35);
-            border: 1px dashed var(--border-strong);
-            border-radius: var(--radius-sm);
-            padding: 11px 15px;
-            color: var(--text-primary);
-            font-size: 14px;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            outline: none;
+        .class-detail { flex: 1; min-width: 0; }
+        .class-detail .class-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+        .class-detail .class-sub { font-size: 12px; color: var(--text-muted); }
+        .class-detail input.edit-input {
+            background: rgba(0,0,0,0.35); border: 1px dashed var(--border-strong);
+            border-radius: var(--radius-sm); padding: 11px 15px; color: var(--text-primary);
+            font-size: 14px; width: 100%; font-family: 'Inter', sans-serif; outline: none;
             transition: all 0.3s var(--ease-smooth);
         }
-        .schedule-row-item input.edit-field:focus {
-            border-color: var(--emerald-400);
-            border-style: solid;
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06);
-            background: rgba(0,0,0,0.5);
+        .class-detail input.edit-input:focus {
+            border-color: var(--emerald-400); border-style: solid;
+            box-shadow: 0 0 0 4px rgba(52,211,153,0.06); background: rgba(0,0,0,0.5);
         }
-        .save-button-bar {
-            margin-top: 18px;
-            display: none;
+        .save-bar { margin-top: 18px; display: none; }
+        .save-bar.visible {
+            display: block; animation: fadeUp 0.4s var(--ease-out-back);
         }
-        .save-button-bar.visible {
-            display: block;
-            animation: fadeSlideUp 0.4s var(--ease-out-back);
-        }
-        @keyframes fadeSlideUp {
+        @keyframes fadeUp {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Search */
-        .search-box-wrapper {
-            position: relative;
-            margin-bottom: 22px;
-        }
-        .search-box-wrapper .search-prefix-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 16px;
-            pointer-events: none;
-            z-index: 1;
+        .search-wrap { position: relative; margin-bottom: 22px; }
+        .search-wrap .search-icon {
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 16px; pointer-events: none; z-index: 1;
             transition: all 0.3s var(--ease-smooth);
         }
-        .search-box-wrapper input {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            padding: 16px 18px 16px 50px;
-            border-radius: var(--radius-lg);
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            outline: none;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
+        .search-wrap input {
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border-subtle);
+            padding: 16px 18px 16px 50px; border-radius: var(--radius-lg);
+            font-size: 15px; font-weight: 500; color: var(--text-primary); outline: none;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
         }
-        .search-box-wrapper input:focus {
+        .search-wrap input:focus {
             border-color: var(--emerald-400);
-            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.06), var(--shadow-emerald-sm);
+            box-shadow: 0 0 0 4px rgba(52,211,153,0.06), var(--shadow-emerald-sm);
             background: var(--bg-input-focus);
         }
-        .search-box-wrapper input:focus ~ .search-prefix-icon {
-            color: var(--emerald-400);
-            transform: translateY(-50%) scale(1.15);
+        .search-wrap input:focus ~ .search-icon {
+            color: var(--emerald-400); transform: translateY(-50%) scale(1.15);
         }
 
         /* Classmates Grid */
-        .classmates-masonry {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
+        .cm-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .cm-card {
+            background: var(--bg-glass); backdrop-filter: blur(45px) saturate(190%);
+            -webkit-backdrop-filter: blur(45px) saturate(190%);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);
+            padding: 22px; transition: all 0.4s var(--ease-smooth);
+            position: relative; overflow: hidden;
         }
-        .classmate-panel {
-            background: var(--bg-elevated);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            padding: 22px;
-            transition: all 0.4s var(--ease-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-        .classmate-panel::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
+        .cm-card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
             background: linear-gradient(90deg, var(--emerald-500), var(--emerald-600));
-            opacity: 0;
-            transition: opacity 0.4s var(--ease-smooth);
+            opacity: 0; transition: opacity 0.4s var(--ease-smooth);
         }
-        .classmate-panel.has-shared::after {
+        .cm-card.shared::after {
             opacity: 1;
             background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
             background-size: 200% 100%;
-            animation: sharedBarShimmer 2s ease-in-out infinite;
+            animation: sharedShimmer 2.2s ease-in-out infinite;
         }
-        @keyframes sharedBarShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        @keyframes sharedShimmer {
+            0%,100%{background-position:0% 50%} 50%{background-position:100% 50%}
         }
-        .classmate-panel:hover {
-            border-color: var(--border-medium);
-            transform: translateY(-3px);
+        .cm-card:hover {
+            border-color: var(--border-medium); transform: translateY(-3px);
             box-shadow: var(--shadow-lg), var(--shadow-emerald-sm);
         }
-        .classmate-panel.has-shared:hover {
-            box-shadow: var(--shadow-lg), var(--shadow-amber-sm);
-        }
-        .classmate-top-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 18px;
-            padding-bottom: 18px;
+        .cm-card.shared:hover { box-shadow: var(--shadow-lg), 0 0 28px rgba(245,158,11,0.12); }
+        .cm-top {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 18px; padding-bottom: 18px;
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .cm-avatar-circle {
-            width: 52px; height: 52px;
-            border-radius: 18px;
-            background: linear-gradient(145deg, var(--emerald-500), var(--emerald-700));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-            color: #fff;
-            flex-shrink: 0;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
-            transition: all 0.3s var(--ease-bounce);
+        .cm-avatar {
+            width: 52px; height: 52px; border-radius: 18px;
+            background: linear-gradient(150deg, var(--emerald-500), var(--emerald-700));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 20px; color: #fff; flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(16,185,129,0.25);
+            transition: all 0.3s var(--ease-out-back);
         }
-        .classmate-panel:hover .cm-avatar-circle {
-            transform: scale(1.08);
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.35);
+        .cm-card:hover .cm-avatar {
+            transform: scale(1.08); box-shadow: 0 12px 28px rgba(16,185,129,0.35);
         }
-        .cm-meta {
-            flex: 1;
-            min-width: 0;
-        }
+        .cm-meta { flex: 1; min-width: 0; }
         .cm-meta h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            font-size: 16px; font-weight: 600; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
         }
-        .cm-grade-tag {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-tertiary);
-            background: rgba(255,255,255,0.03);
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            border: 1px solid rgba(255,255,255,0.06);
+        .grade-tag {
+            font-size: 12px; font-weight: 500; color: var(--text-tertiary);
+            background: rgba(255,255,255,0.03); padding: 4px 12px;
+            border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.06);
         }
-        .cm-shared-badge {
-            font-size: 11px;
-            font-weight: 600;
-            background: rgba(245, 158, 11, 0.1);
-            color: #fbbf24;
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            white-space: nowrap;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            animation: badgeGlow 2s ease-in-out infinite;
+        .shared-tag {
+            font-size: 11px; font-weight: 600; background: rgba(245,158,11,0.1);
+            color: #fbbf24; padding: 5px 12px; border-radius: var(--radius-full);
+            white-space: nowrap; border: 1px solid rgba(245,158,11,0.2);
+            animation: sharedGlow 2s ease-in-out infinite;
         }
-        @keyframes badgeGlow {
-            0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+        @keyframes sharedGlow {
+            0%,100%{box-shadow:0 0 8px rgba(245,158,11,0.2)}
+            50%{box-shadow:0 0 20px rgba(245,158,11,0.5)}
         }
-        .cm-classes-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 9px;
-        }
-        .cm-class-bubble {
-            background: rgba(2, 15, 10, 0.5);
-            padding: 11px 14px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            color: var(--text-secondary);
-            transition: all 0.3s var(--ease-smooth);
+        .cm-classes { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+        .cm-pill {
+            background: rgba(2,15,10,0.5); padding: 11px 14px; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 9px;
+            color: var(--text-secondary); transition: all 0.3s var(--ease-smooth);
             border: 1px solid transparent;
         }
-        .cm-class-bubble i {
-            color: var(--emerald-400);
-            font-size: 10px;
-            flex-shrink: 0;
-        }
-        .cm-class-bubble span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .cm-class-bubble.match-highlight {
-            background: rgba(245, 158, 11, 0.06);
-            border-color: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-            animation: matchPulse 1.5s ease-in-out infinite;
+        .cm-pill i { color: var(--emerald-400); font-size: 10px; flex-shrink: 0; }
+        .cm-pill span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cm-pill.highlight {
+            background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2);
+            color: #fbbf24; animation: matchPulse 1.5s ease-in-out infinite;
         }
         @keyframes matchPulse {
-            0%, 100% { border-color: rgba(245, 158, 11, 0.2); }
-            50% { border-color: rgba(245, 158, 11, 0.5); }
+            0%,100%{border-color:rgba(245,158,11,0.2)} 50%{border-color:rgba(245,158,11,0.5)}
         }
-        .cm-class-bubble.match-highlight i {
-            color: #f59e0b;
-        }
+        .cm-pill.highlight i { color: #f59e0b; }
 
         /* Settings */
-        .profile-hero-card {
-            text-align: center;
-            padding: 40px 28px;
+        .profile-card {
+            text-align: center; padding: 40px 28px;
         }
         .profile-avatar-xl {
-            width: 96px; height: 96px;
-            border-radius: 28px;
-            background: linear-gradient(145deg, var(--emerald-400), var(--emerald-700));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: 800;
-            color: #fff;
+            width: 96px; height: 96px; border-radius: 28px;
+            background: linear-gradient(150deg, var(--emerald-400), var(--emerald-700));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; font-weight: 800; color: #fff;
             margin: 0 auto 24px;
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
-            transition: all 0.4s var(--ease-bounce);
+            box-shadow: 0 20px 40px rgba(16,185,129,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            transition: all 0.4s var(--ease-out-back);
         }
-        .profile-hero-card:hover .profile-avatar-xl {
+        .profile-card:hover .profile-avatar-xl {
             transform: scale(1.05) rotate(3deg);
-            box-shadow: 0 24px 48px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
+            box-shadow: 0 24px 48px rgba(16,185,129,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset;
         }
-        .profile-hero-card h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.02em;
+        .profile-card h2 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+        .setting-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 22px; background: rgba(2,15,10,0.5);
+            border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.04);
+            gap: 18px; transition: all 0.3s var(--ease-smooth);
         }
-        .setting-row-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 22px;
-            background: rgba(2, 15, 10, 0.5);
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(255,255,255,0.04);
-            gap: 18px;
-            transition: all 0.3s var(--ease-smooth);
-        }
-        .setting-row-item:hover {
-            background: rgba(2, 15, 10, 0.7);
-            border-color: var(--border-medium);
-        }
-        .setting-label-group h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .setting-label-group p {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .toggle-custom {
-            width: 56px; height: 32px;
-            background: rgba(255,255,255,0.06);
-            border-radius: var(--radius-full);
-            cursor: pointer;
-            position: relative;
-            transition: all 0.4s var(--ease-spring);
-            flex-shrink: 0;
+        .setting-row:hover { background: rgba(2,15,10,0.7); border-color: var(--border-medium); }
+        .setting-row h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+        .setting-row p { font-size: 13px; color: var(--text-secondary); }
+
+        /* Toggle */
+        .toggle-switch {
+            width: 56px; height: 32px; background: rgba(255,255,255,0.06);
+            border-radius: var(--radius-full); cursor: pointer; position: relative;
+            transition: all 0.4s var(--ease-spring); flex-shrink: 0;
             border: 1px solid rgba(255,255,255,0.06);
         }
-        .toggle-custom.active {
-            background: var(--emerald-600);
-            border-color: var(--emerald-400);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        .toggle-switch.on {
+            background: var(--emerald-600); border-color: var(--emerald-400);
+            box-shadow: 0 0 20px rgba(16,185,129,0.4);
         }
-        .toggle-custom .toggle-thumb {
-            width: 26px; height: 26px;
-            background: #fff;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px; left: 2px;
+        .toggle-switch .toggle-knob {
+            width: 26px; height: 26px; background: #fff; border-radius: 50%;
+            position: absolute; top: 2px; left: 2px;
             transition: all 0.4s var(--ease-spring);
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        .toggle-custom.active .toggle-thumb {
-            left: 26px;
-            box-shadow: 0 2px 14px rgba(16, 185, 129, 0.5);
+        .toggle-switch.on .toggle-knob {
+            left: 26px; box-shadow: 0 2px 14px rgba(16,185,129,0.5);
         }
 
-        /* Empty States */
+        /* Empty State */
         .empty-panel {
-            text-align: center;
-            padding: 56px 28px;
-            grid-column: 1 / -1;
+            text-align: center; padding: 56px 28px; grid-column: 1 / -1;
         }
-        .empty-panel .empty-icon-large {
-            font-size: 64px;
-            margin-bottom: 20px;
-            display: block;
-            opacity: 0.25;
+        .empty-panel .empty-icon {
+            font-size: 64px; margin-bottom: 20px; display: block; opacity: 0.25;
             animation: emptyFloat 3s ease-in-out infinite;
         }
         @keyframes emptyFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+            0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)}
         }
+        .empty-panel h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .empty-panel p { color: var(--text-secondary); font-size: 14px; }
 
         /* Skeleton */
-        .skeleton-block {
+        .skeleton {
             background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 75%);
-            background-size: 200% 100%;
-            animation: skeletonWave 2s ease-in-out infinite;
-            border-radius: 8px;
+            background-size: 200% 100%; animation: shimmer 2s ease-in-out infinite; border-radius: 8px;
         }
-        @keyframes skeletonWave {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        @keyframes shimmer {
+            0%{background-position:200% 0} 100%{background-position:-200% 0}
         }
 
         /* Bottom Nav */
-        .bottom-nav-ios {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(3, 15, 10, 0.88);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+        .bottom-nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(3,15,10,0.88); backdrop-filter: blur(45px) saturate(200%);
+            -webkit-backdrop-filter: blur(45px) saturate(200%);
             border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 10px calc(10px + var(--safe-bottom));
-            z-index: 100;
+            display: flex; justify-content: space-around;
+            padding: 10px 10px calc(10px + var(--safe-bottom)); z-index: 100;
         }
         .bottom-nav-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 16px;
-            border-radius: var(--radius-md);
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s var(--ease-smooth);
-            font-family: 'Inter', sans-serif;
-            letter-spacing: -0.01em;
-            min-width: 68px;
-            position: relative;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            padding: 10px 16px; border-radius: var(--radius-md);
+            background: transparent; border: none; color: var(--text-muted);
+            font-size: 11px; font-weight: 500; cursor: pointer;
+            transition: all 0.3s var(--ease-smooth); font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em; min-width: 68px; position: relative;
         }
-        .bottom-nav-btn i {
-            font-size: 22px;
-            transition: all 0.4s var(--ease-bounce);
-        }
-        .bottom-nav-btn.active {
-            color: var(--emerald-400);
-        }
+        .bottom-nav-btn i { font-size: 22px; transition: all 0.4s var(--ease-out-back); }
+        .bottom-nav-btn.active { color: var(--emerald-400); }
         .bottom-nav-btn.active i {
             transform: translateY(-4px);
-            filter: drop-shadow(0 6px 12px rgba(16, 185, 129, 0.5));
+            filter: drop-shadow(0 6px 12px rgba(16,185,129,0.5));
         }
         .bottom-nav-btn.active::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 20px; height: 3px;
-            background: var(--emerald-400);
-            border-radius: 0 0 3px 3px;
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 3px; background: var(--emerald-400); border-radius: 0 0 3px 3px;
         }
 
-        /* Responsive */
+        /* ==================== RESPONSIVE ==================== */
         @media (min-width: 768px) {
             .sidebar-desktop { display: flex; }
-            .topbar-mobile { display: none; }
-            .bottom-nav-ios { display: none; }
-            .scroll-view {
-                padding: 36px;
-                padding-bottom: 36px;
-            }
-            .classmates-masonry {
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            }
+            .mobile-topbar { display: none; }
+            .bottom-nav-bar { display: none; }
+            .scroll-area { padding: 32px; padding-bottom: 32px; }
+            .cm-grid { grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); }
         }
         @media (max-width: 420px) {
-            .cm-classes-grid { grid-template-columns: 1fr; }
+            .cm-classes { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Master Background -->
-    <div class="bg-master"></div>
+    <!-- Background -->
+    <div class="bg-universe"></div>
     <div class="bg-grid"></div>
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
     <div class="bg-orb bg-orb-3"></div>
     <div class="bg-orb bg-orb-4"></div>
-    <div class="bg-particles" id="bg-particles"></div>
 
-    <!-- Connection Status -->
-    <div class="connection-bar" id="connection-bar">
-        <div class="connection-pulse"></div>
-        <span id="connection-text">Back Online</span>
-    </div>
-
-    <!-- Toast Portal -->
+    <!-- Toast -->
     <div class="toast-portal" id="toast-portal"></div>
 
-    <!-- Confirmation Modal -->
+    <!-- Modal -->
     <div class="modal-backdrop hidden" id="confirm-modal">
-        <div class="modal-panel">
-            <div class="modal-icon-wrap">
-                <i class="fa-solid fa-eye-slash"></i>
-            </div>
+        <div class="modal-dialog">
+            <div class="modal-icon-circle"><i class="fa-solid fa-eye-slash"></i></div>
             <h3>Turn Off Discovery?</h3>
-            <p class="modal-desc">This will hide your schedule from other students and remove you from the classmates directory entirely.</p>
-            <div class="modal-alert">
+            <p class="modal-desc">This will hide your schedule from other students and remove you from the classmates directory.</p>
+            <div class="modal-alert-box">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                <span><strong>Important:</strong> Other students won't be able to see if they share classes with you. You'll become invisible in the directory.</span>
+                <span><strong>Important:</strong> Other students won't be able to see if they share classes with you.</span>
             </div>
             <div class="modal-buttons">
                 <button class="btn-modal btn-modal-cancel" id="btn-cancel-discovery">Keep It On</button>
@@ -1653,246 +924,156 @@
         </div>
     </div>
 
-    <!-- Splash Screen -->
+    <!-- Splash -->
     <div class="splash-master" id="splash-screen">
-        <div class="splash-logo-wrapper">
-            <div class="splash-logo">W</div>
-        </div>
-        <div class="splash-brand">WWHS Schedule</div>
+        <div class="splash-logo-wrap"><div class="splash-logo-emblem">W</div></div>
+        <div class="splash-brand-name">WWHS Schedule</div>
         <div class="splash-tagline">Share & Discover Classes</div>
-        <div class="splash-loader-track">
-            <div class="splash-loader-fill"></div>
-        </div>
+        <div class="splash-progress-track"><div class="splash-progress-fill"></div></div>
     </div>
 
-    <!-- Auth Screens -->
+    <!-- Auth -->
     <div class="auth-stage hidden" id="auth-view">
         <!-- Login -->
         <div class="auth-card" id="login-card">
             <div class="auth-emblem">W</div>
             <h2>Welcome Back</h2>
-            <p class="auth-sub">Sign in with your school email</p>
-            <div class="field-group">
-                <i class="fa-solid fa-envelope field-icon"></i>
-                <input type="email" id="login-email" placeholder="student@hernandoschools.org" autocomplete="email" inputmode="email">
-            </div>
-            <div class="field-hint">Use your @hernandoschools.org email</div>
-            <div class="field-group">
-                <i class="fa-solid fa-lock field-icon"></i>
-                <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
-            </div>
-            <button class="btn btn-emerald" id="btn-login">
-                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+            <p class="auth-sub">Sign in with your school Microsoft account</p>
+            <button class="btn btn-microsoft" id="btn-ms-login">
+                <div class="ms-logo"><span class="ms-sq1"></span><span class="ms-sq2"></span><span class="ms-sq3"></span><span class="ms-sq4"></span></div>
+                Sign in with Microsoft
             </button>
-            <button class="btn btn-ghost" id="link-to-signup">New here? <strong>Create Account</strong></button>
+            <div class="divider-text">or use email</div>
+            <div class="field-wrap"><i class="fa-solid fa-envelope field-icon"></i><input type="email" id="login-email" placeholder="student@hernandoschools.org" autocomplete="email"></div>
+            <div class="field-hint">Use your @hernandoschools.org email</div>
+            <div class="field-wrap"><i class="fa-solid fa-lock field-icon"></i><input type="password" id="login-password" placeholder="Password" autocomplete="current-password"></div>
+            <button class="btn btn-primary" id="btn-login">Sign In</button>
+            <button class="btn btn-ghost" id="link-signup">Create new account</button>
         </div>
 
         <!-- Signup -->
         <div class="auth-card hidden" id="signup-card">
             <h2 style="text-align:center; margin-bottom:28px;">Create Account</h2>
             <div class="step-track">
-                <div class="step-pip active" id="pip-1"></div>
-                <div class="step-pip" id="pip-2"></div>
-                <div class="step-pip" id="pip-3"></div>
+                <div class="step-dot current" id="dot-1"></div>
+                <div class="step-dot" id="dot-2"></div>
+                <div class="step-dot" id="dot-3"></div>
             </div>
-
             <div id="step-1" class="step-slide active">
-                <div class="field-group">
-                    <i class="fa-solid fa-envelope field-icon"></i>
-                    <input type="email" id="signup-email" placeholder="student@hernandoschools.org" autocomplete="email">
-                </div>
+                <button class="btn btn-microsoft" id="btn-ms-signup">
+                    <div class="ms-logo"><span class="ms-sq1"></span><span class="ms-sq2"></span><span class="ms-sq3"></span><span class="ms-sq4"></span></div>
+                    Sign up with Microsoft
+                </button>
+                <div class="divider-text">or use email</div>
+                <div class="field-wrap"><i class="fa-solid fa-envelope field-icon"></i><input type="email" id="signup-email" placeholder="student@hernandoschools.org" autocomplete="email"></div>
                 <div class="field-hint">Must be @hernandoschools.org</div>
-                <div class="field-group">
-                    <i class="fa-solid fa-lock field-icon"></i>
-                    <input type="password" id="signup-password" placeholder="Password (6+ characters)" autocomplete="new-password">
-                </div>
-                <button class="btn btn-emerald" id="btn-next-1">Continue <i class="fa-solid fa-arrow-right"></i></button>
-                <button class="btn btn-ghost" id="link-to-login">Have an account? <strong>Sign In</strong></button>
+                <div class="field-wrap"><i class="fa-solid fa-lock field-icon"></i><input type="password" id="signup-password" placeholder="Password (6+ chars)" autocomplete="new-password"></div>
+                <button class="btn btn-primary" id="btn-next-1">Continue</button>
+                <button class="btn btn-ghost" id="link-login">Back to Sign In</button>
             </div>
-
             <div id="step-2" class="step-slide">
-                <div class="field-group">
-                    <i class="fa-solid fa-user field-icon"></i>
-                    <input type="text" id="signup-name" placeholder="Full Name" autocomplete="name">
-                </div>
-                <div class="field-group">
-                    <i class="fa-solid fa-graduation-cap field-icon"></i>
-                    <select id="signup-grade">
-                        <option value="" disabled selected>Grade Level</option>
-                        <option value="9">9th Grade</option>
-                        <option value="10">10th Grade</option>
-                        <option value="11">11th Grade</option>
-                        <option value="12">12th Grade</option>
-                    </select>
-                </div>
-                <div class="step-actions">
-                    <button class="btn btn-outline btn-prev" data-target="1">Back</button>
-                    <button class="btn btn-emerald" id="btn-next-2">Continue</button>
-                </div>
+                <div class="field-wrap"><i class="fa-solid fa-user field-icon"></i><input type="text" id="signup-name" placeholder="Full Name" autocomplete="name"></div>
+                <div class="field-wrap"><i class="fa-solid fa-graduation-cap field-icon"></i><select id="signup-grade"><option value="" disabled selected>Grade Level</option><option value="9">9th Grade</option><option value="10">10th Grade</option><option value="11">11th Grade</option><option value="12">12th Grade</option></select></div>
+                <div class="step-nav-btns"><button class="btn btn-outline btn-prev" data-target="1">Back</button><button class="btn btn-primary" id="btn-next-2">Continue</button></div>
             </div>
-
             <div id="step-3" class="step-slide">
-                <p style="font-size:13px; color:var(--text-secondary); text-align:center; margin-bottom:18px;">Enter your classes for each period</p>
-                <div style="max-height:230px; overflow-y:auto; padding-right:4px;">
-                    <div class="field-group"><i class="fa-solid fa-1 field-icon"></i><input type="text" id="p1" placeholder="Period 1"></div>
-                    <div class="field-group"><i class="fa-solid fa-2 field-icon"></i><input type="text" id="p2" placeholder="Period 2"></div>
-                    <div class="field-group"><i class="fa-solid fa-3 field-icon"></i><input type="text" id="p3" placeholder="Period 3"></div>
-                    <div class="field-group"><i class="fa-solid fa-4 field-icon"></i><input type="text" id="p4" placeholder="Period 4"></div>
-                    <div class="field-group"><i class="fa-solid fa-5 field-icon"></i><input type="text" id="p5" placeholder="Period 5"></div>
-                    <div class="field-group"><i class="fa-solid fa-6 field-icon"></i><input type="text" id="p6" placeholder="Period 6"></div>
-                    <div class="field-group"><i class="fa-solid fa-7 field-icon"></i><input type="text" id="p7" placeholder="Period 7"></div>
+                <p style="font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:16px;">Enter your classes for each period</p>
+                <div style="max-height:220px;overflow-y:auto;padding-right:4px;">
+                    <div class="field-wrap"><i class="fa-solid fa-1 field-icon"></i><input type="text" id="p1" placeholder="Period 1"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-2 field-icon"></i><input type="text" id="p2" placeholder="Period 2"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-3 field-icon"></i><input type="text" id="p3" placeholder="Period 3"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-4 field-icon"></i><input type="text" id="p4" placeholder="Period 4"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-5 field-icon"></i><input type="text" id="p5" placeholder="Period 5"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-6 field-icon"></i><input type="text" id="p6" placeholder="Period 6"></div>
+                    <div class="field-wrap"><i class="fa-solid fa-7 field-icon"></i><input type="text" id="p7" placeholder="Period 7"></div>
                 </div>
-                <div class="step-actions">
-                    <button class="btn btn-outline btn-prev" data-target="2">Back</button>
-                    <button class="btn btn-emerald" id="btn-finish">Complete Setup</button>
-                </div>
+                <div class="step-nav-btns"><button class="btn btn-outline btn-prev" data-target="2">Back</button><button class="btn btn-primary" id="btn-finish">Complete Setup</button></div>
             </div>
         </div>
     </div>
 
     <!-- Main App -->
-    <div class="app-master hidden" id="main-app">
+    <div class="app-shell hidden" id="main-app">
         <aside class="sidebar-desktop">
-            <div class="sidebar-brand-block">
-                <div class="brand-icon">W</div>
-                <div class="sidebar-brand-text">
-                    <h3>WWHS Schedule</h3>
-                    <span>Share & Discover</span>
-                </div>
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">W</div>
+                <div><h3>WWHS Schedule</h3><span>Share & Discover</span></div>
             </div>
-            <nav class="sidebar-nav-list">
-                <button class="sidebar-nav-btn active" data-tab="schedule">
-                    <i class="fa-solid fa-calendar-days"></i> My Schedule
-                </button>
-                <button class="sidebar-nav-btn" data-tab="classmates">
-                    <i class="fa-solid fa-users"></i> Classmates
-                </button>
-                <button class="sidebar-nav-btn" data-tab="settings">
-                    <i class="fa-solid fa-gear"></i> Settings
-                </button>
+            <nav class="sidebar-nav">
+                <button class="sidebar-nav-btn active" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i> My Schedule</button>
+                <button class="sidebar-nav-btn" data-tab="classmates"><i class="fa-solid fa-users"></i> Classmates</button>
+                <button class="sidebar-nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
             </nav>
-            <div class="sidebar-footer-area">
-                <button class="btn-logout-sidebar" id="btn-logout-desk">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                </button>
+            <div class="sidebar-footer">
+                <button class="btn-logout-side" id="btn-logout-desk"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
             </div>
         </aside>
-
-        <div class="panel-primary">
-            <header class="topbar-mobile">
+        <div class="main-panel">
+            <header class="mobile-topbar">
                 <h1>WWHS Schedule</h1>
-                <button class="avatar-mobile-btn" id="mobile-avatar-btn">?</button>
+                <button class="mobile-avatar-btn" id="mobile-avatar-btn">?</button>
             </header>
-
-            <div class="scroll-view" id="main-scroll">
-                <div class="content-inner">
-                    
-                    <div id="tab-schedule" class="animate-in">
-                        <div class="discovery-status-bar" id="discovery-bar">
-                            <div class="discovery-info-block">
-                                <h3>
-                                    <span class="discovery-dot-live on" id="discovery-dot"></span>
-                                    <span id="discovery-title">Discovery Active</span>
-                                </h3>
-                                <p id="discovery-desc">Classmates can see your schedule and find you in the directory</p>
-                            </div>
-                            <span class="status-pill active-pill" id="discovery-chip">
-                                <i class="fa-solid fa-check-circle"></i> Visible
-                            </span>
+            <div class="scroll-area" id="main-scroll"><div class="content-wrap">
+                <div id="tab-schedule">
+                    <div class="disc-bar" id="disc-bar">
+                        <div class="disc-info">
+                            <h3><span class="disc-dot on" id="disc-dot"></span> <span id="disc-title">Discovery Active</span></h3>
+                            <p id="disc-desc">Classmates can see your schedule and find you in the directory</p>
                         </div>
-
-                        <div class="chips-row">
-                            <button class="chip accent-chip" id="btn-edit-schedule">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit Schedule
-                            </button>
-                            <button class="chip" id="btn-copy-schedule">
-                                <i class="fa-solid fa-copy"></i> Copy
-                            </button>
-                        </div>
-
-                        <div class="card-elevated">
-                            <div class="schedule-stack" id="schedule-container"></div>
-                        </div>
-
-                        <div class="save-button-bar" id="save-bar">
-                            <button class="btn btn-emerald" id="btn-save-schedule">
-                                <i class="fa-solid fa-check"></i> Save Changes
-                            </button>
-                        </div>
+                        <span class="status-chip on-chip" id="disc-chip"><i class="fa-solid fa-check-circle"></i> Visible</span>
                     </div>
-
-                    <div id="tab-classmates" class="hidden animate-in">
-                        <div class="section-header-row">
-                            <h2>Classmates</h2>
-                            <button class="chip" id="btn-refresh-dir">
-                                <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                            </button>
-                        </div>
-                        <div class="search-box-wrapper">
-                            <i class="fa-solid fa-magnifying-glass search-prefix-icon"></i>
-                            <input type="text" id="class-search" placeholder="Search by name, class, or period...">
-                        </div>
-                        <div class="classmates-masonry" id="classmates-container"></div>
+                    <div class="chip-row">
+                        <button class="chip-btn accent" id="btn-edit-schedule"><i class="fa-solid fa-pen-to-square"></i> Edit Schedule</button>
+                        <button class="chip-btn" id="btn-copy-schedule"><i class="fa-solid fa-copy"></i> Copy</button>
                     </div>
-
-                    <div id="tab-settings" class="hidden animate-in">
-                        <div class="card-elevated profile-hero-card">
-                            <div class="profile-avatar-xl" id="profile-avatar">?</div>
-                            <h2 id="profile-name">Loading...</h2>
-                            <p style="color:var(--text-secondary); margin-bottom:4px;">Grade <span id="profile-grade">--</span></p>
-                            <p style="color:var(--text-muted); font-size:13px; margin-bottom:18px;" id="profile-email">...</p>
-                            <span class="status-pill active-pill" id="settings-chip">
-                                <i class="fa-solid fa-check-circle"></i> Discoverable
-                            </span>
-                        </div>
-
-                        <div class="card-elevated">
-                            <h3 style="font-size:16px; font-weight:600; margin-bottom:18px;">
-                                <i class="fa-solid fa-user-group" style="color:var(--emerald-400); margin-right:8px;"></i>
-                                Discovery Settings
-                            </h3>
-                            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:20px; line-height:1.6;">
-                                When discovery is on, your schedule is visible to classmates. Turn it off to become invisible.
-                            </p>
-                            <div class="setting-row-item">
-                                <div class="setting-label-group">
-                                    <h4>Discovery Mode</h4>
-                                    <p id="settings-desc">Visible to classmates</p>
-                                </div>
-                                <div class="toggle-custom active" id="toggle-discovery" role="switch" tabindex="0">
-                                    <div class="toggle-thumb"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-outline" style="color:#f87171; border-color:rgba(239,68,68,0.2); width:100%; margin-top:12px;" id="btn-logout-mob">
-                            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                        </button>
-                    </div>
+                    <div class="card"><div class="schedule-list" id="schedule-container"></div></div>
+                    <div class="save-bar" id="save-bar"><button class="btn btn-primary" id="btn-save-schedule">Save Changes</button></div>
                 </div>
-            </div>
+                <div id="tab-classmates" class="hidden">
+                    <div class="section-header">
+                        <h2>Classmates</h2>
+                        <button class="chip-btn" id="btn-refresh-dir"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    </div>
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="class-search" placeholder="Search by name, class, or period...">
+                    </div>
+                    <div class="cm-grid" id="classmates-container"></div>
+                </div>
+                <div id="tab-settings" class="hidden">
+                    <div class="card profile-card">
+                        <div class="profile-avatar-xl" id="profile-avatar">?</div>
+                        <h2 id="profile-name">Loading...</h2>
+                        <p style="color:var(--text-secondary);margin-bottom:4px;">Grade <span id="profile-grade">--</span></p>
+                        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;" id="profile-email">...</p>
+                        <span class="status-chip on-chip" id="settings-chip"><i class="fa-solid fa-check-circle"></i> Discoverable</span>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;"><i class="fa-solid fa-user-group" style="color:var(--emerald-400);margin-right:8px;"></i>Discovery Settings</h3>
+                        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;line-height:1.6;">When discovery is on, your schedule is visible to classmates. Turn it off to become invisible.</p>
+                        <div class="setting-row">
+                            <div><h4>Discovery Mode</h4><p id="settings-desc">Visible to classmates</p></div>
+                            <div class="toggle-switch on" id="toggle-discovery"><div class="toggle-knob"></div></div>
+                        </div>
+                    </div>
+                    <button class="chip-btn danger" id="btn-delete-account" style="width:100%;margin-top:12px;justify-content:center;"><i class="fa-solid fa-trash"></i> Delete My Account</button>
+                    <button class="btn-logout-side" id="btn-logout-mob" style="margin-top:10px;">Sign Out</button>
+                </div>
+            </div></div>
         </div>
-
-        <nav class="bottom-nav-ios">
-            <button class="bottom-nav-btn active" data-tab="schedule">
-                <i class="fa-solid fa-calendar-days"></i> Schedule
-            </button>
-            <button class="bottom-nav-btn" data-tab="classmates">
-                <i class="fa-solid fa-users"></i> Directory
-            </button>
-            <button class="bottom-nav-btn" data-tab="settings">
-                <i class="fa-solid fa-gear"></i> Profile
-            </button>
+        <nav class="bottom-nav-bar">
+            <button class="bottom-nav-btn active" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i>Schedule</button>
+            <button class="bottom-nav-btn" data-tab="classmates"><i class="fa-solid fa-users"></i>Directory</button>
+            <button class="bottom-nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i>Profile</button>
         </nav>
     </div>
 
+    <!-- ==================== APPLICATION LOGIC ==================== -->
     <script type="module">
-        // ==================== FIREBASE IMPORTS ====================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyDhbKywSRayDsHPpfBVSojVm5ESMQly6do",
             authDomain: "wwhs-schedule.firebaseapp.com",
@@ -1905,193 +1086,192 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        
+        const microsoftProvider = new OAuthProvider('microsoft.com');
+        microsoftProvider.setCustomParameters({ tenant: 'common', prompt: 'select_account' });
+        microsoftProvider.addScope('User.Read');
+        microsoftProvider.addScope('profile');
+        microsoftProvider.addScope('email');
+        microsoftProvider.addScope('openid');
+
         const SCHOOL_DOMAIN = 'hernandoschools.org';
-
-        // ==================== GLOBAL STATE ====================
+        const ADMIN_EMAIL = 'admin@hernandoschools.org';
+        
         let currentUserData = null;
-        let editModeActive = false;
+        let isEditMode = false;
         let classmatesListener = null;
-        let allClassmatesCache = [];
+        let allClassmatesData = [];
 
-        // ==================== BACKGROUND PARTICLES ====================
-        function createParticles() {
-            const container = document.getElementById('bg-particles');
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'bg-particle';
-                const size = Math.random() * 3 + 1;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = Math.random() * 15 + 10 + 's';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                container.appendChild(particle);
-            }
-        }
-        createParticles();
-
-        // ==================== TOAST SYSTEM ====================
-        function showToast(message, type = 'success') {
-            const portal = document.getElementById('toast-portal');
-            const toast = document.createElement('div');
-            toast.className = `toast-item ${type}`;
-            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', warning: 'fa-triangle-exclamation' };
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type]} toast-icon"></i>
-                <span>${message}</span>
-            `;
-            portal.appendChild(toast);
-            
-            const dismiss = () => {
-                toast.classList.add('exit');
-                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 350);
-            };
-            
-            setTimeout(dismiss, 4000);
-            toast.addEventListener('click', dismiss);
+        // ==================== TOAST ====================
+        function showToast(msg, type = 'success') {
+            const p = document.getElementById('toast-portal');
+            const t = document.createElement('div');
+            t.className = `toast-item ${type}`;
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+            t.innerHTML = `<i class="fa-solid ${icons[type]} toast-icon-pop"></i> ${msg}`;
+            p.appendChild(t);
+            const remove = () => { t.classList.add('exiting'); setTimeout(() => t.remove(), 350); };
+            setTimeout(remove, 3800);
+            t.addEventListener('click', remove);
         }
 
-        // ==================== CONNECTION STATUS ====================
-        function updateConnection(online) {
-            const bar = document.getElementById('connection-bar');
-            const text = document.getElementById('connection-text');
-            bar.className = `connection-bar ${online ? 'online' : 'offline'} show`;
-            text.textContent = online ? 'Back Online' : 'No Internet Connection';
-            if (online) setTimeout(() => bar.classList.remove('show'), 3000);
+        // ==================== VALIDATION ====================
+        function isValidSchoolEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.split('@')[1].toLowerCase() === SCHOOL_DOMAIN;
         }
-        window.addEventListener('online', () => updateConnection(true));
-        window.addEventListener('offline', () => updateConnection(false));
-        updateConnection(navigator.onLine);
 
         // ==================== SPLASH ====================
         setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('splash-screen').classList.add('hidden'), 700);
+            const s = document.getElementById('splash-screen');
+            s.style.opacity = '0';
+            setTimeout(() => s.classList.add('hidden'), 700);
         }, 2700);
 
         // ==================== SCREEN MANAGEMENT ====================
         function showScreen(name) {
-            const authView = document.getElementById('auth-view');
-            const mainApp = document.getElementById('main-app');
-            const loginCard = document.getElementById('login-card');
-            const signupCard = document.getElementById('signup-card');
-            
+            const av = document.getElementById('auth-view'), ma = document.getElementById('main-app');
+            const lc = document.getElementById('login-card'), sc = document.getElementById('signup-card');
             if (name === 'login') {
-                authView.classList.remove('hidden');
-                loginCard.classList.remove('hidden');
-                signupCard.classList.add('hidden');
-                mainApp.classList.remove('visible');
-                setTimeout(() => mainApp.classList.add('hidden'), 500);
+                av.classList.remove('hidden'); lc.classList.remove('hidden'); sc.classList.add('hidden');
+                ma.classList.remove('visible'); setTimeout(() => ma.classList.add('hidden'), 400);
             } else if (name === 'signup') {
-                authView.classList.remove('hidden');
-                signupCard.classList.remove('hidden');
-                loginCard.classList.add('hidden');
-                mainApp.classList.remove('visible');
-                setTimeout(() => mainApp.classList.add('hidden'), 500);
-                setStepUI(1);
+                av.classList.remove('hidden'); sc.classList.remove('hidden'); lc.classList.add('hidden');
+                ma.classList.remove('visible'); setTimeout(() => ma.classList.add('hidden'), 400);
+                setStep(1);
             } else {
-                authView.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => mainApp.classList.add('visible'));
-                });
-                loadUserProfile();
+                av.classList.add('hidden'); ma.classList.remove('hidden');
+                requestAnimationFrame(() => requestAnimationFrame(() => ma.classList.add('visible')));
+                loadUserData();
             }
-        }
-
-        // ==================== EMAIL VALIDATION ====================
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.split('@')[1].toLowerCase() === SCHOOL_DOMAIN;
         }
 
         // ==================== NAVIGATION ====================
-        document.getElementById('link-to-signup').addEventListener('click', () => showScreen('signup'));
-        document.getElementById('link-to-login').addEventListener('click', () => showScreen('login'));
+        document.getElementById('link-signup').addEventListener('click', () => showScreen('signup'));
+        document.getElementById('link-login').addEventListener('click', () => showScreen('login'));
         document.getElementById('mobile-avatar-btn').addEventListener('click', () => switchTab('settings'));
 
         // ==================== STEPPER ====================
-        function setStepUI(n) {
-            document.querySelectorAll('.step-slide').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.step-pip').forEach(el => el.classList.remove('active', 'done'));
+        function setStep(n) {
+            document.querySelectorAll('.step-slide').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.step-dot').forEach(e => e.classList.remove('current', 'done'));
             document.getElementById('step-' + n)?.classList.add('active');
             for (let i = 1; i <= 3; i++) {
-                const pip = document.getElementById('pip-' + i);
-                if (pip) {
-                    if (i < n) pip.classList.add('done');
-                    if (i === n) pip.classList.add('active');
-                }
+                const d = document.getElementById('dot-' + i);
+                if (d) { if (i < n) d.classList.add('done'); if (i === n) d.classList.add('current'); }
             }
         }
-
         document.getElementById('btn-next-1').addEventListener('click', () => {
-            const email = document.getElementById('signup-email').value.trim();
-            if (!isValidEmail(email)) return showToast(`Use @${SCHOOL_DOMAIN} email`, 'error');
+            if (!isValidSchoolEmail(document.getElementById('signup-email').value.trim())) return showToast(`Use @${SCHOOL_DOMAIN} email`, 'error');
             if (document.getElementById('signup-password').value.length < 6) return showToast('Password too short', 'error');
-            setStepUI(2);
+            setStep(2);
         });
         document.getElementById('btn-next-2').addEventListener('click', () => {
             if (!document.getElementById('signup-name').value.trim()) return showToast('Enter your name', 'error');
             if (!document.getElementById('signup-grade').value) return showToast('Select grade', 'error');
-            setStepUI(3);
+            setStep(3);
         });
-        document.querySelectorAll('.btn-prev').forEach(b => {
-            b.addEventListener('click', e => setStepUI(parseInt(e.currentTarget.dataset.target)));
-        });
+        document.querySelectorAll('.btn-prev').forEach(b => b.addEventListener('click', e => setStep(parseInt(e.target.dataset.target))));
 
-        // ==================== AUTH ====================
-        function btnLoading(id, loading) {
-            const btn = document.getElementById(id);
-            if (!btn) return;
-            if (loading) {
-                btn.dataset.orig = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Please wait...';
-            } else {
-                btn.disabled = false;
-                if (btn.dataset.orig) btn.innerHTML = btn.dataset.orig;
+        // ==================== MICROSOFT AUTH ====================
+        async function handleMicrosoftSignIn(isSignup = false) {
+            try {
+                const result = await signInWithPopup(auth, microsoftProvider);
+                const email = result.user.email;
+                if (!isValidSchoolEmail(email) && email.toLowerCase() !== ADMIN_EMAIL) {
+                    await signOut(auth);
+                    return showToast(`Only @${SCHOOL_DOMAIN} emails allowed`, 'error');
+                }
+                if (isSignup) {
+                    const snap = await getDoc(doc(db, "students", result.user.uid));
+                    if (snap.exists()) {
+                        showToast('Account already exists! Signed in.');
+                        return;
+                    }
+                    await setDoc(doc(db, "students", result.user.uid), {
+                        name: result.user.displayName || 'Student',
+                        email, grade: '', shared: true,
+                        schedule: {1:'Free Period',2:'Free Period',3:'Free Period',4:'Free Period',5:'Free Period',6:'Free Period',7:'Free Period'},
+                        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+                        authProvider: 'microsoft'
+                    });
+                    showToast('Account created! Complete your profile in Settings.');
+                } else {
+                    showToast('Signed in with Microsoft!');
+                }
+            } catch (e) {
+                if (e.code !== 'auth/popup-closed-by-user') {
+                    console.error(e);
+                    showToast('Microsoft sign-in failed. Try again.', 'error');
+                }
             }
         }
+        document.getElementById('btn-ms-login').addEventListener('click', () => handleMicrosoftSignIn(false));
+        document.getElementById('btn-ms-signup').addEventListener('click', () => handleMicrosoftSignIn(true));
+
+        // ==================== EMAIL AUTH ====================
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+            if (!email || !pass) return showToast('Fill all fields', 'error');
+            if (!isValidSchoolEmail(email) && email.toLowerCase() !== ADMIN_EMAIL) return showToast(`@${SCHOOL_DOMAIN} required`, 'warning');
+            try { await signInWithEmailAndPassword(auth, email, pass); showToast('Welcome! 👋'); }
+            catch { showToast('Invalid credentials', 'error'); }
+        });
 
         document.getElementById('btn-finish').addEventListener('click', async () => {
-            btnLoading('btn-finish', true);
+            const email = document.getElementById('signup-email').value.trim();
+            if (!isValidSchoolEmail(email)) return showToast(`@${SCHOOL_DOMAIN} required`, 'error');
             try {
+                const dupQuery = query(collection(db, "students"), where("email", "==", email));
+                const dupSnap = await getDocs(dupQuery);
+                if (!dupSnap.empty) return showToast('This email is already registered', 'error');
+                
                 const schedule = {};
                 for (let i = 1; i <= 7; i++) schedule[i] = document.getElementById('p' + i).value.trim() || 'Free Period';
-                const email = document.getElementById('signup-email').value.trim();
-                if (!isValidEmail(email)) { btnLoading('btn-finish', false); return showToast('Invalid email', 'error'); }
-                
                 const uc = await createUserWithEmailAndPassword(auth, email, document.getElementById('signup-password').value);
                 await setDoc(doc(db, "students", uc.user.uid), {
                     name: document.getElementById('signup-name').value.trim(),
                     grade: document.getElementById('signup-grade').value,
                     email, shared: true, schedule,
-                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+                    authProvider: 'email'
                 });
-                showToast('Account created! Welcome! 🎉');
+                showToast('Account created! 🎉');
             } catch (e) {
-                showToast(e.message || 'Signup failed', 'error');
-                btnLoading('btn-finish', false);
+                if (e.code === 'auth/email-already-in-use') showToast('Email already registered', 'error');
+                else showToast(e.message, 'error');
             }
         });
 
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-password').value;
-            if (!email || !pass) return showToast('Fill all fields', 'error');
-            if (!isValidEmail(email)) return showToast(`@${SCHOOL_DOMAIN} required`, 'warning');
-            btnLoading('btn-login', true);
-            try { await signInWithEmailAndPassword(auth, email, pass); showToast('Welcome! 👋'); }
-            catch { showToast('Invalid credentials', 'error'); btnLoading('btn-login', false); }
-        });
-
+        // ==================== LOGOUT & DELETE ====================
         async function doLogout() {
             if (classmatesListener) { classmatesListener(); classmatesListener = null; }
             localStorage.removeItem('wwhs_cache');
             await signOut(auth);
+            showToast('Signed out');
         }
         document.getElementById('btn-logout-desk').addEventListener('click', doLogout);
         document.getElementById('btn-logout-mob').addEventListener('click', doLogout);
 
+        document.getElementById('btn-delete-account').addEventListener('click', async () => {
+            if (!confirm('Permanently delete your account and schedule? This cannot be undone.')) return;
+            try {
+                const user = auth.currentUser;
+                if (user) {
+                    await deleteDoc(doc(db, "students", user.uid));
+                    await deleteUser(user);
+                    showToast('Account deleted');
+                }
+            } catch (e) {
+                if (e.code === 'auth/requires-recent-login') {
+                    showToast('Please sign out and sign in again first, then delete.', 'error');
+                } else {
+                    showToast('Delete failed. Try again.', 'error');
+                }
+            }
+        });
+
+        // ==================== AUTH STATE ====================
         onAuthStateChanged(auth, u => {
             if (u) { showScreen('app'); }
             else { if (classmatesListener) { classmatesListener(); classmatesListener = null; } showScreen('login'); }
@@ -2099,81 +1279,60 @@
 
         // ==================== TAB SWITCHING ====================
         function switchTab(id) {
-            document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.tab === id);
-            });
-            ['schedule','classmates','settings'].forEach(t => {
-                const el = document.getElementById('tab-' + t);
-                if (el) {
-                    if (t === id) { el.classList.remove('hidden'); el.classList.add('animate-in'); }
-                    else el.classList.add('hidden');
-                }
-            });
+            document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+            ['schedule','classmates','settings'].forEach(t => document.getElementById('tab-' + t).classList.toggle('hidden', t !== id));
             document.getElementById('main-scroll').scrollTop = 0;
             if (id === 'classmates') loadClassmates();
-            if (id === 'settings') refreshSettingsDisplay();
+            if (id === 'settings') refreshSettingsUI();
         }
-        document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => {
-            b.addEventListener('click', () => b.dataset.tab && switchTab(b.dataset.tab));
-        });
+        document.querySelectorAll('.sidebar-nav-btn, .bottom-nav-btn').forEach(b => b.addEventListener('click', () => b.dataset.tab && switchTab(b.dataset.tab)));
 
         // ==================== DISCOVERY ====================
-        async function setDiscovery(shared) {
+        async function updateDiscovery(shared) {
             if (!auth.currentUser) return;
             try {
                 await updateDoc(doc(db, "students", auth.currentUser.uid), { shared, updatedAt: new Date().toISOString() });
                 if (currentUserData) currentUserData.shared = shared;
-                updateDiscoveryDisplay(shared);
+                updateDiscoveryUI(shared);
                 showToast(shared ? 'Discovery ON ✨' : 'Discovery OFF 🔒');
-            } catch { showToast('Update failed', 'error'); updateDiscoveryDisplay(!shared); }
+            } catch { showToast('Update failed', 'error'); }
         }
-
-        function updateDiscoveryDisplay(shared) {
-            const dot = document.getElementById('discovery-dot');
-            const title = document.getElementById('discovery-title');
-            const desc = document.getElementById('discovery-desc');
-            const chip = document.getElementById('discovery-chip');
-            const sChip = document.getElementById('settings-chip');
-            const sDesc = document.getElementById('settings-desc');
+        function updateDiscoveryUI(shared) {
+            const dot = document.getElementById('disc-dot'), title = document.getElementById('disc-title');
+            const desc = document.getElementById('disc-desc'), chip = document.getElementById('disc-chip');
+            const sChip = document.getElementById('settings-chip'), sDesc = document.getElementById('settings-desc');
             const toggle = document.getElementById('toggle-discovery');
-            
             if (shared) {
-                if (dot) { dot.className = 'discovery-dot-live on'; }
-                if (title) title.textContent = 'Discovery Active';
+                if (dot) dot.className = 'disc-dot on'; if (title) title.textContent = 'Discovery Active';
                 if (desc) desc.textContent = 'Classmates can see your schedule and find you in the directory';
-                if (chip) { chip.className = 'status-pill active-pill'; chip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Visible'; }
-                if (sChip) { sChip.className = 'status-pill active-pill'; sChip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Discoverable'; }
+                if (chip) { chip.className = 'status-chip on-chip'; chip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Visible'; }
+                if (sChip) { sChip.className = 'status-chip on-chip'; sChip.innerHTML = '<i class="fa-solid fa-check-circle"></i> Discoverable'; }
                 if (sDesc) sDesc.textContent = 'Visible to classmates';
-                if (toggle) toggle.classList.add('active');
+                if (toggle) toggle.classList.add('on');
             } else {
-                if (dot) { dot.className = 'discovery-dot-live off'; }
-                if (title) title.textContent = 'Discovery Off';
+                if (dot) dot.className = 'disc-dot off'; if (title) title.textContent = 'Discovery Off';
                 if (desc) desc.textContent = 'Your schedule is hidden. Classmates cannot find you.';
-                if (chip) { chip.className = 'status-pill inactive-pill'; chip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
-                if (sChip) { sChip.className = 'status-pill inactive-pill'; sChip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
+                if (chip) { chip.className = 'status-chip off-chip'; chip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
+                if (sChip) { sChip.className = 'status-chip off-chip'; sChip.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hidden'; }
                 if (sDesc) sDesc.textContent = 'Hidden from classmates';
-                if (toggle) toggle.classList.remove('active');
+                if (toggle) toggle.classList.remove('on');
             }
         }
-
         document.getElementById('toggle-discovery').addEventListener('click', function() {
-            if (this.classList.contains('active')) {
+            if (this.classList.contains('on')) {
                 document.getElementById('confirm-modal').classList.remove('hidden');
             } else {
-                setDiscovery(true);
+                updateDiscovery(true);
             }
         });
         document.getElementById('btn-cancel-discovery').addEventListener('click', () => document.getElementById('confirm-modal').classList.add('hidden'));
         document.getElementById('btn-confirm-discovery').addEventListener('click', async () => {
             document.getElementById('confirm-modal').classList.add('hidden');
-            await setDiscovery(false);
-        });
-        document.getElementById('confirm-modal').addEventListener('click', function(e) {
-            if (e.target === this) this.classList.add('hidden');
+            await updateDiscovery(false);
         });
 
         // ==================== LOAD USER ====================
-        async function loadUserProfile() {
+        async function loadUserData() {
             if (!auth.currentUser) return;
             try {
                 const snap = await getDoc(doc(db, "students", auth.currentUser.uid));
@@ -2181,41 +1340,34 @@
                     const d = snap.data();
                     if (d.shared === undefined) { d.shared = true; await updateDoc(doc(db, "students", auth.currentUser.uid), { shared: true }); }
                     currentUserData = d;
-                    renderProfileUI(d);
+                    renderUserUI(d);
                     localStorage.setItem('wwhs_cache', JSON.stringify(d));
                 } else {
                     const cached = localStorage.getItem('wwhs_cache');
-                    if (cached) { currentUserData = JSON.parse(cached); renderProfileUI(currentUserData); showToast('Offline mode', 'warning'); }
+                    if (cached) { currentUserData = JSON.parse(cached); renderUserUI(currentUserData); showToast('Offline mode', 'warning'); }
                     else showToast('Profile not found', 'error');
                 }
             } catch {
                 const cached = localStorage.getItem('wwhs_cache');
-                if (cached) { currentUserData = JSON.parse(cached); renderProfileUI(currentUserData); showToast('Offline', 'warning'); }
+                if (cached) { currentUserData = JSON.parse(cached); renderUserUI(currentUserData); }
             }
         }
-
-        function renderProfileUI(d) {
+        function renderUserUI(d) {
             const init = (d.name || '?')[0].toUpperCase();
             document.getElementById('profile-name').textContent = d.name || 'Student';
             document.getElementById('profile-email').textContent = d.email || '';
             document.getElementById('profile-grade').textContent = d.grade || '--';
             document.getElementById('profile-avatar').textContent = init;
             document.getElementById('mobile-avatar-btn').textContent = init;
-            updateDiscoveryDisplay(!!d.shared);
+            updateDiscoveryUI(!!d.shared);
             renderSchedule(d.schedule, false);
         }
-
         function renderSchedule(sched, edit = false) {
             const c = document.getElementById('schedule-container');
             let h = '';
             for (let i = 1; i <= 7; i++) {
                 const name = sched?.[i] || 'Free Period';
-                h += `<div class="schedule-row-item">
-                    <div class="period-badge-num">P${i}</div>
-                    <div class="class-detail">
-                        ${edit ? `<input type="text" id="edit-p${i}" class="edit-field" value="${name}">` : `<div class="class-name-text">${name}</div><div class="class-sub-text">Period ${i}</div>`}
-                    </div>
-                </div>`;
+                h += `<div class="sched-row"><div class="period-num">P${i}</div><div class="class-detail">${edit ? `<input class="edit-input" id="edit-p${i}" value="${name}">` : `<div class="class-name">${name}</div><div class="class-sub">Period ${i}</div>`}</div></div>`;
             }
             c.innerHTML = h;
             document.getElementById('save-bar').classList.toggle('visible', edit);
@@ -2223,23 +1375,20 @@
 
         // ==================== EDIT SCHEDULE ====================
         document.getElementById('btn-edit-schedule').addEventListener('click', function() {
-            editModeActive = !editModeActive;
-            this.innerHTML = editModeActive ? '<i class="fa-solid fa-xmark"></i> Cancel' : '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
-            renderSchedule(currentUserData?.schedule, editModeActive);
+            isEditMode = !isEditMode;
+            this.innerHTML = isEditMode ? '<i class="fa-solid fa-xmark"></i> Cancel' : '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
+            renderSchedule(currentUserData?.schedule, isEditMode);
         });
-
         document.getElementById('btn-save-schedule').addEventListener('click', async () => {
-            if (!auth.currentUser || !editModeActive) return;
-            const updated = {};
-            for (let i = 1; i <= 7; i++) {
-                updated[i] = document.getElementById('edit-p' + i)?.value.trim() || 'Free Period';
-            }
+            if (!auth.currentUser || !isEditMode) return;
+            const s = {};
+            for (let i = 1; i <= 7; i++) s[i] = document.getElementById('edit-p' + i)?.value.trim() || 'Free Period';
             try {
-                await updateDoc(doc(db, "students", auth.currentUser.uid), { schedule: updated, updatedAt: new Date().toISOString() });
-                currentUserData.schedule = updated;
-                editModeActive = false;
+                await updateDoc(doc(db, "students", auth.currentUser.uid), { schedule: s, updatedAt: new Date().toISOString() });
+                currentUserData.schedule = s;
+                isEditMode = false;
                 document.getElementById('btn-edit-schedule').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Schedule';
-                renderSchedule(updated, false);
+                renderSchedule(s, false);
                 showToast('Schedule saved! ✅');
             } catch { showToast('Save failed', 'error'); }
         });
@@ -2254,75 +1403,46 @@
 
         // ==================== CLASSMATES ====================
         document.getElementById('btn-refresh-dir').addEventListener('click', () => loadClassmates(true));
-
         function loadClassmates(force = false) {
             const c = document.getElementById('classmates-container');
-            if (force || !allClassmatesCache.length) {
-                c.innerHTML = Array(4).fill('<div class="classmate-panel"><div class="skeleton-block" style="height:180px;border-radius:18px;"></div></div>').join('');
-            }
+            if (force || !allClassmatesData.length) c.innerHTML = Array(4).fill('<div class="cm-card"><div class="skeleton" style="height:160px;border-radius:18px;"></div></div>').join('');
             if (currentUserData && !currentUserData.shared) {
-                c.innerHTML = '<div class="empty-panel"><span class="empty-icon-large">🔒</span><h3>Discovery Off</h3><p>Enable discovery in Settings.</p></div>';
+                c.innerHTML = '<div class="empty-panel"><span class="empty-icon">🔒</span><h3>Discovery Off</h3><p>Enable discovery in Settings.</p></div>';
                 return;
             }
             if (classmatesListener) classmatesListener();
             const q = query(collection(db, "students"), where("shared", "==", true));
             classmatesListener = onSnapshot(q, snap => {
-                allClassmatesCache = [];
-                snap.forEach(d => { if (d.id !== auth.currentUser?.uid) allClassmatesCache.push({ id: d.id, ...d.data() }); });
-                renderClassmates(allClassmatesCache);
-            }, () => {
-                c.innerHTML = '<div class="empty-panel"><span class="empty-icon-large">📡</span><h3>Connection Error</h3></div>';
-            });
+                allClassmatesData = [];
+                snap.forEach(d => { if (d.id !== auth.currentUser?.uid) allClassmatesData.push({ id: d.id, ...d.data() }); });
+                renderClassmates(allClassmatesData);
+            }, () => { c.innerHTML = '<div class="empty-panel"><span class="empty-icon">📡</span><h3>Connection Error</h3></div>'; });
         }
-
         function renderClassmates(list, search = '') {
             const c = document.getElementById('classmates-container');
-            let filtered = list;
+            let f = list;
             if (search) {
                 const t = search.toLowerCase();
-                filtered = list.filter(cm => {
-                    if (cm.name?.toLowerCase().includes(t)) return true;
-                    if (cm.grade?.toString().includes(t)) return true;
-                    if (cm.schedule) for (let i = 1; i <= 7; i++) if (cm.schedule[i]?.toLowerCase().includes(t)) return true;
-                    return false;
-                });
+                f = list.filter(cm => cm.name?.toLowerCase().includes(t) || cm.grade?.toString().includes(t) || (cm.schedule && Object.values(cm.schedule).some(v => v.toLowerCase().includes(t))));
             }
-            if (!filtered.length) {
-                c.innerHTML = `<div class="empty-panel"><span class="empty-icon-large">${search ? '🔍' : '👥'}</span><h3>${search ? 'No Results' : 'No Classmates'}</h3><p>${search ? 'Try another search' : 'Invite friends!'}</p></div>`;
+            if (!f.length) {
+                c.innerHTML = `<div class="empty-panel"><span class="empty-icon">${search ? '🔍' : '👥'}</span><h3>${search ? 'No Results' : 'No Classmates'}</h3><p>${search ? 'Try another search' : 'Be the first to share!'}</p></div>`;
                 return;
             }
-            c.innerHTML = filtered.map((cm, i) => {
+            c.innerHTML = f.map((cm, i) => {
                 let shared = 0;
-                if (currentUserData?.schedule && cm.schedule) {
-                    for (let j = 1; j <= 7; j++) {
-                        if ((currentUserData.schedule[j]||'').toLowerCase() === (cm.schedule[j]||'').toLowerCase() && currentUserData.schedule[j]) shared++;
-                    }
-                }
+                if (currentUserData?.schedule && cm.schedule) for (let j = 1; j <= 7; j++) if ((currentUserData.schedule[j]||'').toLowerCase() === (cm.schedule[j]||'').toLowerCase() && currentUserData.schedule[j]) shared++;
                 let pills = '';
                 for (let j = 1; j <= 7; j++) {
                     const cn = cm.schedule?.[j] || 'Free';
                     const match = search && cn.toLowerCase().includes(search.toLowerCase());
-                    pills += `<div class="cm-class-bubble ${match ? 'match-highlight' : ''}"><i class="fa-solid fa-circle"></i><span>P${j}: ${cn}</span></div>`;
+                    pills += `<div class="cm-pill ${match ? 'highlight' : ''}"><i class="fa-solid fa-circle"></i><span>P${j}: ${cn}</span></div>`;
                 }
-                return `<div class="classmate-panel ${shared ? 'has-shared' : ''}" style="animation:fadeInScale 0.5s ${i*0.06}s var(--ease-out-expo) both;">
-                    <div class="classmate-top-row">
-                        <div class="cm-avatar-circle">${(cm.name||'?')[0].toUpperCase()}</div>
-                        <div class="cm-meta">
-                            <h4>${cm.name||'Student'} ${shared ? `<span class="cm-shared-badge">🔗 ${shared} shared</span>` : ''}</h4>
-                            <span class="cm-grade-tag">Grade ${cm.grade||'--'}</span>
-                        </div>
-                    </div>
-                    <div class="cm-classes-grid">${pills}</div>
-                </div>`;
+                return `<div class="cm-card ${shared ? 'shared' : ''}"><div class="cm-top"><div class="cm-avatar">${(cm.name||'?')[0].toUpperCase()}</div><div class="cm-meta"><h4>${cm.name||'Student'} ${shared ? `<span class="shared-tag">🔗 ${shared} shared</span>` : ''}</h4><span class="grade-tag">Grade ${cm.grade||'--'}</span></div></div><div class="cm-classes">${pills}</div></div>`;
             }).join('');
         }
-
-        document.getElementById('class-search').addEventListener('input', e => renderClassmates(allClassmatesCache, e.target.value));
-
-        function refreshSettingsDisplay() {
-            if (currentUserData) updateDiscoveryDisplay(!!currentUserData.shared);
-        }
-
+        document.getElementById('class-search').addEventListener('input', e => renderClassmates(allClassmatesData, e.target.value));
+        function refreshSettingsUI() { if (currentUserData) updateDiscoveryUI(!!currentUserData.shared); }
     </script>
 </body>
 </html>
