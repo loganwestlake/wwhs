@@ -132,10 +132,21 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            opacity: .35;
-            background: radial-gradient(circle at 15% 25%, rgba(34, 197, 94, .05) 0%, transparent 45%),
-                        radial-gradient(circle at 85% 75%, rgba(21, 128, 61, .04) 0%, transparent 45%);
+            opacity: .5;
+            background: radial-gradient(circle at 15% 25%, rgba(34, 197, 94, .08) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 75%, rgba(21, 128, 61, .06) 0%, transparent 45%);
+            animation: ambDrift 18s ease-in-out infinite;
         }
+        @keyframes ambDrift {
+            0%, 100% { background-position: 0 0, 0 0; }
+            50% { background-position: 20px -20px, -20px 20px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .bg-amb { animation: none; } }
+
+        /* Tab content entrance, applied via JS on every switchTab() call */
+        .tab-enter { animation: tabEnter .35s var(--es); }
+        @keyframes tabEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) { .tab-enter { animation: none; } }
 
         /* ==========================================================================
            TOAST NOTIFICATIONS
@@ -242,26 +253,44 @@
             position: fixed; inset: 0; z-index: 100;
             display: flex; align-items: center; justify-content: center;
             padding: 20px;
-            background:
-                radial-gradient(circle at 12% 8%, rgba(34,197,94,.07) 0%, transparent 40%),
-                radial-gradient(circle at 88% 92%, rgba(21,128,61,.06) 0%, transparent 40%),
-                var(--ow);
+            background: linear-gradient(165deg, #eafcf1 0%, var(--ow) 38%, var(--ow) 62%, #eafcf1 100%);
             overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Ambient animated mesh — fixed to the viewport so it always fills the
+           screen edge-to-edge no matter how tall the card content is. */
+        .mesh-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
+        .blob.b1 { width: 46vmax; height: 46vmax; top: -18vmax; left: -14vmax; background: radial-gradient(circle, var(--g300), var(--g500) 70%); animation: drift1 22s ease-in-out infinite; }
+        .blob.b2 { width: 38vmax; height: 38vmax; bottom: -16vmax; right: -12vmax; background: radial-gradient(circle, #6ee7b7, var(--g600) 70%); animation: drift2 26s ease-in-out infinite; }
+        .blob.b3 { width: 30vmax; height: 30vmax; top: 38%; left: 50%; background: radial-gradient(circle, #bef264, var(--g400) 70%); opacity: .3; animation: drift3 30s ease-in-out infinite; }
+
+        @keyframes drift1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(6vmax, 8vmax) scale(1.08); } }
+        @keyframes drift2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-7vmax, -6vmax) scale(1.1); } }
+        @keyframes drift3 { 0%, 100% { transform: translate(-50%, 0) scale(1); } 50% { transform: translate(-50%, -5vmax) scale(1.15); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob { animation: none !important; }
         }
 
         .ap {
-            background: var(--w);
-            border: 1px solid var(--gy200);
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, .78);
+            backdrop-filter: blur(22px) saturate(140%);
+            -webkit-backdrop-filter: blur(22px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, .7);
             border-radius: var(--r2);
             padding: 42px 32px;
             width: 100%;
             max-width: 420px;
-            box-shadow: var(--sxl);
-            animation: apIn .6s var(--es);
+            box-shadow: 0 24px 60px rgba(21, 128, 61, .14), 0 4px 12px rgba(0,0,0,.04);
+            animation: apIn .65s var(--esp);
             text-align: center;
             margin: auto;
         }
-        @keyframes apIn { from { opacity: 0; transform: translateY(20px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes apIn { from { opacity: 0; transform: translateY(28px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         .ap-icon {
             width: 68px; height: 68px;
@@ -269,9 +298,23 @@
             border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 18px;
-            box-shadow: 0 10px 20px rgba(34, 197, 94, .2);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, .25);
+            animation: iconPulse 3.2s ease-in-out infinite;
         }
         .ap-icon i { font-size: 28px; color: #fff; }
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 10px 20px rgba(34, 197, 94, .25); transform: scale(1); }
+            50% { box-shadow: 0 12px 28px rgba(34, 197, 94, .4); transform: scale(1.04); }
+        }
+        @media (prefers-reduced-motion: reduce) { .ap-icon { animation: none; } }
+
+        /* Staggered field entrance inside whichever step/panel is active */
+        .step.active .fg, .step.active > .btn { animation: fieldIn .5s var(--es) backwards; }
+        .step.active .fg:nth-child(1), .step.active > *:nth-child(1) { animation-delay: .05s; }
+        .step.active .fg:nth-child(2), .step.active > *:nth-child(2) { animation-delay: .1s; }
+        .step.active .fg:nth-child(3), .step.active > *:nth-child(3) { animation-delay: .15s; }
+        .step.active .fg:nth-child(4), .step.active > *:nth-child(4) { animation-delay: .2s; }
+        @keyframes fieldIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .ap h2 { font-family: var(--df); font-size: 23px; font-weight: 700; margin-bottom: 4px; }
         .ap .sub { color: var(--gy500); font-size: 14px; margin-bottom: 28px; }
@@ -599,6 +642,7 @@
 
 <!-- Authentication Screen -->
 <div class="as hidden" id="authScreen">
+    <div class="mesh-bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
     <!-- Login Panel -->
     <div class="ap" id="loginPanel">
         <div class="ap-icon"><i class="fa-solid fa-calendar-days"></i></div>
@@ -1159,7 +1203,13 @@ function switchSignupStep(stepNumber) {
 function switchTab(tabName) {
     currentActiveTab = tabName;
     ['schedule', 'classmates', 'settings', 'admin'].forEach(name => {
-        document.getElementById('tab-' + name).classList.toggle('hidden', name !== tabName);
+        const el = document.getElementById('tab-' + name);
+        el.classList.toggle('hidden', name !== tabName);
+        if (name === tabName) {
+            el.classList.remove('tab-enter');
+            void el.offsetWidth; // restart animation
+            el.classList.add('tab-enter');
+        }
     });
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
     document.querySelectorAll('.nav-btn-mobile').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
