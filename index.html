@@ -408,6 +408,8 @@
         }
         .sb-b h3 { font-family: var(--df); font-size: 15px; font-weight: 700; }
         .sb-b span { font-size: 11px; color: var(--gy500); display: block; }
+        .ver { font-size: 10px; color: var(--gy400); font-weight: 600; }
+        .sb-b .ver { display: block; margin-top: 2px; }
 
         .sb-n { display: flex; flex-direction: column; gap: 3px; flex: 1; }
         .sb-n button {
@@ -739,7 +741,7 @@
     <aside class="sdbr">
         <div class="sb-b">
             <div class="sb-i"><i class="fa-solid fa-calendar-days"></i></div>
-            <div><h3>WWHS PRO</h3><span>Share &amp; Discover</span></div>
+            <div><h3>WWHS PRO</h3><span>Share &amp; Discover</span><span class="ver">–</span></div>
         </div>
         <nav class="sb-n">
             <button class="active nav-btn" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i> My Schedule</button>
@@ -752,7 +754,7 @@
 
     <div class="mp">
         <header class="tb">
-            <h1>WWHS PRO <span class="ac hidden" id="adminBadge">Admin</span></h1>
+            <h1>WWHS PRO <span class="ver">–</span> <span class="ac hidden" id="adminBadge">Admin</span></h1>
             <button class="ab" id="btnMobileHelp">?</button>
         </header>
 
@@ -808,6 +810,7 @@
                         <h2 id="profileName">Loading...</h2>
                         <p class="mt">Grade <span id="profileGrade">--</span></p>
                         <p class="em" id="profileEmail">...</p>
+                        <span class="ver" style="display:block;margin:0 auto 8px;width:fit-content">–</span>
                         <div id="adminIndicatorContainer"></div>
                         <span class="pl gn" id="settingsDiscoveryPill"><i class="fa-solid fa-check-circle"></i> Discoverable</span>
                     </div>
@@ -911,6 +914,9 @@ const SCHOOL_DOMAIN = 'hernandoschools.org';
 // anyone who views source on the deployed site.
 const ADMIN_EMAIL = 'admin@hernandoschools.org';
 const PERIOD_COUNT = 7;
+// Version tag shown in the sidebar, mobile header, and profile card.
+const APP_VERSION = 'v1.3';
+document.querySelectorAll('.ver').forEach(el => el.textContent = APP_VERSION);
 
 /**
  * ============================================================================
