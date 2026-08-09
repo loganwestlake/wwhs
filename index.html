@@ -915,7 +915,7 @@ const SCHOOL_DOMAIN = 'hernandoschools.org';
 const ADMIN_EMAIL = 'admin@hernandoschools.org';
 const PERIOD_COUNT = 7;
 // Version tag shown in the sidebar, mobile header, and profile card.
-const APP_VERSION = 'v1.3';
+const APP_VERSION = 'v1.4';
 document.querySelectorAll('.ver').forEach(el => el.textContent = APP_VERSION);
 
 /**
@@ -1049,6 +1049,8 @@ let currentUserId = null;
 let currentDocumentData = null;
 let isEditingMode = false;
 let cachedClassmates = [];
+let isClassmatesLoading = false;
+let renderToken = 0;
 let classmateFilterMode = 'all'; // 'all' | 'shared'
 let isAdminUser = false;
 let pendingUserDeletionId = null; // uid of user pending deletion, or 'SELF'
@@ -1242,7 +1244,7 @@ function switchTab(tabName) {
     document.querySelectorAll('.nav-btn-mobile').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
     document.getElementById('scrollContent').scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (tabName === 'classmates') loadClassmates();
+    if (tabName === 'classmates' && cachedClassmates.length === 0 && !isClassmatesLoading) loadClassmates();
     if (tabName === 'admin' && isAdminUser) loadAdminData();
 }
 
@@ -1376,7 +1378,7 @@ async function loadUserProfile(uid) {
         renderScheduleView();
         updateDiscoveryUI(!!currentDocumentData.discoveryEnabled);
 
-        if (currentActiveTab === 'classmates') loadClassmates();
+        if (currentActiveTab === 'classmates' && cachedClassmates.length === 0 && !isClassmatesLoading) loadClassmates();
         if (currentActiveTab === 'admin' && isAdminUser) loadAdminData();
     } catch (err) {
         showToast('Could not load your profile: ' + describeAuthError(err), 'er');
@@ -1544,6 +1546,8 @@ document.getElementById('btn-force-discovery-off').addEventListener('click', asy
  * ============================================================================
  */
 async function loadClassmates() {
+    if (isClassmatesLoading) return;
+    isClassmatesLoading = true;
     const container = document.getElementById('classmatesResultsContainer');
     container.innerHTML = `<div class="skel" style="height:120px"></div><div class="skel" style="height:120px"></div>`;
     try {
@@ -1557,6 +1561,8 @@ async function loadClassmates() {
         applyClassmateFilters();
     } catch (err) {
         container.innerHTML = `<div class="em-s"><i class="fa-solid fa-triangle-exclamation"></i><h3>Could not load classmates</h3><p>${describeAuthError(err)}</p></div>`;
+    } finally {
+        isClassmatesLoading = false;
     }
 }
 
@@ -1678,7 +1684,13 @@ function renderClassmates(list) {
         return;
     }
 
-    list.forEach(mate => {
+    // Render in small batches per animation frame so big directories never
+    // freeze the phone (especially iOS Safari).
+    const CHUNK = 8;
+    let index = 0;
+    const token = ++renderToken;
+
+    function buildCard(mate) {
         const sharedPeriods = getSharedPeriods(mySchedule, mate.schedule);
 
         const card = document.createElement('div');
@@ -1730,11 +1742,24 @@ function renderClassmates(list) {
             </div>
         `;
 
-        container.appendChild(card);
-    });
+        return card;
+    }
+
+    function renderNextBatch() {
+        if (token !== renderToken) return;
+        const end = Math.min(index + CHUNK, list.length);
+        for (; index < end; index++) container.appendChild(buildCard(list[index]));
+        if (index < list.length) requestAnimationFrame(renderNextBatch);
+    }
+
+    requestAnimationFrame(renderNextBatch);
 }
 
-document.getElementById('classmateSearchInput').addEventListener('input', applyClassmateFilters);
+let searchDebounce = null;
+document.getElementById('classmateSearchInput').addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(applyClassmateFilters, 200);
+});
 
 document.querySelectorAll('#classmateFilterToggle .seg-btn').forEach(btn => {
     btn.addEventListener('click', () => {
