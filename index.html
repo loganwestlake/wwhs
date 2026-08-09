@@ -540,13 +540,15 @@
         .cma { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--g400), var(--g600)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0; }
         .cmi h4 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .gt { font-size: 11px; color: var(--gy500); background: var(--gy50); padding: 3px 9px; border-radius: 8px; }
-        .sht { font-size: 10px; font-weight: 600; background: var(--a50); color: var(--a700); padding: 3px 9px; border-radius: 8px; }
+        .sht { font-size: 10px; font-weight: 600; background: #fefce8; color: #a16207; border: 1px solid #fde047; padding: 3px 9px; border-radius: 8px; }
 
         .ccl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .cmp { background: var(--gy50); padding: 9px 11px; border-radius: 10px; font-size: 11px; display: flex; align-items: center; gap: 7px; color: var(--gy600); }
         .cmp i { color: var(--g500); font-size: 9px; }
-        .cmp.hl { background: var(--a50); border: 1px solid var(--a100); color: var(--a700); }
-        .cmp.hl i { color: var(--a500); }
+        .cmp strong { color: var(--g700); font-size: 10px; min-width: 22px; }
+        .cmp span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cmp.hl { background: var(--w); border: 2px solid #fde047; color: #a16207; box-shadow: 0 0 0 3px rgba(253, 224, 71, .25); }
+        .cmp.hl i { color: #eab308; }
 
         .pc { text-align: center; padding: 32px 22px; }
         .pa { width: 84px; height: 84px; border-radius: 22px; background: linear-gradient(135deg, var(--g400), var(--g600)); display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; color: #fff; margin: 0 auto 18px; box-shadow: 0 10px 24px rgba(34, 197, 94, .2); }
@@ -1570,72 +1572,158 @@ function applyClassmateFilters() {
         });
     }
 
-    // Classmates who share the most periods with you float to the top.
-    list = [...list].sort((a, b) => sharedCourses(mySchedule, b.schedule).length - sharedCourses(mySchedule, a.schedule).length);
+    // Classmates who share the most actual PERIODS with you float to the top.
+    list = [...list].sort((a, b) =>
+        getSharedPeriods(mySchedule, b.schedule).length -
+        getSharedPeriods(mySchedule, a.schedule).length
+    );
 
     renderClassmates(list);
 }
 
-/** Lowercased, trimmed course name — used so matching ignores section-code
- *  differences (WWHS_COURSES has several duplicate codes for the same class,
- *  e.g. "0102300 CERAM/POT 1" and "0102305 CERAM/POT 1") and casing/whitespace. */
+/** Lowercased, trimmed course name used for matching equivalent course names. */
 function normalizedCourseName(courseString) {
     const parsed = parseCourse(courseString);
     return parsed ? parsed.name.trim().toLowerCase() : '';
 }
 
-function sharedCourses(myScheduleObj, theirScheduleObj) {
-    const myNames = new Set(
-        Object.values(myScheduleObj || {})
-            .filter(Boolean)
-            .map(normalizedCourseName)
-            .filter(n => n && n !== 'free period')
-    );
+/** Numeric FL course code (e.g. "1200310") when the schedule stores a catalog string. */
+function getCourseCode(courseString) {
+    const parsed = parseCourse(courseString);
+    return parsed && /^\d+$/.test(parsed.code) ? parsed.code : '';
+}
+
+/**
+ * Returns the periods where both students have the same class.
+ * IMPORTANT: the period number must match too.
+ *
+ * A period counts as shared when both students are in the same class: they
+ * either picked the same catalog course (matching FL course code), entered
+ * the same course name, or both have a Free Period.
+ *
+ * Example:
+ *   My P2 = Algebra
+ *   Their P2 = Algebra  -> shared
+ *   My P3 = Free Period
+ *   Their P3 = Free Period -> shared
+ *   Their P5 = Algebra  -> NOT shared
+ */
+function getSharedPeriods(myScheduleObj, theirScheduleObj) {
     const shared = [];
-    for (const course of Object.values(theirScheduleObj || {})) {
-        if (!course) continue;
-        const name = normalizedCourseName(course);
-        if (name && name !== 'free period' && myNames.has(name)) shared.push(course);
+
+    for (let period = 1; period <= PERIOD_COUNT; period++) {
+        const periodKey = 'period' + period;
+        const myCourse = (myScheduleObj || {})[periodKey];
+        const theirCourse = (theirScheduleObj || {})[periodKey];
+
+        if (!myCourse || !theirCourse) continue;
+
+        const myName = normalizedCourseName(myCourse);
+        const theirName = normalizedCourseName(theirCourse);
+
+        if (myName && theirName) {
+            const myCode = getCourseCode(myCourse);
+            const theirCode = getCourseCode(theirCourse);
+            if (myName === theirName || (myCode && myCode === theirCode)) {
+                shared.push({
+                    period,
+                    course: theirCourse,
+                    myCourse
+                });
+            }
+        }
     }
+
     return shared;
+}
+
+/* Kept as a compatibility helper for any other code that uses sharedCourses(). */
+function sharedCourses(myScheduleObj, theirScheduleObj) {
+    return getSharedPeriods(myScheduleObj, theirScheduleObj).map(item => item.course);
 }
 
 function renderClassmates(list) {
     const container = document.getElementById('classmatesResultsContainer');
     container.innerHTML = '';
+
+    const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
+
     if (list.length === 0) {
         const sharedEmpty = classmateFilterMode === 'shared';
+        const myHasCourses = Object.values(mySchedule).some(v => v && v.trim());
+        let emptyIcon = 'fa-user-group';
+        let emptyTitle = 'No Classmates Found';
+        let emptyMsg = 'No one matches your search, or nobody nearby has discovery turned on.';
+        if (sharedEmpty && !myHasCourses) {
+            emptyIcon = 'fa-calendar-xmark';
+            emptyTitle = 'Add Your Schedule First';
+            emptyMsg = 'Save your classes on the My Schedule tab, then this list will show classmates who share the same periods with you.';
+        } else if (sharedEmpty) {
+            emptyIcon = 'fa-layer-group';
+            emptyTitle = 'No Same Period Classes';
+            emptyMsg = 'Nobody discoverable has the exact same class in the exact same period as you yet. Both of you must select the same class in the same period, and have Discovery turned on.';
+        }
         container.innerHTML = `
             <div class="em-s">
-                <i class="fa-solid ${sharedEmpty ? 'fa-layer-group' : 'fa-user-group'}"></i>
-                <h3>${sharedEmpty ? 'No shared periods yet' : 'No classmates found'}</h3>
-                <p>${sharedEmpty ? "No one discoverable shares a class with you right now. Try \u201cAll Classmates\u201d instead." : 'No one matches yet, or nobody nearby has discovery turned on.'}</p>
+                <i class="fa-solid ${emptyIcon}"></i>
+                <h3>${emptyTitle}</h3>
+                <p>${emptyMsg}</p>
             </div>`;
         return;
     }
-    const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
 
     list.forEach(mate => {
-        const shared = sharedCourses(mySchedule, mate.schedule);
-        const card = document.createElement('div');
-        card.className = 'cmc' + (shared.length > 0 ? ' shd' : '');
+        const sharedPeriods = getSharedPeriods(mySchedule, mate.schedule);
 
-        const allCourses = Object.values(mate.schedule || {}).filter(Boolean);
-        const chips = allCourses.slice(0, 6).map(c => {
-            const parsed = parseCourse(c);
-            const isShared = shared.includes(c);
-            return `<div class="cmp${isShared ? ' hl' : ''}"><i class="fa-solid fa-circle"></i> ${parsed.name}</div>`;
+        const card = document.createElement('div');
+        card.className = 'cmc' + (sharedPeriods.length > 0 ? ' shd' : '');
+
+        // Keep every course tied to its real period number.
+        // In Same Periods mode, only show the periods that actually match.
+        const allCourses = [];
+        for (let period = 1; period <= PERIOD_COUNT; period++) {
+            const course = (mate.schedule || {})['period' + period];
+            if (course) {
+                allCourses.push({
+                    period,
+                    course,
+                    shared: sharedPeriods.some(item => item.period === period)
+                });
+            }
+        }
+
+        const coursesToShow = classmateFilterMode === 'shared'
+            ? allCourses.filter(item => item.shared)
+            : allCourses;
+
+        const chips = coursesToShow.slice(0, PERIOD_COUNT).map(item => {
+            const parsed = parseCourse(item.course);
+            return `
+                <div class="cmp${item.shared ? ' hl' : ''}">
+                    <i class="fa-solid fa-circle"></i>
+                    <strong>P${item.period}</strong>
+                    <span>${parsed ? parsed.name : item.course}</span>
+                </div>`;
         }).join('');
 
         card.innerHTML = `
             <div class="cmt">
                 <div class="cma">${getInitials(mate.name)}</div>
                 <div class="cmi">
-                    <h4>${mate.name || 'Student'} <span class="gt">Grade ${mate.grade || '--'}</span>${shared.length > 0 ? `<span class="sht">${shared.length} shared</span>` : ''}</h4>
+                    <h4>
+                        ${mate.name || 'Student'}
+                        <span class="gt">Grade ${mate.grade || '--'}</span>
+                        ${sharedPeriods.length > 0
+                            ? `<span class="sht"><i class="fa-solid fa-layer-group"></i> P${sharedPeriods.map(s => s.period).join(', P')}</span>`
+                            : ''}
+                    </h4>
                 </div>
             </div>
-            <div class="ccl">${chips || '<div class="cmp">No classes listed yet</div>'}</div>
+            <div class="ccl">
+                ${chips || '<div class="cmp">No classes listed yet</div>'}
+            </div>
         `;
+
         container.appendChild(card);
     });
 }
