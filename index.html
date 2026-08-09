@@ -1576,11 +1576,26 @@ function applyClassmateFilters() {
     renderClassmates(list);
 }
 
+/** Lowercased, trimmed course name — used so matching ignores section-code
+ *  differences (WWHS_COURSES has several duplicate codes for the same class,
+ *  e.g. "0102300 CERAM/POT 1" and "0102305 CERAM/POT 1") and casing/whitespace. */
+function normalizedCourseName(courseString) {
+    const parsed = parseCourse(courseString);
+    return parsed ? parsed.name.trim().toLowerCase() : '';
+}
+
 function sharedCourses(myScheduleObj, theirScheduleObj) {
-    const mine = new Set(Object.values(myScheduleObj || {}).filter(Boolean));
+    const myNames = new Set(
+        Object.values(myScheduleObj || {})
+            .filter(Boolean)
+            .map(normalizedCourseName)
+            .filter(n => n && n !== 'free period')
+    );
     const shared = [];
     for (const course of Object.values(theirScheduleObj || {})) {
-        if (course && mine.has(course) && course !== 'Free Period') shared.push(course);
+        if (!course) continue;
+        const name = normalizedCourseName(course);
+        if (name && name !== 'free period' && myNames.has(name)) shared.push(course);
     }
     return shared;
 }
