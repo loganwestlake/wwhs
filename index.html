@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-    <title>WWHS Schedule Share Pro</title>
+    <title>WWHS PRO</title>
 
     <!-- Google Fonts Preconnect and Links -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -517,6 +517,20 @@
         }
         .sb-search input:focus { border-color: var(--g400); }
 
+        .seg {
+            display: flex; gap: 4px; background: var(--gy100); border-radius: var(--rl);
+            padding: 4px; margin-bottom: 16px;
+        }
+        .seg-btn {
+            flex: 1; border: none; background: transparent; padding: 10px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; color: var(--gy500); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            font-family: 'Inter', sans-serif; transition: all .25s var(--es);
+        }
+        .seg-btn i { font-size: 12px; }
+        .seg-btn.active { background: var(--w); color: var(--g700); box-shadow: var(--ss); }
+        .seg-btn:not(.active):hover { color: var(--ch); }
+
         .cg { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .cmc { background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rx); padding: 18px; transition: all .3s; position: relative; overflow: hidden; box-shadow: var(--sx); }
         .cmc:hover { box-shadow: var(--sm); transform: translateY(-2px); }
@@ -635,7 +649,7 @@
 <!-- Splash Screen -->
 <div class="sp" id="splashScreen">
     <div class="sp-logo"><i class="fa-solid fa-calendar-days"></i></div>
-    <h1>WWHS Schedule</h1>
+    <h1>WWHS PRO</h1>
     <p>Share &amp; Discover Classes</p>
     <div class="sp-bar"><div class="sp-bar-fill"></div></div>
 </div>
@@ -723,7 +737,7 @@
     <aside class="sdbr">
         <div class="sb-b">
             <div class="sb-i"><i class="fa-solid fa-calendar-days"></i></div>
-            <div><h3>WWHS Schedule</h3><span>Share &amp; Discover</span></div>
+            <div><h3>WWHS PRO</h3><span>Share &amp; Discover</span></div>
         </div>
         <nav class="sb-n">
             <button class="active nav-btn" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i> My Schedule</button>
@@ -736,7 +750,7 @@
 
     <div class="mp">
         <header class="tb">
-            <h1>WWHS Schedule <span class="ac hidden" id="adminBadge">Admin</span></h1>
+            <h1>WWHS PRO <span class="ac hidden" id="adminBadge">Admin</span></h1>
             <button class="ab" id="btnMobileHelp">?</button>
         </header>
 
@@ -777,6 +791,10 @@
                     <div class="sb-search">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="classmateSearchInput" placeholder="Search by name or class...">
+                    </div>
+                    <div class="seg" id="classmateFilterToggle">
+                        <button class="seg-btn active" data-mode="all"><i class="fa-solid fa-users"></i> All Classmates</button>
+                        <button class="seg-btn" data-mode="shared"><i class="fa-solid fa-layer-group"></i> Same Periods</button>
                     </div>
                     <div class="cg" id="classmatesResultsContainer"></div>
                 </div>
@@ -1023,6 +1041,7 @@ let currentUserId = null;
 let currentDocumentData = null;
 let isEditingMode = false;
 let cachedClassmates = [];
+let classmateFilterMode = 'all'; // 'all' | 'shared'
 let isAdminUser = false;
 let pendingUserDeletionId = null; // uid of user pending deletion, or 'SELF'
 let currentActiveTab = 'schedule';
@@ -1527,10 +1546,34 @@ async function loadClassmates() {
             if (docSnap.id === currentUserId) return;
             cachedClassmates.push({ uid: docSnap.id, ...docSnap.data() });
         });
-        renderClassmates(cachedClassmates);
+        applyClassmateFilters();
     } catch (err) {
         container.innerHTML = `<div class="em-s"><i class="fa-solid fa-triangle-exclamation"></i><h3>Could not load classmates</h3><p>${describeAuthError(err)}</p></div>`;
     }
+}
+
+/** Combines the All/Same-Periods segmented toggle with the search box, then renders. */
+function applyClassmateFilters() {
+    const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
+    const searchQuery = document.getElementById('classmateSearchInput').value.toLowerCase().trim();
+
+    let list = cachedClassmates;
+
+    if (classmateFilterMode === 'shared') {
+        list = list.filter(mate => sharedCourses(mySchedule, mate.schedule).length > 0);
+    }
+
+    if (searchQuery) {
+        list = list.filter(mate => {
+            if ((mate.name || '').toLowerCase().includes(searchQuery)) return true;
+            return Object.values(mate.schedule || {}).some(c => (c || '').toLowerCase().includes(searchQuery));
+        });
+    }
+
+    // Classmates who share the most periods with you float to the top.
+    list = [...list].sort((a, b) => sharedCourses(mySchedule, b.schedule).length - sharedCourses(mySchedule, a.schedule).length);
+
+    renderClassmates(list);
 }
 
 function sharedCourses(myScheduleObj, theirScheduleObj) {
@@ -1546,7 +1589,13 @@ function renderClassmates(list) {
     const container = document.getElementById('classmatesResultsContainer');
     container.innerHTML = '';
     if (list.length === 0) {
-        container.innerHTML = `<div class="em-s"><i class="fa-solid fa-user-group"></i><h3>No classmates found</h3><p>No one matches yet, or nobody nearby has discovery turned on.</p></div>`;
+        const sharedEmpty = classmateFilterMode === 'shared';
+        container.innerHTML = `
+            <div class="em-s">
+                <i class="fa-solid ${sharedEmpty ? 'fa-layer-group' : 'fa-user-group'}"></i>
+                <h3>${sharedEmpty ? 'No shared periods yet' : 'No classmates found'}</h3>
+                <p>${sharedEmpty ? "No one discoverable shares a class with you right now. Try \u201cAll Classmates\u201d instead." : 'No one matches yet, or nobody nearby has discovery turned on.'}</p>
+            </div>`;
         return;
     }
     const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
@@ -1576,14 +1625,14 @@ function renderClassmates(list) {
     });
 }
 
-document.getElementById('classmateSearchInput').addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase().trim();
-    if (!q) return renderClassmates(cachedClassmates);
-    const filtered = cachedClassmates.filter(mate => {
-        if ((mate.name || '').toLowerCase().includes(q)) return true;
-        return Object.values(mate.schedule || {}).some(c => (c || '').toLowerCase().includes(q));
+document.getElementById('classmateSearchInput').addEventListener('input', applyClassmateFilters);
+
+document.querySelectorAll('#classmateFilterToggle .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        classmateFilterMode = btn.dataset.mode;
+        document.querySelectorAll('#classmateFilterToggle .seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+        applyClassmateFilters();
     });
-    renderClassmates(filtered);
 });
 
 document.getElementById('btnRefreshClassmates').addEventListener('click', loadClassmates);
