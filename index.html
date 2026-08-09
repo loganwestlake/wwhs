@@ -1980,11 +1980,14 @@ function renderSignupCourseInputs() {
  * ============================================================================
  */
 
-// Hide splash screen automatically
+// Hide splash screen automatically and flow straight to the login screen
 setTimeout(() => { 
     const splash = document.getElementById('splashScreen'); 
     splash.style.opacity = '0'; 
-    setTimeout(() => splash.classList.add('hidden'), 600); 
+    setTimeout(() => {
+        splash.classList.add('hidden');
+        switchMainView('login'); // This function call fixes the blank screen issue
+    }, 600); 
 }, 2400);
 
 /**
