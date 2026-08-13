@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <title>WWHS PRO</title>
+
+    <!-- Google Fonts Preconnect and Links -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & DESIGN SYSTEM
+           ========================================================================== */
+        :root {
+            /* Green Color Palette */
+            --g50: #f0fdf4;
+            --g100: #dcfce7;
+            --g200: #bbf7d0;
+            --g300: #86efac;
+            --g400: #4ade80;
+            --g500: #22c55e;
+            --g600: #16a34a;
+            --g700: #15803d;
+
+            /* Grayscale Palette */
+            --w: #fff;
+            --ow: #fafbfb;
+            --gy50: #f9fafb;
+            --gy100: #f3f4f6;
+            --gy200: #e5e7eb;
+            --gy300: #d1d5db;
+            --gy400: #9ca3af;
+            --gy500: #6b7280;
+            --gy600: #4b5563;
+            --gy700: #374151;
+            --ch: #1a1a1a;
+
+            /* Amber/Warning Palette */
+            --a50: #fffbeb;
+            --a100: #fef3c7;
+            --a500: #f59e0b;
+            --a700: #b45309;
+
+            /* Red/Error Palette */
+            --r50: #fef2f2;
+            --r100: #fee2e2;
+            --r500: #ef4444;
+            --r600: #dc2626;
+
+            /* Blue/Info Palette */
+            --b50: #eff6ff;
+            --b100: #dbeafe;
+            --b200: #bfdbfe;
+            --b500: #3b82f6;
+            --b600: #2563eb;
+            --b700: #1d4ed8;
+
+            /* Shadows */
+            --sx: 0 1px 2px rgba(0,0,0,.04);
+            --ss: 0 1px 3px rgba(0,0,0,.06);
+            --sm: 0 4px 12px rgba(0,0,0,.08);
+            --sl: 0 8px 24px rgba(0,0,0,.1);
+            --sxl: 0 16px 40px rgba(0,0,0,.12);
+
+            /* Border Radii */
+            --rs: 8px;
+            --rm: 12px;
+            --rl: 16px;
+            --rx: 20px;
+            --r2: 28px;
+            --rf: 9999px;
+
+            /* Safe Areas for Mobile Devices */
+            --sb: env(safe-area-inset-bottom, 16px);
+            --st: env(safe-area-inset-top, 0px);
+
+            /* Animations */
+            --es: cubic-bezier(.4, 0, .2, 1);
+            --esp: cubic-bezier(.34, 1.56, .64, 1);
+
+            /* Display face, used sparingly for headings/logo */
+            --df: 'Lexend', 'Inter', sans-serif;
+        }
+
+        /* ==========================================================================
+           GLOBAL RESETS & TYPOGRAPHY
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        *::selection {
+            background: rgba(34, 197, 94, .2);
+            color: var(--g700);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--ow);
+            color: var(--ch);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            line-height: 1.5;
+            letter-spacing: -.01em;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ==========================================================================
+           BACKGROUND AMBIENT EFFECT
+           ========================================================================== */
+        .bg-amb {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .5;
+            background: radial-gradient(circle at 15% 25%, rgba(34, 197, 94, .08) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 75%, rgba(21, 128, 61, .06) 0%, transparent 45%);
+            animation: ambDrift 18s ease-in-out infinite;
+        }
+        @keyframes ambDrift {
+            0%, 100% { background-position: 0 0, 0 0; }
+            50% { background-position: 20px -20px, -20px 20px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .bg-amb { animation: none; } }
+
+        /* Tab content entrance, applied via JS on every switchTab() call */
+        .tab-enter { animation: tabEnter .35s var(--es); }
+        @keyframes tabEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) { .tab-enter { animation: none; } }
+
+        /* ==========================================================================
+           TOAST NOTIFICATIONS
+           ========================================================================== */
+        .tc {
+            position: fixed;
+            top: calc(var(--st) + 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            width: calc(100% - 32px);
+            max-width: 420px;
+        }
+
+        .t {
+            background: var(--w);
+            border: 1px solid var(--gy200);
+            padding: 15px 18px;
+            border-radius: var(--rm);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--sl);
+            pointer-events: auto;
+            animation: tIn .5s var(--esp) forwards;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .t::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 3px;
+        }
+
+        .t.su::before { background: var(--g500); }
+        .t.er::before { background: var(--r500); }
+        .t.wa::before { background: var(--a500); }
+        .t.in::before { background: var(--b500); }
+
+        .t i { font-size: 18px; flex-shrink: 0; }
+        .t.su i { color: var(--g500); }
+        .t.er i { color: var(--r500); }
+        .t.wa i { color: var(--a500); }
+        .t.in i { color: var(--b500); }
+
+        .t.rm { animation: tOut .35s ease forwards; }
+
+        @keyframes tIn {
+            from { opacity: 0; transform: translateY(-24px) scale(.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes tOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(80px); }
+        }
+
+        /* ==========================================================================
+           SPLASH SCREEN
+           ========================================================================== */
+        .sp {
+            position: fixed;
+            inset: 0;
+            background: var(--w);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity .6s ease;
+        }
+
+        .sp-logo {
+            width: 96px; height: 96px;
+            background: linear-gradient(135deg, var(--g400), var(--g600));
+            border-radius: 26px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 16px 32px rgba(34, 197, 94, .25);
+            animation: spf 3s ease-in-out infinite;
+        }
+        .sp-logo i { font-size: 40px; color: #fff; }
+        @keyframes spf { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .sp h1 { font-family: var(--df); font-size: 28px; font-weight: 700; letter-spacing: -.03em; }
+        .sp p { font-size: 14px; color: var(--gy500); margin-top: 6px; }
+
+        .sp-bar { width: 130px; height: 3px; background: var(--gy200); border-radius: 10px; margin-top: 28px; overflow: hidden; }
+        .sp-bar-fill { height: 100%; background: var(--g500); border-radius: 10px; animation: spb 2.3s var(--es) forwards; width: 0%; }
+        @keyframes spb { 0% { width: 0; } 100% { width: 100%; } }
+
+        /* ==========================================================================
+           AUTHENTICATION SCREEN
+           ========================================================================== */
+        .as {
+            position: fixed; inset: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            background: linear-gradient(165deg, #eafcf1 0%, var(--ow) 38%, var(--ow) 62%, #eafcf1 100%);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Ambient animated mesh — fixed to the viewport so it always fills the
+           screen edge-to-edge no matter how tall the card content is. */
+        .mesh-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; will-change: transform; }
+        .blob.b1 { width: 46vmax; height: 46vmax; top: -18vmax; left: -14vmax; background: radial-gradient(circle, var(--g300), var(--g500) 70%); animation: drift1 22s ease-in-out infinite; }
+        .blob.b2 { width: 38vmax; height: 38vmax; bottom: -16vmax; right: -12vmax; background: radial-gradient(circle, #6ee7b7, var(--g600) 70%); animation: drift2 26s ease-in-out infinite; }
+        .blob.b3 { width: 30vmax; height: 30vmax; top: 38%; left: 50%; background: radial-gradient(circle, #bef264, var(--g400) 70%); opacity: .3; animation: drift3 30s ease-in-out infinite; }
+
+        @keyframes drift1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(6vmax, 8vmax) scale(1.08); } }
+        @keyframes drift2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-7vmax, -6vmax) scale(1.1); } }
+        @keyframes drift3 { 0%, 100% { transform: translate(-50%, 0) scale(1); } 50% { transform: translate(-50%, -5vmax) scale(1.15); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob { animation: none !important; }
+        }
+
+        .ap {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, .78);
+            backdrop-filter: blur(22px) saturate(140%);
+            -webkit-backdrop-filter: blur(22px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, .7);
+            border-radius: var(--r2);
+            padding: 42px 32px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 24px 60px rgba(21, 128, 61, .14), 0 4px 12px rgba(0,0,0,.04);
+            animation: apIn .65s var(--esp);
+            text-align: center;
+            margin: auto;
+        }
+        @keyframes apIn { from { opacity: 0; transform: translateY(28px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .ap-icon {
+            width: 68px; height: 68px;
+            background: linear-gradient(135deg, var(--g400), var(--g600));
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 18px;
+            box-shadow: 0 10px 20px rgba(34, 197, 94, .25);
+            animation: iconPulse 3.2s ease-in-out infinite;
+        }
+        .ap-icon i { font-size: 28px; color: #fff; }
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 10px 20px rgba(34, 197, 94, .25); transform: scale(1); }
+            50% { box-shadow: 0 12px 28px rgba(34, 197, 94, .4); transform: scale(1.04); }
+        }
+        @media (prefers-reduced-motion: reduce) { .ap-icon { animation: none; } }
+
+        /* Staggered field entrance inside whichever step/panel is active */
+        .step.active .fg, .step.active > .btn { animation: fieldIn .5s var(--es) backwards; }
+        .step.active .fg:nth-child(1), .step.active > *:nth-child(1) { animation-delay: .05s; }
+        .step.active .fg:nth-child(2), .step.active > *:nth-child(2) { animation-delay: .1s; }
+        .step.active .fg:nth-child(3), .step.active > *:nth-child(3) { animation-delay: .15s; }
+        .step.active .fg:nth-child(4), .step.active > *:nth-child(4) { animation-delay: .2s; }
+        @keyframes fieldIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .ap h2 { font-family: var(--df); font-size: 23px; font-weight: 700; margin-bottom: 4px; }
+        .ap .sub { color: var(--gy500); font-size: 14px; margin-bottom: 28px; }
+
+        .fg { position: relative; margin-bottom: 16px; text-align: left; }
+        .fg i {
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--gy400); font-size: 15px; pointer-events: none; transition: color .2s; z-index: 1;
+        }
+        .fg input, .fg select, .fg .course-input {
+            width: 100%; background: var(--gy50); border: 1px solid var(--gy200);
+            padding: 14px 15px 14px 44px; border-radius: var(--rm); font-size: 15px;
+            font-weight: 500; color: var(--ch); outline: none; transition: all .2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .fg input:focus, .fg select:focus, .fg .course-input:focus {
+            border-color: var(--g400); box-shadow: 0 0 0 4px rgba(34, 197, 94, .06); background: var(--w);
+        }
+        .fg input:focus ~ i, .fg:focus-within i { color: var(--g500); }
+        .fg select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239ca3af' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6 1.5-1.5L8 8.5l4.5-4.5L14 5.5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 15px center; padding-right: 42px;
+        }
+        .fh { font-size: 12px; color: var(--gy400); margin-top: -10px; margin-bottom: 16px; padding-left: 15px; text-align: left; }
+
+        .pw-wrap { position: relative; }
+        .pw-toggle {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; color: var(--gy400); cursor: pointer;
+            padding: 8px 10px; font-size: 13px; z-index: 2;
+        }
+        .pw-toggle:hover { color: var(--gy600); }
+
+        .course-dropdown {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rm);
+            max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: var(--sm); display: none;
+        }
+        .course-dropdown.show { display: block; }
+        .course-dropdown .course-option { padding: 10px 15px; cursor: pointer; font-size: 13px; border-bottom: 1px solid var(--gy100); transition: background .15s; }
+        .course-dropdown .course-option:hover { background: var(--g50); }
+        .course-dropdown .course-option:last-child { border-bottom: none; }
+
+        /* ==========================================================================
+           BUTTONS
+           ========================================================================== */
+        .btn {
+            width: 100%; padding: 14px 18px; border-radius: var(--rm); font-size: 15px; font-weight: 600;
+            cursor: pointer; border: none; display: flex; align-items: center; justify-content: center;
+            gap: 10px; transition: all .25s; font-family: 'Inter', sans-serif; letter-spacing: -.01em;
+        }
+        .btn:active { transform: scale(.97); }
+        .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+        .btn-d { background: var(--ch); color: #fff; box-shadow: var(--ss); margin-top: 4px; }
+        .btn-d:hover:not(:disabled) { background: #000; transform: translateY(-1px); box-shadow: var(--sm); }
+
+        .btn-o { background: transparent; border: 1px solid var(--gy300); color: var(--ch); }
+        .btn-o:hover { background: var(--gy50); }
+
+        .btn-g { background: transparent; color: var(--g600); font-weight: 600; margin-top: 10px; }
+        .btn-g:hover { color: var(--g700); }
+
+        .stp { display: flex; gap: 7px; justify-content: center; margin-bottom: 26px; }
+        .sd { width: 10px; height: 10px; border-radius: 50%; background: var(--gy200); transition: all .35s var(--esp); }
+        .sd.cur { background: var(--g500); width: 30px; border-radius: 20px; box-shadow: 0 2px 8px rgba(34, 197, 94, .3); }
+        .sd.done { background: var(--g400); }
+
+        .step { display: none; }
+        .step.active { display: block; animation: si .35s var(--es); }
+        @keyframes si { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+
+        .sn { display: flex; gap: 12px; margin-top: 20px; }
+        .sn button { flex: 1; }
+
+        /* ==========================================================================
+           MAIN APPLICATION LAYOUT
+           ========================================================================== */
+        .ar { display: flex; width: 100vw; height: 100dvh; overflow: hidden; opacity: 0; transition: opacity .4s; }
+        .ar.visible { opacity: 1; }
+
+        .sdbr {
+            display: none; width: 275px; background: var(--w); border-right: 1px solid var(--gy200);
+            padding: 30px 18px; flex-direction: column; z-index: 10; flex-shrink: 0;
+        }
+        .sb-b { display: flex; align-items: center; gap: 12px; padding: 0 8px; margin-bottom: 36px; }
+        .sb-b .sb-i {
+            width: 40px; height: 40px; background: linear-gradient(135deg, var(--g400), var(--g600));
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;
+        }
+        .sb-b h3 { font-family: var(--df); font-size: 15px; font-weight: 700; }
+        .sb-b span { font-size: 11px; color: var(--gy500); display: block; }
+        .ver { font-size: 10px; color: var(--gy400); font-weight: 600; }
+        .sb-b .ver { display: block; margin-top: 2px; }
+
+        .sb-n { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+        .sb-n button {
+            display: flex; align-items: center; gap: 13px; padding: 13px 15px; border-radius: var(--rm);
+            background: transparent; border: none; color: var(--gy600); font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; width: 100%; text-align: left;
+        }
+        .sb-n button i { font-size: 17px; width: 20px; text-align: center; }
+        .sb-n button:hover { background: var(--gy50); color: var(--ch); }
+        .sb-n button.active { background: var(--g50); color: var(--g700); font-weight: 600; }
+
+        .btn-lo {
+            width: 100%; padding: 13px; border-radius: var(--rm); background: transparent; border: 1px solid var(--r100);
+            color: var(--r500); font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
+        }
+        .btn-lo:hover { background: var(--r50); }
+        .btn-lo:disabled { opacity: .6; cursor: wait; }
+
+        .mp { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--ow); }
+
+        .tb {
+            display: flex; align-items: center; justify-content: space-between; padding: 14px 18px;
+            padding-top: calc(var(--st) + 10px); background: var(--w); border-bottom: 1px solid var(--gy200); z-index: 20;
+        }
+        .tb h1 { font-family: var(--df); font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .ac { font-size: 10px; font-weight: 700; background: var(--b500); color: #fff; padding: 3px 8px; border-radius: 10px; letter-spacing: .03em; }
+        .ab {
+            width: 36px; height: 36px; border-radius: 11px; background: linear-gradient(135deg, var(--g400), var(--g600));
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff;
+            cursor: pointer; border: none; transition: transform .2s;
+        }
+        .ab:active { transform: scale(.88); }
+
+        .sc { flex: 1; overflow-y: auto; padding: 18px; padding-bottom: calc(95px + var(--sb)); }
+        .cw { max-width: 720px; margin: 0 auto; }
+
+        .cd { background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rx); padding: 22px; margin-bottom: 14px; box-shadow: var(--sx); transition: all .3s; }
+        .cd:hover { box-shadow: var(--ss); }
+
+        .sh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+        .sh h2 { font-family: var(--df); font-size: 19px; font-weight: 700; }
+
+        .db {
+            background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rx); padding: 18px 22px;
+            margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; box-shadow: var(--sx);
+        }
+        .di h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+        .dd { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .dd.on { background: var(--g500); box-shadow: 0 0 8px rgba(34, 197, 94, .4); }
+        .dd.off { background: var(--r500); }
+        .di p { font-size: 12px; color: var(--gy500); margin-left: 16px; }
+
+        .pl { padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .pl.gn { background: var(--g50); color: var(--g700); border: 1px solid var(--g200); }
+        .pl.rd { background: var(--r50); color: var(--r500); border: 1px solid var(--r100); }
+        .pl.bl { background: var(--b50); color: var(--b700); border: 1px solid var(--b200); }
+
+        .cr { display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap; }
+        .chp {
+            padding: 9px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+            border: 1px solid var(--gy200); background: var(--w); color: var(--gy600);
+            display: inline-flex; align-items: center; gap: 6px; transition: all .2s; font-family: 'Inter', sans-serif;
+        }
+        .chp:hover { background: var(--gy50); color: var(--ch); }
+        .chp:active { transform: scale(.95); }
+        .chp.gn { background: var(--g50); border-color: var(--g200); color: var(--g700); }
+        .chp.rd { background: var(--r50); border-color: var(--r100); color: var(--r500); }
+        .chp.bl { background: var(--b50); border-color: var(--b100); color: var(--b600); }
+        .chp:disabled { opacity: .5; cursor: not-allowed; }
+
+        .sl { display: flex; flex-direction: column; gap: 8px; }
+        .sr { display: flex; align-items: center; gap: 14px; padding: 15px 17px; background: var(--gy50); border-radius: var(--rm); transition: all .2s; border: 1px solid transparent; }
+        .sr:hover { background: var(--w); border-color: var(--gy200); box-shadow: var(--sx); }
+        .sr.free { opacity: .6; }
+
+        .pn { width: 46px; height: 46px; border-radius: 13px; background: var(--g50); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; color: var(--g700); flex-shrink: 0; }
+
+        .cdt { flex: 1; min-width: 0; }
+        .cdt .cn { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cdt .cp { font-size: 11px; color: var(--gy500); }
+        .cdt input.ef {
+            background: var(--w); border: 1px dashed var(--gy300); border-radius: 8px; padding: 9px 12px;
+            color: var(--ch); font-size: 14px; width: 100%; font-family: 'Inter', sans-serif; outline: none;
+        }
+        .cdt input.ef:focus { border-color: var(--g400); border-style: solid; }
+
+        .course-search-wrap { position: relative; }
+        .course-search-wrap .dropdown {
+            position: absolute; top: 100%; left: 0; right: 0; background: var(--w); border: 1px solid var(--gy200);
+            border-radius: var(--rm); max-height: 180px; overflow-y: auto; z-index: 50; box-shadow: var(--sm); display: none;
+        }
+        .course-search-wrap .dropdown.show { display: block; }
+        .course-search-wrap .dropdown .item { padding: 10px 15px; cursor: pointer; font-size: 13px; border-bottom: 1px solid var(--gy100); transition: background .15s; }
+        .course-search-wrap .dropdown .item:hover { background: var(--g50); }
+        .course-search-wrap .dropdown .item:last-child { border-bottom: none; }
+
+        .svb { margin-top: 14px; display: none; }
+        .svb.show { display: block; animation: fu .3s ease; }
+        @keyframes fu { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .sb-search { position: relative; margin-bottom: 18px; }
+        .sb-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gy400); }
+        .sb-search input {
+            width: 100%; background: var(--w); border: 1px solid var(--gy200); padding: 13px 15px 13px 42px;
+            border-radius: var(--rl); font-size: 14px; color: var(--ch); outline: none; font-family: 'Inter', sans-serif;
+        }
+        .sb-search input:focus { border-color: var(--g400); }
+
+        .seg {
+            display: flex; gap: 4px; background: var(--gy100); border-radius: var(--rl);
+            padding: 4px; margin-bottom: 16px;
+        }
+        .seg-btn {
+            flex: 1; border: none; background: transparent; padding: 10px 12px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; color: var(--gy500); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            font-family: 'Inter', sans-serif; transition: all .25s var(--es);
+        }
+        .seg-btn i { font-size: 12px; }
+        .seg-btn.active { background: var(--w); color: var(--g700); box-shadow: var(--ss); }
+        .seg-btn:not(.active):hover { color: var(--ch); }
+
+        .cg { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .cmc { background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rx); padding: 18px; transition: all .3s; position: relative; overflow: hidden; box-shadow: var(--sx); }
+        .cmc:hover { box-shadow: var(--sm); transform: translateY(-2px); }
+        .cmc.shd { border-left: 3px solid var(--a500); }
+
+        .cmt { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--gy100); }
+        .cma { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--g400), var(--g600)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0; }
+        .cmi h4 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .gt { font-size: 11px; color: var(--gy500); background: var(--gy50); padding: 3px 9px; border-radius: 8px; }
+        .sht { font-size: 10px; font-weight: 600; background: #fefce8; color: #a16207; border: 1px solid #fde047; padding: 3px 9px; border-radius: 8px; }
+
+        .ccl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .cmp { background: var(--gy50); padding: 9px 11px; border-radius: 10px; font-size: 11px; display: flex; align-items: center; gap: 7px; color: var(--gy600); }
+        .cmp i { color: var(--g500); font-size: 9px; }
+        .cmp strong { color: var(--g700); font-size: 10px; min-width: 22px; }
+        .cmp span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cmp.hl { background: var(--w); border: 2px solid #fde047; color: #a16207; box-shadow: 0 0 0 3px rgba(253, 224, 71, .25); }
+        .cmp.hl i { color: #eab308; }
+
+        .pc { text-align: center; padding: 32px 22px; }
+        .pa { width: 84px; height: 84px; border-radius: 22px; background: linear-gradient(135deg, var(--g400), var(--g600)); display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; color: #fff; margin: 0 auto 18px; box-shadow: 0 10px 24px rgba(34, 197, 94, .2); }
+        .pc h2 { font-family: var(--df); font-size: 21px; font-weight: 700; margin-bottom: 2px; }
+        .pc .mt { color: var(--gy500); font-size: 13px; }
+        .pc .em { color: var(--gy400); font-size: 12px; margin-bottom: 10px; }
+
+        .tr { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; background: var(--gy50); border-radius: var(--rm); border: 1px solid var(--gy200); gap: 14px; }
+        .tr h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .tr p { font-size: 12px; color: var(--gy500); }
+
+        .tg { width: 50px; height: 30px; background: var(--gy200); border-radius: 30px; cursor: pointer; position: relative; transition: all .35s var(--esp); flex-shrink: 0; }
+        .tg.on { background: var(--g500); }
+        .tg .kn { width: 24px; height: 24px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: all .35s var(--esp); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+        .tg.on .kn { left: 23px; }
+
+        .str { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 18px; }
+        .stb { background: var(--w); border: 1px solid var(--gy200); border-radius: var(--rl); padding: 18px; text-align: center; box-shadow: var(--sx); }
+        .stb h3 { font-family: var(--df); font-size: 27px; font-weight: 800; color: var(--g600); }
+        .stb p { font-size: 12px; color: var(--gy500); }
+
+        .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .tbl th { text-align: left; padding: 10px 12px; background: var(--gy50); color: var(--gy500); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; border-bottom: 2px solid var(--gy200); }
+        .tbl td { padding: 10px 12px; border-bottom: 1px solid var(--gy100); vertical-align: middle; }
+        .tbl tr:hover td { background: var(--gy50); }
+        .tbl-ico-btn { background: transparent; border: none; color: var(--r500); cursor: pointer; padding: 6px 8px; border-radius: 8px; font-size: 13px; }
+        .tbl-ico-btn:hover { background: var(--r50); }
+        .tbl-mini-pl { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; }
+        .tbl-mini-pl.on { background: var(--g50); color: var(--g700); }
+        .tbl-mini-pl.off { background: var(--r50); color: var(--r500); }
+
+        .em-s { text-align: center; padding: 40px 20px; }
+        .em-s i { font-size: 44px; color: var(--gy300); margin-bottom: 14px; display: block; }
+        .em-s h3 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+        .em-s p { color: var(--gy500); font-size: 13px; }
+
+        .skel { background: linear-gradient(90deg, var(--gy100) 25%, var(--gy50) 37%, var(--gy100) 63%); background-size: 400% 100%; animation: sk 1.4s ease infinite; border-radius: var(--rm); }
+        @keyframes sk { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+        .bn { position: fixed; bottom: 0; left: 0; right: 0; background: var(--w); border-top: 1px solid var(--gy200); display: flex; justify-content: space-around; padding: 7px 7px calc(7px + var(--sb)); z-index: 100; }
+        .bn button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 12px; border-radius: var(--rm); background: transparent; border: none; color: var(--gy400); font-size: 10px; font-weight: 500; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; }
+        .bn button i { font-size: 19px; }
+        .bn button.active { color: var(--g600); }
+
+        .mo { position: fixed; inset: 0; background: rgba(0,0,0,.4); backdrop-filter: blur(4px); z-index: 10002; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .md { background: var(--w); border: 1px solid var(--gy200); border-radius: var(--r2); padding: 32px 26px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 24px 56px rgba(0,0,0,.15); animation: mdIn .4s var(--esp); }
+        @keyframes mdIn { from { transform: scale(.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .md h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .md p { color: var(--gy500); font-size: 14px; margin-bottom: 14px; }
+        .md-al { background: var(--a50); border: 1px solid var(--a100); border-radius: var(--rm); padding: 12px; margin-bottom: 18px; font-size: 12px; color: var(--a700); text-align: left; display: flex; gap: 10px; }
+        .md-bt { display: flex; gap: 10px; }
+        .md-bt button { flex: 1; padding: 13px; border-radius: var(--rm); font-weight: 600; font-size: 14px; cursor: pointer; border: none; font-family: 'Inter', sans-serif; }
+        .bc { background: var(--gy100); color: var(--ch); }
+        .bd { background: var(--r50); color: var(--r500); border: 1px solid var(--r100); }
+        .bd:disabled, .bc:disabled { opacity: .6; cursor: wait; }
+
+        @media(min-width: 768px) {
+            .sdbr { display: flex; }
+            .tb { display: none; }
+            .bn { display: none; }
+            .sc { padding: 24px; }
+            .cg { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        }
+        @media(max-width: 400px) {
+            .ccl { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-amb"></div>
+<div class="tc" id="toastContainer"></div>
+
+<!-- Modal: Turn Off Discovery -->
+<div class="mo hidden" id="modal-discovery">
+    <div class="md">
+        <h3>Turn Off Discovery?</h3>
+        <p>Hides your schedule from classmates.</p>
+        <div class="md-al"><i class="fa-solid fa-triangle-exclamation"></i> Others won't see shared classes with you until you turn this back on.</div>
+        <div class="md-bt">
+            <button class="bc" id="btn-cancel-discovery">Keep On</button>
+            <button class="bd" id="btn-force-discovery-off">Turn Off</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Delete User -->
+<div class="mo hidden" id="modal-delete">
+    <div class="md">
+        <h3 id="deleteModalTitle">Delete User?</h3>
+        <p id="deleteModalBody">Permanently removes this profile.</p>
+        <div class="md-al"><i class="fa-solid fa-triangle-exclamation"></i> This cannot be undone.</div>
+        <div class="md-bt">
+            <button class="bc" id="btn-cancel-delete">Cancel</button>
+            <button class="bd" id="btn-force-delete">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Splash Screen -->
+<div class="sp" id="splashScreen">
+    <div class="sp-logo"><i class="fa-solid fa-calendar-days"></i></div>
+    <h1>WWHS PRO</h1>
+    <p>Share &amp; Discover Classes</p>
+    <div class="sp-bar"><div class="sp-bar-fill"></div></div>
+</div>
+
+<!-- Authentication Screen -->
+<div class="as hidden" id="authScreen">
+    <div class="mesh-bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+    <!-- Login Panel -->
+    <div class="ap" id="loginPanel">
+        <div class="ap-icon"><i class="fa-solid fa-calendar-days"></i></div>
+        <h2>Welcome Back</h2>
+        <p class="sub">Sign in with your school email</p>
+        <div class="fg">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="student@hernandoschools.org" autocomplete="email">
+        </div>
+        <div class="fh">Use your @hernandoschools.org email</div>
+        <div class="fg pw-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+            <button type="button" class="pw-toggle" data-for="loginPassword"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <button class="btn btn-d" id="btnLoginSubmit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</button>
+        <button class="btn btn-g" id="btnGoToSignup">Create new account</button>
+    </div>
+
+    <!-- Signup Panel -->
+    <div class="ap hidden" id="signupPanel">
+        <h2 style="margin-bottom:22px">Create Account</h2>
+        <div class="stp">
+            <div class="sd cur" id="dot1"></div>
+            <div class="sd" id="dot2"></div>
+            <div class="sd" id="dot3"></div>
+        </div>
+        <!-- Step 1: Account Info -->
+        <div id="step1" class="step active">
+            <div class="fg">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="signupEmail" placeholder="student@hernandoschools.org" autocomplete="email">
+            </div>
+            <div class="fh">Must be @hernandoschools.org</div>
+            <div class="fg pw-wrap">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="signupPassword" placeholder="Password (6+ chars)" autocomplete="new-password">
+                <button type="button" class="pw-toggle" data-for="signupPassword"><i class="fa-solid fa-eye"></i></button>
+            </div>
+            <button class="btn btn-d" id="btnStep1Next">Continue</button>
+            <button class="btn btn-g" id="btnGoToLogin">Back to Sign In</button>
+        </div>
+        <!-- Step 2: Personal Info -->
+        <div id="step2" class="step">
+            <div class="fg">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="signupName" placeholder="Full Name">
+            </div>
+            <div class="fg">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <select id="signupGrade">
+                    <option value="" disabled selected>Grade Level</option>
+                    <option value="9">9th</option>
+                    <option value="10">10th</option>
+                    <option value="11">11th</option>
+                    <option value="12">12th</option>
+                </select>
+            </div>
+            <div class="sn">
+                <button class="btn btn-o btnPrevStep" data-target="1">Back</button>
+                <button class="btn btn-d" id="btnStep2Next">Continue</button>
+            </div>
+        </div>
+        <!-- Step 3: Courses Info -->
+        <div id="step3" class="step">
+            <p style="font-size:12px;color:var(--gy500);text-align:center;margin-bottom:12px">Search and select your classes (optional — you can add these later)</p>
+            <div style="max-height:300px;overflow-y:auto;padding-right:3px" id="signup-courses-container"></div>
+            <div class="sn">
+                <button class="btn btn-o btnPrevStep" data-target="2">Back</button>
+                <button class="btn btn-d" id="btnFinishSignup"><i class="fa-solid fa-check"></i> Complete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Application Layout -->
+<div class="ar hidden" id="appRoot">
+    <aside class="sdbr">
+        <div class="sb-b">
+            <div class="sb-i"><i class="fa-solid fa-calendar-days"></i></div>
+            <div><h3>WWHS PRO</h3><span>Share &amp; Discover</span><span class="ver">–</span></div>
+        </div>
+        <nav class="sb-n">
+            <button class="active nav-btn" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i> My Schedule</button>
+            <button class="nav-btn" data-tab="classmates"><i class="fa-solid fa-users"></i> Classmates</button>
+            <button class="nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+            <button class="adm-nav hidden nav-btn" data-tab="admin"><i class="fa-solid fa-shield-halved"></i> Admin Panel</button>
+        </nav>
+        <button class="btn-lo" id="btnSidebarLogout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+    </aside>
+
+    <div class="mp">
+        <header class="tb">
+            <h1>WWHS PRO <span class="ver">–</span> <span class="ac hidden" id="adminBadge">Admin</span></h1>
+            <button class="ab" id="btnMobileHelp">?</button>
+        </header>
+
+        <div class="sc" id="scrollContent">
+            <div class="cw">
+
+                <!-- Tab: Schedule -->
+                <div id="tab-schedule">
+                    <div class="db">
+                        <div class="di">
+                            <h3><span class="dd on" id="discoveryDot"></span> <span id="discoveryTextIndicator">Discovery Active</span></h3>
+                            <p id="discoveryDescription">Classmates can see your schedule</p>
+                        </div>
+                        <span class="pl gn" id="discoveryPill"><i class="fa-solid fa-check-circle"></i> Visible</span>
+                    </div>
+                    <div class="cr">
+                        <button class="chp gn" id="btnEditSchedule"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                        <button class="chp" id="btnCopySchedule"><i class="fa-solid fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="cd">
+                        <div class="sl" id="scheduleRowsContainer">
+                            <div class="skel" style="height:64px"></div>
+                            <div class="skel" style="height:64px"></div>
+                            <div class="skel" style="height:64px"></div>
+                        </div>
+                    </div>
+                    <div class="svb" id="saveButtonContainer">
+                        <button class="btn btn-d" id="btnSaveChanges"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                    </div>
+                </div>
+
+                <!-- Tab: Classmates -->
+                <div id="tab-classmates" class="hidden">
+                    <div class="sh">
+                        <h2>Classmates</h2>
+                        <button class="chp" id="btnRefreshClassmates"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                    </div>
+                    <div class="sb-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="classmateSearchInput" placeholder="Search by name or class...">
+                    </div>
+                    <div class="seg" id="classmateFilterToggle">
+                        <button class="seg-btn active" data-mode="all"><i class="fa-solid fa-users"></i> All Classmates</button>
+                        <button class="seg-btn" data-mode="shared"><i class="fa-solid fa-layer-group"></i> Same Periods</button>
+                    </div>
+                    <div class="cg" id="classmatesResultsContainer"></div>
+                </div>
+
+                <!-- Tab: Settings -->
+                <div id="tab-settings" class="hidden">
+                    <div class="cd pc">
+                        <div class="pa" id="profileAvatar">?</div>
+                        <h2 id="profileName">Loading...</h2>
+                        <p class="mt">Grade <span id="profileGrade">--</span></p>
+                        <p class="em" id="profileEmail">...</p>
+                        <span class="ver" style="display:block;margin:0 auto 8px;width:fit-content">–</span>
+                        <div id="adminIndicatorContainer"></div>
+                        <span class="pl gn" id="settingsDiscoveryPill"><i class="fa-solid fa-check-circle"></i> Discoverable</span>
+                    </div>
+                    <div class="cd">
+                        <h3 style="font-size:15px;font-weight:600;margin-bottom:14px">
+                            <i class="fa-solid fa-user-group" style="color:var(--g500);margin-right:6px"></i>Discovery Settings
+                        </h3>
+                        <p style="font-size:12px;color:var(--gy500);margin-bottom:16px">When on, classmates who share a class with you can find you in the Classmates tab.</p>
+                        <div class="tr">
+                            <div>
+                                <h4>Discovery Mode</h4>
+                                <p id="settingsDiscoveryStatus">Visible</p>
+                            </div>
+                            <div class="tg on" id="toggleDiscoveryMode"><div class="kn"></div></div>
+                        </div>
+                    </div>
+                    <button class="chp rd" id="btnDeleteAccount" style="width:100%;margin-top:10px;justify-content:center">
+                        <i class="fa-solid fa-trash"></i> Delete Account
+                    </button>
+                    <button class="btn-lo" id="btnSettingsLogout" style="margin-top:8px">Sign Out</button>
+                </div>
+
+                <!-- Tab: Admin -->
+                <div id="tab-admin" class="hidden">
+                    <div class="sh"><h2><i class="fa-solid fa-shield-halved" style="color:var(--b500)"></i> Admin Dashboard</h2></div>
+                    <div class="str" id="adminStatsContainer"></div>
+                    <div class="cd">
+                        <h3 style="font-size:16px;font-weight:600;margin-bottom:14px">All Users</h3>
+                        <div style="overflow-x:auto">
+                            <table class="tbl">
+                                <thead>
+                                    <tr><th>Name</th><th>Email</th><th>Grade</th><th>Discovery</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <nav class="bn">
+        <button class="active nav-btn-mobile" data-tab="schedule"><i class="fa-solid fa-calendar-days"></i>Schedule</button>
+        <button class="nav-btn-mobile" data-tab="classmates"><i class="fa-solid fa-users"></i>Directory</button>
+        <button class="nav-btn-mobile" data-tab="settings"><i class="fa-solid fa-gear"></i>Profile</button>
+        <button class="adm-nav hidden nav-btn-mobile" data-tab="admin"><i class="fa-solid fa-shield-halved"></i>Admin</button>
+    </nav>
+</div>
+
+<script type="module">
+/**
+ * ============================================================================
+ * FIREBASE INITIALIZATION & IMPORTS
+ * ============================================================================
+ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut,
+    deleteUser
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    query,
+    where,
+    updateDoc,
+    deleteDoc,
+    getDocs,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDhbKywSRayDsHPpfBVSojVm5ESMQly6do",
+    authDomain: "wwhs-schedule.firebaseapp.com",
+    projectId: "wwhs-schedule",
+    storageBucket: "wwhs-schedule.appspot.com",
+    messagingSenderId: "281839558316",
+    appId: "1:281839558316:web:f5cc21aad4383ba8458909"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Constants
+const SCHOOL_DOMAIN = 'hernandoschools.org';
+// The very first account created with this email is auto-flagged as admin in Firestore.
+// IMPORTANT: this alone does NOT make anything secure. Admin status must also be
+// enforced in your Firestore Security Rules (see the rules block in the comment
+// at the bottom of this file), otherwise a user could edit their own "isAdmin"
+// field with the browser dev tools. There is intentionally no admin password
+// checked in this client file — a password shipped in JS can always be read by
+// anyone who views source on the deployed site.
+const ADMIN_EMAIL = 'admin@hernandoschools.org';
+const PERIOD_COUNT = 7;
+// Version tag shown in the sidebar, mobile header, and profile card.
+const APP_VERSION = 'v1.4';
+document.querySelectorAll('.ver').forEach(el => el.textContent = APP_VERSION);
+
+/**
+ * ============================================================================
+ * WWHS COURSE CATALOG DATA
+ * ============================================================================
+ */
+const WWHS_COURSES = [
+    { originalString: "0101375 PRE-AICE ART&DES3DIG - Cambridge AICE Art & Design: 3D Studies IGCSE Level" },
+    { originalString: "0101440 FIN CFT STUD ART 1 - Fine Craft Studio Art 1" },
+    { originalString: "0101450 FIN CFT STUD ART 2 - Fine Craft Studio Art 2" },
+    { originalString: "0102300 CERAM/POT 1 - Ceramics/Pottery 1" },
+    { originalString: "0102305 CERAM/POT 1 - Ceramics/Pottery 1" },
+    { originalString: "0102320 CERAM/POT 3 HON - Ceramics/Pottery 3 Honors" },
+    { originalString: "0108370 DIGITAL ART IMG 1 - Digital Art Imaging 1" },
+    { originalString: "0300300 WORLD DANCE - World Dance" },
+    { originalString: "0300305 INTRO TO DANCE - Introduction to Dance" },
+    { originalString: "0300310 DANCE TECHNQS 1 - Dance Techniques 1" },
+    { originalString: "0300330 DANCE TECHNQS 3 HON - Dance Techniques 3 Honors" },
+    { originalString: "0300340 BALLET 1 - Ballet 1" },
+    { originalString: "0300380 DANCE CHOR PERF 1 - Dance Choreography/Performance 1" },
+    { originalString: "0300400 DANCE REPERT 1 - Dance Repertory 1" },
+    { originalString: "0300650 FL PRE-IB DANCE - Florida's Preinternational Baccalaureate Dance" },
+    { originalString: "0300700 PRE-AP DANCE - Pre-Advanced Placement Dance" },
+    { originalString: "0400310 THEATRE 1 - Theatre 1" },
+    { originalString: "0400345 PRE-AICE DRAMA IG - Cambridge Pre-AICE Drama IGCSE Level" },
+    { originalString: "0400370 ACTING 1 - Acting 1" },
+    { originalString: "0400405 IB MYP DRAMA 1 - International Baccalaureate Mid Yrs Prog Drama 1" },
+    { originalString: "0400700 TV PROD 1 - Television Production 1" },
+    { originalString: "0400800 PRODUCTION 1 - Production 1" },
+    { originalString: "0500300 PERSONAL DEV/TEEN - Personal Development and Career Planning for Teens" },
+    { originalString: "0701300 FRENCH 1 - French 1" },
+    { originalString: "0701800 FL PRE-IB FRENCH 1 - Florida's Preinternational Baccalaureate French 1" },
+    { originalString: "0701870 IB MYP FRENCH 1 - International Baccalaureate Mid Yrs Prog French 1" },
+    { originalString: "0702300 GERMAN 1 - German 1" },
+    { originalString: "0702800 FL PRE-IB GERMAN 1 - Florida's Preinternational Baccalaureate German 1" },
+    { originalString: "0707800 FL PRE-IB SPANISH 1 - Florida's Preinternational Baccalaureate Spanish 1" },
+    { originalString: "0708340 SPANISH 1 - Spanish 1" },
+    { originalString: "0708870 IB MYP SPANISH 1 - International Baccalaureate Mid Yrs Prog Spanish 1" },
+    { originalString: "0709300 SPANISH SPEAKS 1 - Spanish for Spanish Speakers 1" },
+    { originalString: "1000412 INTENS READ 1 - Intensive Reading 1" },
+    { originalString: "1000414 INTENS READ 2 - Intensive Reading 2" },
+    { originalString: "1000416 INTENS READ 3 - Intensive Reading 3" },
+    { originalString: "1000418 INTENS READ 4 - Intensive Reading 4" },
+    { originalString: "1001310 ENG 1 - English 1" },
+    { originalString: "1001320 ENG HON 1 - English Honors 1" },
+    { originalString: "1001415 PRE-AP ENGLISH 1 - Pre-Advanced Placement English 1" },
+    { originalString: "1001800 FL PRE-IB ENG 1 - Florida's Preinternational Baccalaureate English 1" },
+    { originalString: "1001840 IB MYP ENG 1 - International Baccalaureate Mid Yrs Prog English 1" },
+    { originalString: "1002300 ENG 1 THROUGH ESOL - English 1 Through ESOL" },
+    { originalString: "1002380 ENGLISH LANG DEV - English Language Development" },
+    { originalString: "1002381 DEV LANG ARTS ESOL-R - Developmental Language Arts ESOL (Reading)" },
+    { originalString: "1005913 IB GERMAN LIT S-T 3 - International Baccalaureate German Literature Self-Taught 3" },
+    { originalString: "1005923 IB GUJARATI LIT S-T3 - International Baccalaureate Gujarati Literature Self-Taught 3" },
+    { originalString: "1005933 IB HINDI LIT S-T 3 - International Baccalaureate Hindi Literature Self-Taught 3" },
+    { originalString: "1005953 IB SPANISH LIT S-T 3 - International Baccalaureate Spanish Literature Self-Taught 3" },
+    { originalString: "1005973 IB FRENCH LIT S-T 3 - International Baccalaureate French Literature Self-Taught 3" },
+    { originalString: "1006300 JOURNAL 1 - Journalism 1" },
+    { originalString: "1007300 SPEECH 1 - Speech 1" },
+    { originalString: "1007305 SPEECH 1 - Speech 1" },
+    { originalString: "1007330 DEBATE 1 - Debate 1" },
+    { originalString: "1009300 WRIT 1 - Writing 1" },
+    { originalString: "1009320 CREATIVE WRIT 1 - Creative Writing 1" },
+    { originalString: "1200310 ALG 1 - Algebra 1" },
+    { originalString: "1200320 ALG 1 HON - Algebra 1 Honors" },
+    { originalString: "1200370 ALG 1-A - Algebra 1-A" },
+    { originalString: "1200380 ALG 1-B - Algebra 1-B" },
+    { originalString: "1200386 PRE-AP ALGEBRA 1 - Pre-Advanced Placement Algebra 1" },
+    { originalString: "1200390 IB MYP ALG 1 - International Baccalaureate Mid Yrs Prog Algebra 1" },
+    { originalString: "1209810 PRE-AICE MATH 1 IG - Cambridge Pre-AICE Mathematics 1 IGCSE Level" },
+    { originalString: "1300320 PRE-AP MUSIC - Pre-Advanced Placement Music" },
+    { originalString: "1300800 FL PRE-IB MUSIC 1 - Florida's Preinternational Baccalaureate Music 1" },
+    { originalString: "1300840 IB MYP MUSIC 1 - International Baccalaureate Mid Yrs Prog Music 1" },
+    { originalString: "1301320 GUITAR 1 - Guitar 1" },
+    { originalString: "1301360 KEYBD 1 - Keyboard 1" },
+    { originalString: "1302300 BAND 1 - Band 1" },
+    { originalString: "1302360 ORCH 1 - Orchestra 1" },
+    { originalString: "1303300 VOCAL TECNQS 1 - Vocal Techniques 1" },
+    { originalString: "1304300 CHORUS 1 - Chorus 1" },
+    { originalString: "1305300 EURHY 1 - Eurhythmics 1" },
+    { originalString: "1501300 PERS FIT - Personal Fitness" },
+    { originalString: "1501310 FIT LIFST DESIGN - Fitness Lifestyle Design" },
+    { originalString: "1501340 WEIGHT TRAIN 1 - Weight Training 1" },
+    { originalString: "1501810 IB MYP PERS FIT - International Baccalaureate Mid Yrs Prog Physical Education" },
+    { originalString: "1502300 GYMNASTICS 1 - Gymnastics 1" },
+    { originalString: "1502400 PADB RACQB HANDBALL - Paddleball/Racquetball/Handball 1" },
+    { originalString: "1502410 INDIV/DUAL SPRTS 1 - Individual and Dual Sports 1" },
+    { originalString: "1503300 TRACK & FIELD - Track and Field" },
+    { originalString: "1503310 BASKETBALL - Basketball" },
+    { originalString: "1503320 SOCCER - Soccer" },
+    { originalString: "1503330 SOFTBALL - Softball" },
+    { originalString: "1503350 TEAM SPRTS 1 - Team Sports 1" },
+    { originalString: "1503400 AEROBICS 1 - Aerobics 1" },
+    { originalString: "1504400 GOLF 1 - Golf 1" },
+    { originalString: "1504460 SWIMMING 1 - Swimming 1" },
+    { originalString: "1504500 TENNIS 1 - Tennis 1" },
+    { originalString: "1505430 RACQUETBALL 1 - Racquetball 1" },
+    { originalString: "1505500 VOLLEYBALL 1 - Volleyball 1" },
+    { originalString: "1505550 WRESTLING 1 - Wrestling 1" },
+    { originalString: "1900300 DRIVER ED/TRAFFIC - Driver Education and Traffic Safety" },
+    { originalString: "2000310 BIOLOGY 1 - Biology 1" },
+    { originalString: "2000335 PRE-AP BIOLOGY - Pre-Advanced Placement Biology" },
+    { originalString: "2000800 FL PRE-IB BIO 1 - Florida's Preinternational Baccalaureate Biology 1" },
+    { originalString: "2000805 IB BIOLOGY 1 - International Baccalaureate Biology 1" },
+    { originalString: "2001310 ERTH/SPA SCI - Earth/Space Science" },
+    { originalString: "2001320 ERTH/SPA SCI HON - Earth/Space Science Honors" },
+    { originalString: "2001340 ENV SCI - Environmental Science" },
+    { originalString: "2001341 ENV SCI HON - Environmental Science Honors" },
+    { originalString: "2001425 IB MYP INTEG SCI 2 - International Baccalaureate Mid Years Prog Integrated Science 2" },
+    { originalString: "2002400 INTEG SCI 1 - Integrated Science 1" },
+    { originalString: "2002415 IB MYP INTEG SCI - International Baccalaureate Mid Yrs Prog Integrated Science" },
+    { originalString: "2100470 PRE-AP WRLD HIST/GE0 - Pre-Advanced Placement World History and Geography" },
+    { originalString: "2103300 WORLD CLTRL GEOG - World Cultural Geography" },
+    { originalString: "2108300 SOCIOLOGY - Sociology" },
+    { originalString: "2109310 WORLD HIST - World History" },
+    { originalString: "2109320 WORLD HIST HON - World History Honors" },
+    { originalString: "2109810 FL PRE-IB WORLD HIST - Florida's Preinternational Baccalaureate World History" },
+    { originalString: "2400710 GEOM HON - Geometry Honors" },
+    { originalString: "2400720 PRE-AP GEOM - Pre-Advanced Placement Geometry" },
+    { originalString: "3026010 HOPE - HOPE- Physical Education (Core)" },
+    { originalString: "3026015 PRE-AICE PHYS ED IG - Cambridge Pre-AICE Physical Education IGCSE Level" },
+    { originalString: "Free Period" }
+];
+
+/**
+ * ============================================================================
+ * STATE MANAGEMENT VARIABLES
+ * ============================================================================
+ */
+let currentUserId = null;
+let currentDocumentData = null;
+let isEditingMode = false;
+let cachedClassmates = [];
+let isClassmatesLoading = false;
+let renderToken = 0;
+let classmateFilterMode = 'all'; // 'all' | 'shared'
+let isAdminUser = false;
+let pendingUserDeletionId = null; // uid of user pending deletion, or 'SELF'
+let currentActiveTab = 'schedule';
+
+/**
+ * ============================================================================
+ * UTILITY FUNCTIONS
+ * ============================================================================
+ */
+function showToast(message, type = 'su') {
+    const container = document.getElementById('toastContainer');
+    const toastElement = document.createElement('div');
+    toastElement.className = `t ${type}`;
+    const iconMap = { su: 'fa-circle-check', er: 'fa-circle-xmark', wa: 'fa-triangle-exclamation', in: 'fa-circle-info' };
+    toastElement.innerHTML = `<i class="fa-solid ${iconMap[type] || iconMap.su}"></i> ${message}`;
+    container.appendChild(toastElement);
+    const removeToast = () => { toastElement.classList.add('rm'); setTimeout(() => toastElement.remove(), 350); };
+    setTimeout(removeToast, 3800);
+    toastElement.addEventListener('click', removeToast);
+}
+
+function validateSchoolEmail(emailAddress) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress) && emailAddress.split('@')[1].toLowerCase() === SCHOOL_DOMAIN;
+}
+
+function getInitials(nameString) { return nameString ? nameString.charAt(0).toUpperCase() : '?'; }
+
+function toggleButtonLoadingState(buttonElement, isLoading) {
+    if (!buttonElement) return;
+    if (isLoading) {
+        buttonElement.setAttribute('data-oh', buttonElement.innerHTML);
+        buttonElement.disabled = true;
+        buttonElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    } else {
+        buttonElement.disabled = false;
+        const originalHtml = buttonElement.getAttribute('data-oh');
+        if (originalHtml) buttonElement.innerHTML = originalHtml;
+    }
+}
+
+/** Friendlier text for common Firebase Auth error codes. */
+function describeAuthError(err) {
+    const code = err && err.code ? err.code : '';
+    const map = {
+        'auth/invalid-email': 'That email address looks invalid.',
+        'auth/user-not-found': 'No account found with that email.',
+        'auth/wrong-password': 'Incorrect password. Try again.',
+        'auth/invalid-credential': 'Incorrect email or password.',
+        'auth/email-already-in-use': 'An account with that email already exists.',
+        'auth/weak-password': 'Password should be at least 6 characters.',
+        'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+        'auth/requires-recent-login': 'For your security, please sign out and back in, then try again.',
+        'auth/network-request-failed': 'Network error — check your connection.'
+    };
+    return map[code] || (err && err.message) || 'Something went wrong. Please try again.';
+}
+
+/** Splits a WWHS course string into a short code and a friendly name. */
+function parseCourse(courseString) {
+    if (!courseString) return null;
+    if (courseString === 'Free Period') return { code: '—', name: 'Free Period' };
+    const dashIndex = courseString.indexOf(' - ');
+    const head = dashIndex > -1 ? courseString.slice(0, dashIndex) : courseString;
+    const name = dashIndex > -1 ? courseString.slice(dashIndex + 3) : courseString;
+    const firstSpace = head.indexOf(' ');
+    const code = firstSpace > -1 ? head.slice(0, firstSpace) : head;
+    return { code, name: name || head };
+}
+
+function emptySchedule() {
+    const sched = {};
+    for (let i = 1; i <= PERIOD_COUNT; i++) sched['period' + i] = '';
+    return sched;
+}
+
+/**
+ * Creates a searchable input field with a dropdown for selecting courses.
+ */
+function createCourseSearch(periodId, placeholder, existingValue = '') {
+    const container = document.createElement('div');
+    container.className = 'course-search-wrap';
+    container.style.cssText = 'position:relative;margin-bottom:16px';
+    container.innerHTML = `
+        <div style="position:relative">
+            <i class="fa-solid fa-book" style="position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--gy400);font-size:15px;pointer-events:none;z-index:1"></i>
+            <input type="text" class="course-input" id="${periodId}" placeholder="${placeholder}" value="${existingValue.replace(/"/g, '&quot;')}" autocomplete="off" style="padding-left:44px">
+        </div>
+        <div class="dropdown" id="${periodId}-dropdown"></div>
+    `;
+
+    const inputField = container.querySelector('input');
+    const dropdownMenu = container.querySelector('.dropdown');
+
+    function renderMatches() {
+        const queryValue = inputField.value.toLowerCase();
+        dropdownMenu.innerHTML = '';
+        if (queryValue.length < 1) { dropdownMenu.classList.remove('show'); return; }
+        const matchedCourses = WWHS_COURSES.filter(course => course.originalString.toLowerCase().includes(queryValue)).slice(0, 15);
+        if (matchedCourses.length === 0) { dropdownMenu.classList.remove('show'); return; }
+        matchedCourses.forEach(courseObj => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+            itemDiv.textContent = courseObj.originalString;
+            itemDiv.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                inputField.value = courseObj.originalString;
+                dropdownMenu.classList.remove('show');
+            });
+            dropdownMenu.appendChild(itemDiv);
+        });
+        dropdownMenu.classList.add('show');
+    }
+
+    inputField.addEventListener('input', renderMatches);
+    inputField.addEventListener('focus', () => { if (inputField.value.length >= 1) renderMatches(); });
+    inputField.addEventListener('blur', () => setTimeout(() => dropdownMenu.classList.remove('show'), 150));
+
+    return container;
+}
+
+function renderSignupCourseInputs() {
+    const container = document.getElementById('signup-courses-container');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let period = 1; period <= PERIOD_COUNT; period++) {
+        container.appendChild(createCourseSearch('signupPeriod' + period, `Period ${period} Class`));
+    }
+}
+
+/**
+ * ============================================================================
+ * SCREEN NAVIGATION
+ * ============================================================================
+ */
+setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    splash.style.opacity = '0';
+    setTimeout(() => splash.classList.add('hidden'), 600);
+}, 1800);
+
+function switchMainView(viewName) {
+    const authScreen = document.getElementById('authScreen');
+    const appRoot = document.getElementById('appRoot');
+    const loginPanel = document.getElementById('loginPanel');
+    const signupPanel = document.getElementById('signupPanel');
+
+    if (viewName === 'login') {
+        authScreen.classList.remove('hidden');
+        loginPanel.classList.remove('hidden');
+        signupPanel.classList.add('hidden');
+        appRoot.classList.remove('visible');
+        setTimeout(() => appRoot.classList.add('hidden'), 400);
+    } else if (viewName === 'signup') {
+        authScreen.classList.remove('hidden');
+        signupPanel.classList.remove('hidden');
+        loginPanel.classList.add('hidden');
+        appRoot.classList.remove('visible');
+        setTimeout(() => appRoot.classList.add('hidden'), 400);
+        switchSignupStep(1);
+        renderSignupCourseInputs();
+    } else {
+        authScreen.classList.add('hidden');
+        appRoot.classList.remove('hidden');
+        requestAnimationFrame(() => appRoot.classList.add('visible'));
+    }
+}
+
+function switchSignupStep(stepNumber) {
+    for (let i = 1; i <= 3; i++) document.getElementById('step' + i).classList.toggle('active', i === stepNumber);
+    for (let i = 1; i <= 3; i++) {
+        const dotIndicator = document.getElementById('dot' + i);
+        dotIndicator.classList.remove('cur', 'done');
+        if (i < stepNumber) dotIndicator.classList.add('done');
+        if (i === stepNumber) dotIndicator.classList.add('cur');
+    }
+}
+
+function switchTab(tabName) {
+    currentActiveTab = tabName;
+    ['schedule', 'classmates', 'settings', 'admin'].forEach(name => {
+        const el = document.getElementById('tab-' + name);
+        el.classList.toggle('hidden', name !== tabName);
+        if (name === tabName) {
+            el.classList.remove('tab-enter');
+            void el.offsetWidth; // restart animation
+            el.classList.add('tab-enter');
+        }
+    });
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
+    document.querySelectorAll('.nav-btn-mobile').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
+    document.getElementById('scrollContent').scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (tabName === 'classmates' && cachedClassmates.length === 0 && !isClassmatesLoading) loadClassmates();
+    if (tabName === 'admin' && isAdminUser) loadAdminData();
+}
+
+document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+document.querySelectorAll('.pw-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.for);
+        const icon = btn.querySelector('i');
+        if (target.type === 'password') { target.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+        else { target.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+    });
+});
+
+/**
+ * ============================================================================
+ * AUTH SCREEN EVENT WIRING
+ * ============================================================================
+ */
+document.getElementById('btnGoToSignup').addEventListener('click', () => switchMainView('signup'));
+document.getElementById('btnGoToLogin').addEventListener('click', () => switchMainView('login'));
+document.getElementById('btnMobileHelp').addEventListener('click', () => showToast('Sign in with your school email to share your schedule with classmates.', 'in'));
+
+document.getElementById('btnStep1Next').addEventListener('click', () => {
+    const emailField = document.getElementById('signupEmail').value.trim();
+    if (!validateSchoolEmail(emailField) && emailField.toLowerCase() !== ADMIN_EMAIL) {
+        return showToast(`Please use a valid @${SCHOOL_DOMAIN} email`, 'er');
+    }
+    const passwordField = document.getElementById('signupPassword').value;
+    if (passwordField.length < 6) return showToast('Password is too short (min 6 characters)', 'er');
+    switchSignupStep(2);
+});
+
+document.getElementById('btnStep2Next').addEventListener('click', () => {
+    const nameField = document.getElementById('signupName').value.trim();
+    if (!nameField) return showToast('Please enter your full name', 'er');
+    const gradeField = document.getElementById('signupGrade').value;
+    if (!gradeField) return showToast('Please select your grade level', 'er');
+    switchSignupStep(3);
+});
+
+document.querySelectorAll('.btnPrevStep').forEach(button => {
+    button.addEventListener('click', (event) => {
+        const targetStep = parseInt(event.currentTarget.getAttribute('data-target'), 10);
+        switchSignupStep(targetStep);
+    });
+});
+
+// --- Login ---
+document.getElementById('btnLoginSubmit').addEventListener('click', async () => {
+    const btn = document.getElementById('btnLoginSubmit');
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) return showToast('Enter your email and password', 'er');
+
+    toggleButtonLoadingState(btn, true);
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast('Welcome back!', 'su');
+        // onAuthStateChanged will handle the view switch + profile load
+    } catch (err) {
+        showToast(describeAuthError(err), 'er');
+    } finally {
+        toggleButtonLoadingState(btn, false);
+    }
+});
+
+['loginEmail', 'loginPassword'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('btnLoginSubmit').click();
+    });
+});
+
+// --- Signup completion ---
+document.getElementById('btnFinishSignup').addEventListener('click', async () => {
+    const btn = document.getElementById('btnFinishSignup');
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const name = document.getElementById('signupName').value.trim();
+    const grade = document.getElementById('signupGrade').value;
+
+    const schedule = emptySchedule();
+    for (let i = 1; i <= PERIOD_COUNT; i++) {
+        const el = document.getElementById('signupPeriod' + i);
+        if (el && el.value.trim()) schedule['period' + i] = el.value.trim();
+    }
+
+    toggleButtonLoadingState(btn, true);
+    try {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = credential.user.uid;
+        await setDoc(doc(db, 'users', uid), {
+            name,
+            email,
+            grade,
+            schedule,
+            discoveryEnabled: true,
+            isAdmin: email.toLowerCase() === ADMIN_EMAIL,
+            createdAt: serverTimestamp()
+        });
+        showToast('Account created — welcome!', 'su');
+        // onAuthStateChanged will handle the view switch + profile load
+    } catch (err) {
+        showToast(describeAuthError(err), 'er');
+    } finally {
+        toggleButtonLoadingState(btn, false);
+    }
+});
+
+/**
+ * ============================================================================
+ * PROFILE / SCHEDULE
+ * ============================================================================
+ */
+async function loadUserProfile(uid) {
+    try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        if (!snap.exists()) {
+            showToast('Could not find your profile. Please contact an admin.', 'er');
+            return;
+        }
+        currentDocumentData = snap.data();
+        isAdminUser = !!currentDocumentData.isAdmin;
+
+        document.getElementById('adminBadge').classList.toggle('hidden', !isAdminUser);
+        document.querySelectorAll('.adm-nav').forEach(el => el.classList.toggle('hidden', !isAdminUser));
+
+        renderProfileCard();
+        renderScheduleView();
+        updateDiscoveryUI(!!currentDocumentData.discoveryEnabled);
+
+        if (currentActiveTab === 'classmates' && cachedClassmates.length === 0 && !isClassmatesLoading) loadClassmates();
+        if (currentActiveTab === 'admin' && isAdminUser) loadAdminData();
+    } catch (err) {
+        showToast('Could not load your profile: ' + describeAuthError(err), 'er');
+    }
+}
+
+function renderProfileCard() {
+    const d = currentDocumentData;
+    document.getElementById('profileAvatar').textContent = getInitials(d.name);
+    document.getElementById('profileName').textContent = d.name || 'Unnamed Student';
+    document.getElementById('profileGrade').textContent = d.grade || '--';
+    document.getElementById('profileEmail').textContent = d.email || '';
+
+    const adminIndicator = document.getElementById('adminIndicatorContainer');
+    adminIndicator.innerHTML = isAdminUser
+        ? `<span class="pl bl" style="margin-bottom:8px"><i class="fa-solid fa-shield-halved"></i> Administrator</span>`
+        : '';
+}
+
+function renderScheduleView() {
+    const container = document.getElementById('scheduleRowsContainer');
+    const d = currentDocumentData;
+    container.innerHTML = '';
+
+    if (isEditingMode) {
+        for (let i = 1; i <= PERIOD_COUNT; i++) {
+            const existing = (d.schedule && d.schedule['period' + i]) || '';
+            const wrap = createCourseSearch('editPeriod' + i, `Period ${i} Class`, existing);
+            wrap.style.marginBottom = i === PERIOD_COUNT ? '0' : '16px';
+            container.appendChild(wrap);
+        }
+        document.getElementById('saveButtonContainer').classList.add('show');
+        return;
+    }
+
+    document.getElementById('saveButtonContainer').classList.remove('show');
+
+    const anyCourses = d.schedule && Object.values(d.schedule).some(v => v && v.trim());
+    if (!anyCourses) {
+        container.innerHTML = `
+            <div class="em-s">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <h3>No classes added yet</h3>
+                <p>Tap Edit to add your schedule.</p>
+            </div>`;
+        return;
+    }
+
+    for (let i = 1; i <= PERIOD_COUNT; i++) {
+        const raw = (d.schedule && d.schedule['period' + i]) || '';
+        if (!raw) continue;
+        const parsed = parseCourse(raw);
+        const row = document.createElement('div');
+        row.className = 'sr' + (parsed.name === 'Free Period' ? ' free' : '');
+        row.innerHTML = `
+            <div class="pn">P${i}</div>
+            <div class="cdt">
+                <div class="cn">${parsed.name}</div>
+                <div class="cp">${parsed.code}</div>
+            </div>`;
+        container.appendChild(row);
+    }
+}
+
+document.getElementById('btnEditSchedule').addEventListener('click', () => {
+    isEditingMode = !isEditingMode;
+    const btn = document.getElementById('btnEditSchedule');
+    btn.innerHTML = isEditingMode
+        ? '<i class="fa-solid fa-xmark"></i> Cancel'
+        : '<i class="fa-solid fa-pen-to-square"></i> Edit';
+    renderScheduleView();
+});
+
+document.getElementById('btnSaveChanges').addEventListener('click', async () => {
+    const btn = document.getElementById('btnSaveChanges');
+    const schedule = emptySchedule();
+    for (let i = 1; i <= PERIOD_COUNT; i++) {
+        const el = document.getElementById('editPeriod' + i);
+        if (el) schedule['period' + i] = el.value.trim();
+    }
+    toggleButtonLoadingState(btn, true);
+    try {
+        await updateDoc(doc(db, 'users', currentUserId), { schedule });
+        currentDocumentData.schedule = schedule;
+        isEditingMode = false;
+        document.getElementById('btnEditSchedule').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit';
+        renderScheduleView();
+        showToast('Schedule saved', 'su');
+    } catch (err) {
+        showToast('Could not save: ' + describeAuthError(err), 'er');
+    } finally {
+        toggleButtonLoadingState(btn, false);
+    }
+});
+
+document.getElementById('btnCopySchedule').addEventListener('click', async () => {
+    const d = currentDocumentData;
+    if (!d) return;
+    const lines = [];
+    for (let i = 1; i <= PERIOD_COUNT; i++) {
+        const raw = (d.schedule && d.schedule['period' + i]) || '';
+        if (!raw) continue;
+        const parsed = parseCourse(raw);
+        lines.push(`Period ${i}: ${parsed.name}`);
+    }
+    if (lines.length === 0) return showToast('Nothing to copy yet', 'wa');
+    const text = `${d.name}'s Schedule\n${lines.join('\n')}`;
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Schedule copied to clipboard', 'su');
+    } catch {
+        showToast('Could not copy — your browser may be blocking clipboard access', 'er');
+    }
+});
+
+/**
+ * ============================================================================
+ * DISCOVERY MODE
+ * ============================================================================
+ */
+function updateDiscoveryUI(enabled) {
+    document.getElementById('discoveryDot').className = 'dd ' + (enabled ? 'on' : 'off');
+    document.getElementById('discoveryTextIndicator').textContent = enabled ? 'Discovery Active' : 'Discovery Off';
+    document.getElementById('discoveryDescription').textContent = enabled ? 'Classmates can see your schedule' : 'Your schedule is hidden from classmates';
+    const pill = document.getElementById('discoveryPill');
+    pill.className = 'pl ' + (enabled ? 'gn' : 'rd');
+    pill.innerHTML = enabled ? '<i class="fa-solid fa-check-circle"></i> Visible' : '<i class="fa-solid fa-eye-slash"></i> Hidden';
+
+    const settingsPill = document.getElementById('settingsDiscoveryPill');
+    settingsPill.className = 'pl ' + (enabled ? 'gn' : 'rd');
+    settingsPill.innerHTML = enabled ? '<i class="fa-solid fa-check-circle"></i> Discoverable' : '<i class="fa-solid fa-eye-slash"></i> Hidden';
+
+    document.getElementById('settingsDiscoveryStatus').textContent = enabled ? 'Visible' : 'Hidden';
+    document.getElementById('toggleDiscoveryMode').classList.toggle('on', enabled);
+}
+
+async function setDiscoveryEnabled(enabled) {
+    try {
+        await updateDoc(doc(db, 'users', currentUserId), { discoveryEnabled: enabled });
+        currentDocumentData.discoveryEnabled = enabled;
+        updateDiscoveryUI(enabled);
+        showToast(enabled ? 'Discovery turned on' : 'Discovery turned off', 'su');
+    } catch (err) {
+        showToast('Could not update discovery: ' + describeAuthError(err), 'er');
+    }
+}
+
+document.getElementById('toggleDiscoveryMode').addEventListener('click', () => {
+    const isCurrentlyOn = currentDocumentData && currentDocumentData.discoveryEnabled;
+    if (isCurrentlyOn) {
+        document.getElementById('modal-discovery').classList.remove('hidden');
+    } else {
+        setDiscoveryEnabled(true);
+    }
+});
+document.getElementById('btn-cancel-discovery').addEventListener('click', () => document.getElementById('modal-discovery').classList.add('hidden'));
+document.getElementById('btn-force-discovery-off').addEventListener('click', async () => {
+    await setDiscoveryEnabled(false);
+    document.getElementById('modal-discovery').classList.add('hidden');
+});
+
+/**
+ * ============================================================================
+ * CLASSMATES / DISCOVERY DIRECTORY
+ * ============================================================================
+ */
+async function loadClassmates() {
+    if (isClassmatesLoading) return;
+    isClassmatesLoading = true;
+    const container = document.getElementById('classmatesResultsContainer');
+    container.innerHTML = `<div class="skel" style="height:120px"></div><div class="skel" style="height:120px"></div>`;
+    try {
+        const q = query(collection(db, 'users'), where('discoveryEnabled', '==', true));
+        const snap = await getDocs(q);
+        cachedClassmates = [];
+        snap.forEach(docSnap => {
+            if (docSnap.id === currentUserId) return;
+            cachedClassmates.push({ uid: docSnap.id, ...docSnap.data() });
+        });
+        applyClassmateFilters();
+    } catch (err) {
+        container.innerHTML = `<div class="em-s"><i class="fa-solid fa-triangle-exclamation"></i><h3>Could not load classmates</h3><p>${describeAuthError(err)}</p></div>`;
+    } finally {
+        isClassmatesLoading = false;
+    }
+}
+
+/** Combines the All/Same-Periods segmented toggle with the search box, then renders. */
+function applyClassmateFilters() {
+    const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
+    const searchQuery = document.getElementById('classmateSearchInput').value.toLowerCase().trim();
+
+    let list = cachedClassmates;
+
+    if (classmateFilterMode === 'shared') {
+        list = list.filter(mate => sharedCourses(mySchedule, mate.schedule).length > 0);
+    }
+
+    if (searchQuery) {
+        list = list.filter(mate => {
+            if ((mate.name || '').toLowerCase().includes(searchQuery)) return true;
+            return Object.values(mate.schedule || {}).some(c => (c || '').toLowerCase().includes(searchQuery));
+        });
+    }
+
+    // Classmates who share the most actual PERIODS with you float to the top.
+    list = [...list].sort((a, b) =>
+        getSharedPeriods(mySchedule, b.schedule).length -
+        getSharedPeriods(mySchedule, a.schedule).length
+    );
+
+    renderClassmates(list);
+}
+
+/** Lowercased, trimmed course name used for matching equivalent course names. */
+function normalizedCourseName(courseString) {
+    const parsed = parseCourse(courseString);
+    return parsed ? parsed.name.trim().toLowerCase() : '';
+}
+
+/** Numeric FL course code (e.g. "1200310") when the schedule stores a catalog string. */
+function getCourseCode(courseString) {
+    const parsed = parseCourse(courseString);
+    return parsed && /^\d+$/.test(parsed.code) ? parsed.code : '';
+}
+
+/**
+ * Returns the periods where both students have the same class.
+ * IMPORTANT: the period number must match too.
+ *
+ * A period counts as shared when both students are in the same class: they
+ * either picked the same catalog course (matching FL course code), entered
+ * the same course name, or both have a Free Period.
+ *
+ * Example:
+ *   My P2 = Algebra
+ *   Their P2 = Algebra  -> shared
+ *   My P3 = Free Period
+ *   Their P3 = Free Period -> shared
+ *   Their P5 = Algebra  -> NOT shared
+ */
+function getSharedPeriods(myScheduleObj, theirScheduleObj) {
+    const shared = [];
+
+    for (let period = 1; period <= PERIOD_COUNT; period++) {
+        const periodKey = 'period' + period;
+        const myCourse = (myScheduleObj || {})[periodKey];
+        const theirCourse = (theirScheduleObj || {})[periodKey];
+
+        if (!myCourse || !theirCourse) continue;
+
+        const myName = normalizedCourseName(myCourse);
+        const theirName = normalizedCourseName(theirCourse);
+
+        if (myName && theirName) {
+            const myCode = getCourseCode(myCourse);
+            const theirCode = getCourseCode(theirCourse);
+            if (myName === theirName || (myCode && myCode === theirCode)) {
+                shared.push({
+                    period,
+                    course: theirCourse,
+                    myCourse
+                });
+            }
+        }
+    }
+
+    return shared;
+}
+
+/* Kept as a compatibility helper for any other code that uses sharedCourses(). */
+function sharedCourses(myScheduleObj, theirScheduleObj) {
+    return getSharedPeriods(myScheduleObj, theirScheduleObj).map(item => item.course);
+}
+
+function renderClassmates(list) {
+    const container = document.getElementById('classmatesResultsContainer');
+    container.innerHTML = '';
+
+    const mySchedule = (currentDocumentData && currentDocumentData.schedule) || {};
+
+    if (list.length === 0) {
+        const sharedEmpty = classmateFilterMode === 'shared';
+        const myHasCourses = Object.values(mySchedule).some(v => v && v.trim());
+        let emptyIcon = 'fa-user-group';
+        let emptyTitle = 'No Classmates Found';
+        let emptyMsg = 'No one matches your search, or nobody nearby has discovery turned on.';
+        if (sharedEmpty && !myHasCourses) {
+            emptyIcon = 'fa-calendar-xmark';
+            emptyTitle = 'Add Your Schedule First';
+            emptyMsg = 'Save your classes on the My Schedule tab, then this list will show classmates who share the same periods with you.';
+        } else if (sharedEmpty) {
+            emptyIcon = 'fa-layer-group';
+            emptyTitle = 'No Same Period Classes';
+            emptyMsg = 'Nobody discoverable has the exact same class in the exact same period as you yet. Both of you must select the same class in the same period, and have Discovery turned on.';
+        }
+        container.innerHTML = `
+            <div class="em-s">
+                <i class="fa-solid ${emptyIcon}"></i>
+                <h3>${emptyTitle}</h3>
+                <p>${emptyMsg}</p>
+            </div>`;
+        return;
+    }
+
+    // Render in small batches per animation frame so big directories never
+    // freeze the phone (especially iOS Safari).
+    const CHUNK = 8;
+    let index = 0;
+    const token = ++renderToken;
+
+    function buildCard(mate) {
+        const sharedPeriods = getSharedPeriods(mySchedule, mate.schedule);
+
+        const card = document.createElement('div');
+        card.className = 'cmc' + (sharedPeriods.length > 0 ? ' shd' : '');
+
+        // Keep every course tied to its real period number.
+        // In Same Periods mode, only show the periods that actually match.
+        const allCourses = [];
+        for (let period = 1; period <= PERIOD_COUNT; period++) {
+            const course = (mate.schedule || {})['period' + period];
+            if (course) {
+                allCourses.push({
+                    period,
+                    course,
+                    shared: sharedPeriods.some(item => item.period === period)
+                });
+            }
+        }
+
+        const coursesToShow = classmateFilterMode === 'shared'
+            ? allCourses.filter(item => item.shared)
+            : allCourses;
+
+        const chips = coursesToShow.slice(0, PERIOD_COUNT).map(item => {
+            const parsed = parseCourse(item.course);
+            return `
+                <div class="cmp${item.shared ? ' hl' : ''}">
+                    <i class="fa-solid fa-circle"></i>
+                    <strong>P${item.period}</strong>
+                    <span>${parsed ? parsed.name : item.course}</span>
+                </div>`;
+        }).join('');
+
+        card.innerHTML = `
+            <div class="cmt">
+                <div class="cma">${getInitials(mate.name)}</div>
+                <div class="cmi">
+                    <h4>
+                        ${mate.name || 'Student'}
+                        <span class="gt">Grade ${mate.grade || '--'}</span>
+                        ${sharedPeriods.length > 0
+                            ? `<span class="sht"><i class="fa-solid fa-layer-group"></i> P${sharedPeriods.map(s => s.period).join(', P')}</span>`
+                            : ''}
+                    </h4>
+                </div>
+            </div>
+            <div class="ccl">
+                ${chips || '<div class="cmp">No classes listed yet</div>'}
+            </div>
+        `;
+
+        return card;
+    }
+
+    function renderNextBatch() {
+        if (token !== renderToken) return;
+        const end = Math.min(index + CHUNK, list.length);
+        for (; index < end; index++) container.appendChild(buildCard(list[index]));
+        if (index < list.length) requestAnimationFrame(renderNextBatch);
+    }
+
+    requestAnimationFrame(renderNextBatch);
+}
+
+let searchDebounce = null;
+document.getElementById('classmateSearchInput').addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(applyClassmateFilters, 200);
+});
+
+document.querySelectorAll('#classmateFilterToggle .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        classmateFilterMode = btn.dataset.mode;
+        document.querySelectorAll('#classmateFilterToggle .seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+        applyClassmateFilters();
+    });
+});
+
+document.getElementById('btnRefreshClassmates').addEventListener('click', loadClassmates);
+
+/**
+ * ============================================================================
+ * ADMIN DASHBOARD
+ * ============================================================================
+ * NOTE ON SECURITY: this panel is only as secure as your Firestore Security
+ * Rules. The client-side `isAdminUser` flag decides what to *show*, but a
+ * technically-inclined user could still call the Firestore SDK directly from
+ * devtools. Real enforcement has to happen in your rules — restrict reads of
+ * the `users` collection list and deletes to documents where
+ * `request.auth.uid == resource.id || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true`.
+ * See the sample rules block at the bottom of this file.
+ */
+async function loadAdminData() {
+    const tbody = document.getElementById('adminUsersTableBody');
+    const stats = document.getElementById('adminStatsContainer');
+    stats.innerHTML = `<div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>`;
+    tbody.innerHTML = `<tr><td colspan="5"><div class="skel" style="height:40px"></div></td></tr>`;
+
+    try {
+        const snap = await getDocs(collection(db, 'users'));
+        const users = [];
+        snap.forEach(d => users.push({ uid: d.id, ...d.data() }));
+
+        const total = users.length;
+        const discoverable = users.filter(u => u.discoveryEnabled).length;
+        const admins = users.filter(u => u.isAdmin).length;
+
+        stats.innerHTML = `
+            <div class="stb"><h3>${total}</h3><p>Total Students</p></div>
+            <div class="stb"><h3>${discoverable}</h3><p>Discoverable</p></div>
+            <div class="stb"><h3>${admins}</h3><p>Admins</p></div>
+        `;
+
+        tbody.innerHTML = '';
+        if (users.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--gy500);padding:24px">No users yet</td></tr>`;
+            return;
+        }
+        users.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${u.name || '—'}${u.isAdmin ? ' <span class="tbl-mini-pl on">ADMIN</span>' : ''}</td>
+                <td>${u.email || '—'}</td>
+                <td>${u.grade || '—'}</td>
+                <td><span class="tbl-mini-pl ${u.discoveryEnabled ? 'on' : 'off'}">${u.discoveryEnabled ? 'ON' : 'OFF'}</span></td>
+                <td><button class="tbl-ico-btn" data-uid="${u.uid}" data-name="${(u.name || 'this user').replace(/"/g, '&quot;')}" title="Delete profile"><i class="fa-solid fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('.tbl-ico-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.uid === currentUserId) return showToast('Use "Delete Account" in Settings to remove your own account', 'wa');
+                pendingUserDeletionId = btn.dataset.uid;
+                document.getElementById('deleteModalTitle').textContent = 'Delete User?';
+                document.getElementById('deleteModalBody').textContent = `This removes ${btn.dataset.name}'s profile and schedule from the directory.`;
+                document.getElementById('modal-delete').classList.remove('hidden');
+            });
+        });
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--r500);padding:24px">${describeAuthError(err)}</td></tr>`;
+    }
+}
+
+document.getElementById('btn-cancel-delete').addEventListener('click', () => {
+    pendingUserDeletionId = null;
+    document.getElementById('modal-delete').classList.add('hidden');
+});
+
+document.getElementById('btn-force-delete').addEventListener('click', async () => {
+    if (!pendingUserDeletionId) return;
+    const btn = document.getElementById('btn-force-delete');
+    toggleButtonLoadingState(btn, true);
+    try {
+        if (pendingUserDeletionId === 'SELF') {
+            await deleteDoc(doc(db, 'users', currentUserId));
+            await deleteUser(auth.currentUser);
+            showToast('Account deleted', 'su');
+            // onAuthStateChanged will move us back to the login screen
+        } else {
+            // Client SDK can only remove this user's Firestore profile, not
+            // their Firebase Auth account — that requires a Cloud Function
+            // with the Admin SDK. Their profile disappears from the
+            // directory and schedule immediately either way.
+            await deleteDoc(doc(db, 'users', pendingUserDeletionId));
+            showToast('Profile removed from directory', 'su');
+            loadAdminData();
+        }
+    } catch (err) {
+        showToast(describeAuthError(err), 'er');
+    } finally {
+        toggleButtonLoadingState(btn, false);
+        pendingUserDeletionId = null;
+        document.getElementById('modal-delete').classList.add('hidden');
+    }
+});
+
+/**
+ * ============================================================================
+ * SETTINGS: DELETE OWN ACCOUNT / LOGOUT
+ * ============================================================================
+ */
+document.getElementById('btnDeleteAccount').addEventListener('click', () => {
+    pendingUserDeletionId = 'SELF';
+    document.getElementById('deleteModalTitle').textContent = 'Delete Your Account?';
+    document.getElementById('deleteModalBody').textContent = 'This permanently removes your profile, schedule, and sign-in.';
+    document.getElementById('modal-delete').classList.remove('hidden');
+});
+
+async function handleLogout() {
+    try {
+        await signOut(auth);
+        showToast('Signed out', 'su');
+    } catch (err) {
+        showToast(describeAuthError(err), 'er');
+    }
+}
+document.getElementById('btnSidebarLogout').addEventListener('click', handleLogout);
+document.getElementById('btnSettingsLogout').addEventListener('click', handleLogout);
+
+/**
+ * ============================================================================
+ * AUTH STATE OBSERVER — single source of truth for which screen shows
+ * ============================================================================
+ */
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUserId = user.uid;
+        switchMainView('app');
+        switchTab('schedule');
+        isEditingMode = false;
+        loadUserProfile(user.uid);
+    } else {
+        currentUserId = null;
+        currentDocumentData = null;
+        isAdminUser = false;
+        cachedClassmates = [];
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        switchMainView('login');
+    }
+});
+
+/**
+ * ============================================================================
+ * SUGGESTED FIRESTORE SECURITY RULES
+ * ============================================================================
+ * Paste something like this into the Firebase Console → Firestore → Rules.
+ * It keeps the admin flag from being self-granted and stops anyone from
+ * reading/writing profiles that aren't theirs, except admins.
+ *
+ * rules_version = '2';
+ * service cloud.firestore {
+ *   match /databases/{database}/documents {
+ *     function isSignedIn() { return request.auth != null; }
+ *     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+ *     function isAdmin() {
+ *       return isSignedIn() &&
+ *         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+ *     }
+ *     match /users/{uid} {
+ *       allow read: if isSignedIn(); // needed for the classmates directory
+ *       allow create: if isOwner(uid) && request.resource.data.isAdmin == false;
+ *       allow update: if (isOwner(uid) && request.resource.data.isAdmin == resource.data.isAdmin)
+ *                     || isAdmin();
+ *       allow delete: if isOwner(uid) || isAdmin();
+ *     }
+ *   }
+ * }
+ */
+</script>
+</body>
+</html>
