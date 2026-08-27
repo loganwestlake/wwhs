@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, viewport-fit=cover" />
   <title>WWHS · premium portal</title>
-  <!-- Tailwind + custom config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,281 +16,606 @@
               300: '#6ee7b7', 400: '#34d399', 500: '#10b981',
               600: '#059669', 700: '#047857', 800: '#065f46',
               900: '#064e3b', 950: '#022c22',
-            },
-            slate: {
-              850: '#1e293b',
             }
           },
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
-          boxShadow: {
-            'premium': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            'glow': '0 0 40px -8px rgba(16, 185, 129, 0.3)',
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'shimmer': 'shimmer 2s linear infinite',
-          },
-          keyframes: {
-            float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' } },
-            shimmer: {
-              '0%': { backgroundPosition: '-200% 0' },
-              '100%': { backgroundPosition: '200% 0' },
-            }
-          }
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] }
         }
       }
     }
   </script>
-  <!-- Google Fonts (Plus Jakarta) -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, setDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Your provided Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC-WOH239fwkAkA7gY-2XUDRok8cs1NiAA",
+      authDomain: "wwhs-pro.firebaseapp.com",
+      databaseURL: "https://wwhs-pro-default-rtdb.firebaseio.com",
+      projectId: "wwhs-pro",
+      storageBucket: "wwhs-pro.firebasestorage.app",
+      messagingSenderId: "467273432534",
+      appId: "1:467273432534:web:91b9e03a6885420ae3f877"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let isAdmin = false;
+    let cardsDataStore = {}; // Global store for card lookup by ID
+
+    // Default cards if none in Firestore (with default sort orders)
+    const defaultCards = [
+      { id: 'schedule', title: 'Schedule Tracker', desc: 'Live periods, countdowns & class timings.', href: 'https://wwhs.pro/schedule', icon: 'clock', locked: false, order: 0 },
+      { id: 'links', title: 'Student Links', desc: 'Canvas, Skyward & essential resources.', href: 'https://wwhs.pro/links', icon: 'link', locked: false, order: 1 },
+      { id: 'calendar', title: 'Campus Calendar', desc: 'Holidays, early release & key dates.', href: 'https://wwhs.pro/calendar', icon: 'calendar', locked: false, order: 2 },
+      { id: 'events', title: 'WWHS Events', desc: 'Spirit weeks, dances, club meetings.', href: 'https://wwhs.pro/events', icon: 'video', locked: false, order: 3 },
+      { id: 'athletics', title: 'WWHS Athletics', desc: 'Schedules, rosters & live matchups.', href: 'https://wwhs.pro/athletics', icon: 'lightning', locked: false, order: 4 },
+      { id: 'notes', title: 'Quick Notes', desc: 'Reminders, homework, ideas — saved.', href: 'https://wwhs.pro/notes', icon: 'pencil', locked: false, order: 5 }
+    ];
+
+    // SVG icon templates map
+    window.iconSvgMap = {
+      clock: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+      link: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>',
+      calendar: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
+      video: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>',
+      lightning: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>',
+      pencil: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>',
+      star: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
+      folder: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>',
+      shield: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>'
+    };
+
+    // Real-time Firestore listener setup so cards update instantly
+    async function initRealtimeCards() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "portal_cards"));
+        if (querySnapshot.empty) {
+          for (let card of defaultCards) {
+            await setDoc(doc(db, "portal_cards", card.id), card);
+          }
+        }
+      } catch (e) {
+        console.error("Initialization fallback check error: ", e);
+      }
+
+      onSnapshot(collection(db, "portal_cards"), (snapshot) => {
+        cardsDataStore = {};
+        let cards = [];
+        snapshot.forEach((docSnap) => {
+          const cardData = { id: docSnap.id, ...docSnap.data() };
+          cardsDataStore[docSnap.id] = cardData;
+          cards.push(cardData);
+        });
+
+        // Automatic Sorting Rule:
+        // 1. Unlocked (active) cards first, then Locked (greyed out) cards.
+        // 2. Within each group, sort by their assigned 'order' property (fallback to 0).
+        cards.sort((a, b) => {
+          const aLocked = a.locked === true ? 1 : 0;
+          const bLocked = b.locked === true ? 1 : 0;
+          if (aLocked !== bLocked) {
+            return aLocked - bLocked; // Active (0) comes before Locked (1)
+          }
+          const aOrder = typeof a.order === 'number' ? a.order : 0;
+          const bOrder = typeof b.order === 'number' ? b.order : 0;
+          return aOrder - bOrder;
+        });
+
+        renderCards(cards);
+      }, (error) => {
+        console.error("Firestore snapshot error:", error);
+      });
+    }
+
+    function renderCards(cards) {
+      const grid = document.getElementById('cardsGrid');
+      grid.innerHTML = '';
+
+      cards.forEach((card, index) => {
+        const svgCode = window.iconSvgMap[card.icon] || window.iconSvgMap['link'];
+        const isLocked = card.locked === true;
+
+        const cardEl = document.createElement('div');
+        cardEl.className = `card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between relative group ${isLocked ? 'opacity-60 bg-slate-100 dark:bg-slate-900/50 cursor-not-allowed' : 'cursor-pointer'}`;
+
+        let innerContent = `
+          <div>
+            <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
+              <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">${svgCode}</svg>
+            </div>
+            <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">${escapeHtml(card.title)}</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${escapeHtml(card.desc)}</p>
+          </div>
+          <div class="pt-5 mt-2 flex items-center gap-2">
+        `;
+
+        if (isLocked) {
+          innerContent += `<span class="block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed">Locked</span>`;
+        } else {
+          innerContent += `<a href="${escapeHtml(card.href || 'https://wwhs.pro/' + card.id)}" class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300">Launch →</a>`;
+        }
+
+        // Admin badge & controls (reordering, locking, editing, deleting)
+        if (isAdmin) {
+          innerContent += `
+            <div class="absolute top-4 right-4 flex items-center gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur px-2 py-1.5 rounded-full shadow-sm border border-slate-200 dark:border-slate-700 z-10">
+              <button onclick="moveCard('${card.id}', 'up')" class="text-xs font-bold text-slate-500 hover:text-emerald-600 px-1" title="Move Up">◀</button>
+              <button onclick="moveCard('${card.id}', 'down')" class="text-xs font-bold text-slate-500 hover:text-emerald-600 px-1" title="Move Down">▶</button>
+              <span class="text-slate-300 dark:text-slate-600">|</span>
+              <button onclick="toggleLock('${card.id}', ${!isLocked})" class="text-xs font-bold px-1 ${isLocked ? 'text-slate-400 hover:text-slate-600' : 'text-amber-600 hover:text-amber-700'}" title="${isLocked ? 'Enable / Ungrey Card' : 'Grey out & Lock Card'}">${isLocked ? '👁️' : '🔒'}</button>
+              <button onclick="openEditModal('${card.id}')" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 px-1" title="Edit Card">✏️</button>
+              <button onclick="deleteCardPrompt('${card.id}')" class="text-xs font-bold text-rose-500 hover:text-rose-700 px-1" title="Delete Card">🗑️</button>
+            </div>
+          `;
+        }
+
+        innerContent += `</div>`;
+        cardEl.innerHTML = innerContent;
+        grid.appendChild(cardEl);
+      });
+
+      if (isAdmin) {
+        const addCardEl = document.createElement('div');
+        addCardEl.className = `card-premium rounded-3xl p-7 md:p-8 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-emerald-400/50 hover:border-emerald-500 min-h-[280px] bg-emerald-50/20 dark:bg-emerald-950/10`;
+        addCardEl.onclick = openAddModal;
+        addCardEl.innerHTML = `
+          <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl font-bold mb-3">+</div>
+          <h3 class="font-bold text-slate-800 dark:text-slate-200 text-lg">Add New Card</h3>
+          <p class="text-xs text-slate-500 mt-1 text-center">Configure subdomain & icon</p>
+        `;
+        grid.appendChild(addCardEl);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Admin Authentication state handler
+    onAuthStateChanged(auth, (user) => {
+      const adminControls = document.getElementById('adminControls');
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (user) {
+        isAdmin = true;
+        adminControls.classList.remove('hidden');
+        logoutBtn.classList.remove('hidden');
+      } else {
+        isAdmin = false;
+        adminControls.classList.add('hidden');
+        logoutBtn.classList.add('hidden');
+      }
+      initRealtimeCards();
+    });
+
+    // Global actions exposed
+    window.handleLogin = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+      const errEl = document.getElementById('loginError');
+      errEl.classList.add('hidden');
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('loginForm').reset();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      }
+    };
+
+    window.handleLogout = async function() {
+      await signOut(auth);
+    };
+
+    // Move card order up or down relative to its peers in the same section (active vs locked)
+    window.moveCard = async function(id, direction) {
+      if (!isAdmin) return;
+      
+      // Get all cards sorted by current order
+      const allCards = Object.values(cardsDataStore).sort((a, b) => {
+        const aOrder = typeof a.order === 'number' ? a.order : 0;
+        const bOrder = typeof b.order === 'number' ? b.order : 0;
+        return aOrder - bOrder;
+      });
+
+      const targetCard = cardsDataStore[id];
+      if (!targetCard) return;
+
+      // Filter peers that share the exact same lock status (since active and locked are in distinct sorted partitions)
+      const peers = allCards.filter(c => (c.locked === true) === (targetCard.locked === true));
+      const currentIndex = peers.findIndex(c => c.id === id);
+
+      if (direction === 'up' && currentIndex > 0) {
+        const prevCard = peers[currentIndex - 1];
+        // Swap their order values
+        const tempOrder = targetCard.order ?? currentIndex;
+        targetCard.order = prevCard.order ?? (currentIndex - 1);
+        prevCard.order = tempOrder;
+
+        try {
+          await updateDoc(doc(db, "portal_cards", targetCard.id), { order: targetCard.order });
+          await updateDoc(doc(db, "portal_cards", prevCard.id), { order: prevCard.order });
+        } catch (e) {
+          alert("Error reordering cards: " + e.message);
+        }
+      } else if (direction === 'down' && currentIndex < peers.length - 1) {
+        const nextCard = peers[currentIndex + 1];
+        // Swap their order values
+        const tempOrder = targetCard.order ?? currentIndex;
+        targetCard.order = nextCard.order ?? (currentIndex + 1);
+        nextCard.order = tempOrder;
+
+        try {
+          await updateDoc(doc(db, "portal_cards", targetCard.id), { order: targetCard.order });
+          await updateDoc(doc(db, "portal_cards", nextCard.id), { order: nextCard.order });
+        } catch (e) {
+          alert("Error reordering cards: " + e.message);
+        }
+      }
+    };
+
+    window.toggleLock = async function(id, lockState) {
+      if (!isAdmin) return;
+      try {
+        await updateDoc(doc(db, "portal_cards", id), { locked: lockState });
+      } catch (e) {
+        alert("Error updating status: " + e.message);
+      }
+    };
+
+    window.deleteCardPrompt = async function(id) {
+      if (!isAdmin) return;
+      if (confirm("Are you sure you want to delete this card?")) {
+        try {
+          await deleteDoc(doc(db, "portal_cards", id));
+        } catch (e) {
+          alert("Error deleting card: " + e.message);
+        }
+      }
+    };
+
+    window.openAddModal = function() {
+      document.getElementById('addModal').classList.remove('hidden');
+    };
+
+    window.closeAddModal = function() {
+      document.getElementById('addModal').classList.add('hidden');
+      document.getElementById('addCardForm').reset();
+    };
+
+    window.handleSaveNewCard = async function(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const title = document.getElementById('cardTitle').value;
+      const desc = document.getElementById('cardDesc').value;
+      const subdomainInput = document.getElementById('cardSubdomain').value.trim().replace(/^\/+/, '');
+      const icon = document.getElementById('cardIcon').value;
+      
+      const customId = subdomainInput ? subdomainInput.toLowerCase().replace(/[^a-z0-9-_]/g, '') : ('card_' + Date.now());
+      const href = `https://wwhs.pro/${subdomainInput}`;
+
+      // Assign highest order number so new card goes to the end of active cards
+      const maxOrder = Object.values(cardsDataStore).reduce((max, c) => Math.max(max, c.order || 0), 0);
+
+      try {
+        await setDoc(doc(db, "portal_cards", customId), {
+          title, desc, href, icon, locked: false, order: maxOrder + 1
+        });
+        closeAddModal();
+      } catch (e) {
+        alert("Error creating card: " + e.message);
+      }
+    };
+
+    window.openEditModal = function(cardId) {
+      if (!isAdmin) return;
+      const card = cardsDataStore[cardId];
+      if (!card) {
+        alert("Card data not found.");
+        return;
+      }
+      
+      document.getElementById('editCardId').value = card.id;
+      document.getElementById('editCardTitle').value = card.title || '';
+      document.getElementById('editCardDesc').value = card.desc || '';
+      
+      let sub = card.id;
+      if (card.href) {
+        const parts = card.href.split('wwhs.pro/');
+        if (parts.length > 1) {
+          sub = parts[1];
+        }
+      }
+      document.getElementById('editCardSubdomain').value = sub;
+      document.getElementById('editCardIcon').value = card.icon || 'link';
+
+      document.getElementById('editModal').classList.remove('hidden');
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('editModal').classList.add('hidden');
+      document.getElementById('editCardForm').reset();
+    };
+
+    window.handleUpdateCard = async function(e) {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const cardId = document.getElementById('editCardId').value;
+      const title = document.getElementById('editCardTitle').value;
+      const desc = document.getElementById('editCardDesc').value;
+      const subdomainInput = document.getElementById('editCardSubdomain').value.trim().replace(/^\/+/, '');
+      const icon = document.getElementById('editCardIcon').value;
+      const href = `https://wwhs.pro/${subdomainInput}`;
+
+      try {
+        await updateDoc(doc(db, "portal_cards", cardId), {
+          title, desc, href, icon
+        });
+        closeEditModal();
+      } catch (e) {
+        alert("Error updating card: " + e.message);
+      }
+    };
+
+    window.openLoginModal = function() {
+      document.getElementById('loginModal').classList.remove('hidden');
+    };
+    window.closeLoginModal = function() {
+      document.getElementById('loginModal').classList.add('hidden');
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initRealtimeCards();
+    });
+  </script>
+
   <style>
     * { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body {
-      background: #f1f5f9;
-      background-image: radial-gradient(at 0% 20%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-                        radial-gradient(at 100% 80%, rgba(5, 150, 105, 0.06) 0px, transparent 50%);
+      background: #ffffff;
+      background-image: radial-gradient(at 0% 20%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
+                        radial-gradient(at 100% 80%, rgba(5, 150, 105, 0.02) 0px, transparent 50%);
       background-attachment: fixed;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
-    /* dark mode overrides */
     .dark body {
       background: #0b1120;
-      background-image: radial-gradient(at 0% 20%, rgba(16, 185, 129, 0.15) 0px, transparent 55%),
-                        radial-gradient(at 100% 80%, rgba(5, 150, 105, 0.10) 0px, transparent 50%);
+      background-image: radial-gradient(at 0% 20%, rgba(16, 185, 129, 0.10) 0px, transparent 55%),
+                        radial-gradient(at 100% 80%, rgba(5, 150, 105, 0.07) 0px, transparent 50%);
     }
     .card-premium {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(16, 185, 129, 0.05);
-      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      will-change: transform;
     }
     .dark .card-premium {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 185, 129, 0.1);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
     }
-    .card-premium:hover {
-      transform: translateY(-8px) scale(1.01);
-      border-color: rgba(16, 185, 129, 0.5);
-      box-shadow: 0 30px 60px -16px rgba(16, 185, 129, 0.25), 0 0 0 1px rgba(16, 185, 129, 0.2);
-    }
-    .dark .card-premium:hover {
-      border-color: rgba(16, 185, 129, 0.5);
-      box-shadow: 0 30px 60px -16px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(16, 185, 129, 0.25);
+    .card-premium:not(.opacity-60):hover {
+      transform: translateY(-4px);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 20px 40px -12px rgba(16, 185, 129, 0.15);
     }
     .icon-wrapper {
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.15);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .dark .icon-wrapper {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: rgba(16, 185, 129, 0.2);
-    }
-    .card-premium:hover .icon-wrapper {
-      transform: scale(1.08) rotate(-2deg);
+    .card-premium:not(.opacity-60):hover .icon-wrapper {
       background: #059669;
       border-color: #059669;
-      box-shadow: 0 8px 24px -6px rgba(5, 150, 105, 0.4);
     }
-    .card-premium:hover .icon-wrapper svg {
+    .card-premium:not(.opacity-60):hover .icon-wrapper svg {
       color: white;
     }
     .btn-cta {
       background: rgba(16, 185, 129, 0.06);
       border: 1px solid rgba(16, 185, 129, 0.15);
-      transition: all 0.3s ease;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
-    .dark .btn-cta {
-      background: rgba(16, 185, 129, 0.10);
-      border-color: rgba(16, 185, 129, 0.15);
-    }
-    .card-premium:hover .btn-cta {
+    .card-premium:not(.opacity-60):hover .btn-cta {
       background: #059669;
       border-color: #059669;
       color: white;
-      box-shadow: 0 6px 20px -6px rgba(5, 150, 105, 0.5);
-    }
-    .badge-pulse {
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 12px; }
-    ::-webkit-scrollbar-thumb { background: #6ee7b7; border-radius: 12px; }
-    ::-webkit-scrollbar-thumb:hover { background: #34d399; }
-    .dark ::-webkit-scrollbar-track { background: #1e293b; }
-    .dark ::-webkit-scrollbar-thumb { background: #047857; }
-    /* iOS safe area */
-    @supports (padding: max(0px)) {
-      .safe-top { padding-top: max(1rem, env(safe-area-inset-top)); }
-      .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
-    }
-    /* better touch */
-    .card-premium {
-      -webkit-touch-callout: none;
-    }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 12px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-300 selection:text-emerald-950 transition-colors duration-300 safe-top safe-bottom">
-  <!-- Theme toggle & live indicator (floating) -->
-  <div class="fixed top-5 right-5 z-50 flex items-center gap-3">
-    <span class="hidden sm:flex items-center gap-1.5 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 border border-white/30 dark:border-slate-700/60 shadow-sm">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> live
-    </span>
-    <button id="themeToggle" class="w-10 h-10 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-white/40 dark:border-slate-700/60 shadow-lg flex items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition-transform duration-300 text-xl">
-      🌙
-    </button>
-  </div>
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-300 selection:text-emerald-950 transition-colors duration-200 relative">
+  
+  <header class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 flex items-center justify-between">
+    <div id="adminControls" class="hidden flex items-center gap-2">
+      <span class="text-xs font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-950 px-3 py-1 rounded-full">Admin Mode Active</span>
+      <button onclick="openAddModal()" class="text-xs font-bold bg-emerald-600 text-white px-3 py-1.5 rounded-xl hover:bg-emerald-700 transition">Add Card</button>
+      <button id="logoutBtn" onclick="handleLogout()" class="text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-xl">Logout</button>
+    </div>
+    <div></div>
+    <div class="flex items-center gap-4 sm:gap-6">
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="#home" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Home</a>
+        <a href="#resources" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Resources</a>
+        <a href="#portal" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Portal</a>
+      </nav>
 
-  <!-- main container -->
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-10 md:py-16 flex-1 flex flex-col items-center justify-center">
+      <button id="themeToggle" class="w-12 h-6 rounded-full bg-slate-200 dark:bg-slate-700 relative p-1 transition-colors duration-200 focus:outline-none">
+        <div id="toggleThumb" class="w-4 h-4 rounded-full bg-white dark:bg-emerald-400 shadow transform transition-transform duration-200 translate-x-0 dark:translate-x-6"></div>
+      </button>
+    </div>
+  </header>
+
+  <main id="home" class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-8 md:py-12 flex-1 flex flex-col items-center justify-center">
     
-    <!-- header -->
     <div class="text-center mb-12 md:mb-16 relative">
-      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-50/80 dark:bg-emerald-950/40 backdrop-blur-sm border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold tracking-wider uppercase shadow-sm mb-5">
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold tracking-wider uppercase shadow-sm mb-5">
         <span class="relative flex h-2 w-2">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </span>
         WWHS · student hub
       </div>
-      <h1 class="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.1] mb-3">
-        <span class="bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent">Welcome</span> to WWHS
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.1] mb-4">
+        Welcome to <span class="bg-emerald-300/80 dark:bg-emerald-500/30 px-3 py-1 rounded-2xl text-slate-900 dark:text-white inline-block shadow-sm">WWHS</span> Portal
       </h1>
-      <p class="text-slate-600 dark:text-slate-400 text-base md:text-lg font-medium max-w-xl mx-auto">Your command center for academics, events, and campus life.</p>
+      <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg font-medium max-w-xl mx-auto">
+        Your command center for academics, events, and campus life.
+      </p>
     </div>
 
-    <!-- 6‑card grid with functional links (domain.com/path) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
-      
-      <!-- card 1 · Schedule → domain.com/schedule -->
-      <a href="https://domain.com/schedule" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">Schedule Tracker</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Live periods, countdowns &amp; class timings.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
-
-      <!-- card 2 · Student Links → domain.com/links -->
-      <a href="https://domain.com/links" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">Student Links</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Canvas, Skyward &amp; essential resources.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
-
-      <!-- card 3 · Campus Calendar → domain.com/calendar -->
-      <a href="https://domain.com/calendar" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">Campus Calendar</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Holidays, early release &amp; key dates.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
-
-      <!-- card 4 · WWHS Events → domain.com/events -->
-      <a href="https://domain.com/events" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">WWHS Events</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Spirit weeks, dances, club meetings.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
-
-      <!-- card 5 · Athletics → domain.com/athletics -->
-      <a href="https://domain.com/athletics" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">WWHS Athletics</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Schedules, rosters &amp; live matchups.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
-
-      <!-- card 6 · Quick Notes → domain.com/notes -->
-      <a href="https://domain.com/notes" target="_blank" rel="noopener noreferrer" class="card-premium rounded-3xl p-7 md:p-8 flex flex-col justify-between cursor-pointer group no-underline min-h-[280px]">
-        <div>
-          <div class="icon-wrapper w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-5">
-            <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-          </div>
-          <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">Quick Notes</h3>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Reminders, homework, ideas — saved.</p>
-        </div>
-        <div class="pt-5 mt-2">
-          <span class="btn-cta block text-center w-full py-3 rounded-xl font-bold text-xs tracking-widest uppercase text-slate-700 dark:text-slate-300 transition">Launch →</span>
-        </div>
-      </a>
+    <div id="portal" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl mt-6">
+      <div id="cardsGrid" class="contents"></div>
     </div>
 
-    <!-- subtle divider + footer note -->
-    <div class="mt-16 flex items-center gap-6 text-xs text-slate-400 dark:text-slate-500 font-medium">
+    <div id="resources" class="mt-16 flex items-center gap-6 text-xs text-slate-400 dark:text-slate-500 font-medium">
       <span class="h-px w-12 bg-emerald-200/50 dark:bg-emerald-800/30"></span>
-      <span>⚡ 8 active portals · real-time sync</span>
+      <span>campus student portals</span>
       <span class="h-px w-12 bg-emerald-200/50 dark:bg-emerald-800/30"></span>
     </div>
   </main>
 
-  <!-- footer -->
-  <footer class="w-full py-5 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/60 dark:border-slate-800/50 backdrop-blur-sm bg-white/30 dark:bg-slate-900/20 safe-bottom">
+  <footer class="w-full py-5 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200/60 dark:border-slate-800/50 bg-white/30 dark:bg-slate-900/20 relative">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between">
-      <span>© 2026 WWHS Pro · student-first</span>
-      <span class="flex items-center gap-2 mt-1 sm:mt-0">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/70"></span>
-        <span>v3.0 · all systems nominal</span>
-      </span>
+      <span>© 2026 WWHS Pro</span>
+      <span>student-first portal</span>
     </div>
+    <button onclick="openLoginModal()" class="absolute bottom-1 right-2 text-[10px] text-slate-300 dark:text-slate-700 hover:text-emerald-500 transition-colors opacity-30 hover:opacity-100 p-1" title="Admin Auth">🔒</button>
   </footer>
 
-  <!-- theme toggle script -->
+  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+      <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">Admin Portal Login</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Authenticate with your Firebase credentials to manage dashboard cards.</p>
+      
+      <div id="loginError" class="hidden mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-600 text-xs font-semibold"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Email</label>
+          <input type="email" id="loginEmail" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Password</label>
+          <input type="password" id="loginPass" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-4">
+          <button type="button" onclick="closeLoginModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="addModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+      <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">Add New Portal Card</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Create a card linked to a custom subdomain.</p>
+
+      <form id="addCardForm" onsubmit="handleSaveNewCard(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Card Title</label>
+          <input type="text" id="cardTitle" required placeholder="e.g. Schedule Tracker" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Description</label>
+          <input type="text" id="cardDesc" required placeholder="Short summary description" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Subdomain Route</label>
+          <div class="flex rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden items-center">
+            <span class="pl-4 text-xs font-semibold text-slate-400 select-none">wwhs.pro/</span>
+            <input type="text" id="cardSubdomain" required placeholder="schedule" class="w-full py-3 pr-4 bg-transparent text-slate-900 dark:text-white text-sm focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Select Icon</label>
+          <select id="cardIcon" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+            <option value="clock">Clock / Schedule</option>
+            <option value="link">Link / Globe</option>
+            <option value="calendar">Calendar</option>
+            <option value="video">Video / Events</option>
+            <option value="lightning">Lightning / Athletics</option>
+            <option value="pencil">Pencil / Notes</option>
+            <option value="star">Star</option>
+            <option value="folder">Folder</option>
+            <option value="shield">Shield</option>
+          </select>
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-4">
+          <button type="button" onclick="closeAddModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20">Save Card</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+      <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2">Edit Portal Card</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Update card details or change its subdomain.</p>
+
+      <form id="editCardForm" onsubmit="handleUpdateCard(event)" class="space-y-4">
+        <input type="hidden" id="editCardId" />
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Card Title</label>
+          <input type="text" id="editCardTitle" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Description</label>
+          <input type="text" id="editCardDesc" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Subdomain Route</label>
+          <div class="flex rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden items-center">
+            <span class="pl-4 text-xs font-semibold text-slate-400 select-none">wwhs.pro/</span>
+            <input type="text" id="editCardSubdomain" required class="w-full py-3 pr-4 bg-transparent text-slate-900 dark:text-white text-sm focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">Select Icon</label>
+          <select id="editCardIcon" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500">
+            <option value="clock">Clock / Schedule</option>
+            <option value="link">Link / Globe</option>
+            <option value="calendar">Calendar</option>
+            <option value="video">Video / Events</option>
+            <option value="lightning">Lightning / Athletics</option>
+            <option value="pencil">Pencil / Notes</option>
+            <option value="star">Star</option>
+            <option value="folder">Folder</option>
+            <option value="shield">Shield</option>
+          </select>
+        </div>
+        <div class="flex items-center justify-end gap-3 pt-4">
+          <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20">Update Card</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     (function() {
       const btn = document.getElementById('themeToggle');
       const html = document.documentElement;
-      // check stored preference
       if (localStorage.getItem('wwhs-theme') === 'dark') {
         html.classList.add('dark');
-        btn.textContent = '☀️';
       }
       btn.addEventListener('click', () => {
         if (html.classList.contains('dark')) {
           html.classList.remove('dark');
-          btn.textContent = '🌙';
           localStorage.setItem('wwhs-theme', 'light');
         } else {
           html.classList.add('dark');
-          btn.textContent = '☀️';
           localStorage.setItem('wwhs-theme', 'dark');
         }
       });
