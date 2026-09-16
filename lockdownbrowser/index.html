@@ -69,8 +69,7 @@
                 Home
             </div>
             <button onclick="showScreen('student-code-view')" id="nav-join-btn" class="bg-[#4caf50] hover:bg-[#43a047] text-white font-extrabold px-6 py-3 rounded-2xl blooket-shadow blooket-btn text-sm flex items-center space-x-2">
-                <span>🎮</span>
-                <span>Join a game</span>
+                <span>Join Assesment</span>
             </button>
             <button onclick="showScreen('instructor-login-view')" id="nav-login-btn" class="bg-white hover:bg-slate-50 text-[#202124] font-extrabold px-6 py-3 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn text-sm dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
                 Log in
@@ -366,16 +365,16 @@
             </button>
         </div>
 
-        <!-- 6. Hardened Lockdown Exam View -->
-        <div id="exam-view" class="hidden w-full h-[calc(100vh-85px)] flex flex-col animate-fade absolute inset-x-0 bottom-0 bg-white z-30 exam-locked">
+        <!-- 6. Hardened Lockdown Exam View (Fixed Fullscreen Overlay) -->
+        <div id="exam-view" class="hidden fixed inset-0 w-full h-full flex flex-col animate-fade bg-white z-30 exam-locked dark:bg-slate-900">
             <!-- Lockdown Header Bar -->
-            <div class="border-b px-4 sm:px-6 py-3 text-xs flex flex-wrap gap-2 justify-between items-center shadow-xs bg-red-50 text-[#c5221f]" style="border-color: rgba(197, 34, 31, 0.2);">
+            <div class="border-b px-4 sm:px-6 py-3 text-xs flex flex-wrap gap-2 justify-between items-center shadow-xs bg-red-50 text-[#c5221f] dark:bg-red-950/40 dark:border-red-900/40 dark:text-red-300" style="border-color: rgba(197, 34, 31, 0.2);">
                 <span class="font-black flex items-center space-x-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#c5221f] animate-ping"></span>
-                    <span>SECURE ISOLATION ACTIVE — stay in fullscreen, copy & context menus disabled.</span>
+                    <span>SECURE ISOLATION ACTIVE — Fullscreen enforced. Copying, shortcuts & context menus disabled.</span>
                 </span>
                 <div class="flex items-center gap-2">
-                    <span id="exam-timer" class="hidden bg-white text-[#202124] px-3.5 py-1.5 rounded-xl font-black shadow-sm text-[11px] border border-black/10">--:--</span>
+                    <span id="exam-timer" class="hidden bg-white text-[#202124] px-3.5 py-1.5 rounded-xl font-black shadow-sm text-[11px] border border-black/10 dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">--:--</span>
                     <!-- Instant Submission Trigger (No strike-suspension loophole) -->
                     <button id="finish-assessment-btn" class="bg-[#4caf50] hover:bg-[#43a047] text-white font-black px-4 py-2 rounded-xl text-xs blooket-shadow-sm flex items-center space-x-1.5 transition cursor-pointer">
                         <span>✅</span>
@@ -386,24 +385,29 @@
             </div>
 
             <!-- Broadcast Message Banner -->
-            <div id="broadcast-banner" class="hidden bg-blue-50 text-blue-800 text-[11px] font-bold px-6 py-2 border-b border-blue-200"></div>
+            <div id="broadcast-banner" class="hidden bg-blue-50 text-blue-800 text-[11px] font-bold px-6 py-2 border-b border-blue-200 dark:bg-blue-950/40 dark:text-blue-200 dark:border-blue-900/40"></div>
 
             <!-- Assessment Frame Container with Link Blocker & Sandboxing -->
-            <div class="relative flex-grow overflow-hidden bg-slate-100">
+            <div class="relative flex-grow overflow-hidden bg-slate-100 dark:bg-slate-900">
                 <!-- Sandboxed Iframe: scripts and forms allowed, but POPUPS and TOP-NAVIGATION are strictly blocked -->
                 <iframe id="exam-frame" sandbox="allow-scripts allow-forms allow-same-origin" src="" class="w-full h-full border-none bg-white"></iframe>
 
-                <!-- Physical Footer Shield: Blocks external Google Forms footer links ("Learn More", "Report Abuse", "Privacy") -->
-                <div id="footer-shield" class="absolute bottom-0 inset-x-0 h-9 bg-slate-100/95 backdrop-blur-xs border-t border-black/5 pointer-events-auto select-none z-10 flex items-center justify-between px-6 text-[10px] font-extrabold text-slate-400">
-                    <span>🛡️ Echo Isolation Boundary</span>
-                    <span>External links & popups are strictly disabled</span>
+                <!-- Physical Footer Shield: Blocks external Google Forms footer links ("Learn More", "Report Abuse", "Privacy", "Terms") -->
+                <div id="footer-shield" class="absolute bottom-0 inset-x-0 h-16 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-t border-black/10 dark:border-white/10 pointer-events-auto select-none z-20 flex items-center justify-between px-6 text-xs font-bold text-slate-500 dark:text-slate-400 shadow-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-emerald-600 text-base">🛡️</span>
+                        <span>Echo Isolation Boundary Active</span>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 font-extrabold hidden sm:block">
+                        External Google Forms links, abuse reports & help pages are strictly blocked
+                    </div>
                 </div>
 
                 <!-- Remote Lockout Overlay -->
-                <div id="locked-overlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 space-y-4 z-20">
-                    <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-3xl">🔒</div>
+                <div id="locked-overlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 space-y-4 z-20 dark:bg-slate-900/95">
+                    <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-3xl dark:bg-red-950/40">🔒</div>
                     <h2 class="text-2xl font-black" style="color:#c5221f;">Assessment Locked</h2>
-                    <p class="text-sm text-[#5f6368] font-bold max-w-sm">You reached the strike limit for this session. Your instructor has been notified and can remotely unlock your assessment — this screen will update automatically the moment they do.</p>
+                    <p class="text-sm text-[#5f6368] font-bold max-w-sm dark:text-slate-300">You reached the strike limit for this session. Your instructor has been notified and can remotely unlock your assessment — this screen will update automatically the moment they do.</p>
                 </div>
             </div>
         </div>
@@ -414,10 +418,11 @@
     <div id="toast-container"></div>
 
     <!-- Fullscreen Lost / Interruption Re-entry Overlay (Captures any click to auto re-enter fullscreen) -->
-    <div id="fullscreen-lost-overlay" class="hidden fixed inset-0 bg-red-950/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-8 z-50 animate-fade cursor-pointer">
+    <div id="fullscreen-lost-overlay" class="hidden fixed inset-0 bg-red-950/95 backdrop-blur-md flex flex-col items-center justify-center text-center p-8 z-50 animate-fade cursor-pointer">
         <div class="w-20 h-20 rounded-2xl bg-red-500/20 border-2 border-red-400 flex items-center justify-center text-4xl mb-4 animate-bounce">⚡</div>
         <h2 class="text-3xl font-black text-white tracking-tight">Fullscreen Isolation Lost!</h2>
         <p class="text-sm font-bold text-red-200 mt-2 max-w-md">Security lockdown requires fullscreen mode. Click anywhere on this screen immediately to re-engage fullscreen and resume your assessment.</p>
+        <p id="fullscreen-lost-strike-text" class="text-xs font-black text-red-300 mt-2">Strikes: 0 / 3</p>
         <button class="mt-6 bg-[#4caf50] hover:bg-[#43a047] text-white font-black px-8 py-4 rounded-2xl blooket-shadow blooket-btn text-base pointer-events-none">
             Click Anywhere to Resume Fullscreen
         </button>
@@ -429,7 +434,7 @@
             <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner bg-emerald-50 text-emerald-600 dark:bg-slate-700">📋</div>
             <div>
                 <h2 class="text-xl font-black tracking-tight text-[#202124] dark:text-slate-100">Ready to Submit?</h2>
-                <p class="text-sm text-[#5f6368] font-bold mt-2 leading-relaxed dark:text-slate-400">
+                <p id="submission-modal-desc" class="text-sm text-[#5f6368] font-bold mt-2 leading-relaxed dark:text-slate-400">
                     Make sure you have clicked the purple <strong>"Submit"</strong> button inside your Google Form quiz first!
                     <br><br>
                     Clicking confirm below will instantly finalize your assessment, submit your telemetry, and end your test session.
