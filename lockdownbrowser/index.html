@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo | Enterprise Secure Assessment & Telemetry Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' };</script>
+    <!-- Google Fonts: Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8fafc;
+            color: #202124;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+        html.dark body { background-color: #0f172a; color: #e2e8f0; }
+
+        /* Strict anti-copy & text-selection lockdown for exam mode */
+        .exam-locked, .exam-locked * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+        .blooket-shadow { box-shadow: 0 6px 0 0 rgba(76, 175, 80, 0.25); }
+        .blooket-shadow-sm { box-shadow: 0 4px 0 0 rgba(76, 175, 80, 0.18); }
+        .blooket-btn { transition: all 0.1s ease; }
+        .blooket-btn:hover { transform: translateY(-2px); }
+        .blooket-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 0 rgba(76, 175, 80, 0.25); }
+        .blooket-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .animate-fade { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.5); border-top-color:#fff; border-radius:50%; animation: spin 0.6s linear infinite; vertical-align:middle; margin-right:6px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #e2ede0; }
+        ::-webkit-scrollbar-thumb { background: #a3c4a0; border-radius: 9999px; }
+        html.dark ::-webkit-scrollbar-track { background: #1e293b; }
+        html.dark ::-webkit-scrollbar-thumb { background: #475569; }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 60; display:flex; flex-direction:column; gap:8px; }
+        .toast { animation: fadeIn 0.25s ease forwards; }
+    </style>
+</head>
+<body class="h-full flex flex-col antialiased selection:bg-[#4caf50] selection:text-white overflow-x-hidden dark:bg-slate-900 dark:text-slate-100">
+
+    <!-- Top Navigation Bar -->
+    <header id="top-navbar" class="w-full px-6 lg:px-12 py-4 flex justify-between items-center bg-white/90 backdrop-blur-md border-b border-black/5 sticky top-0 z-40 shadow-xs dark:bg-slate-800/90 dark:border-white/5">
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="goToHome()">
+            <div class="bg-[#4caf50] text-white font-black text-xl px-3.5 py-2 rounded-2xl blooket-shadow-sm flex items-center justify-center transition group-hover:rotate-3">
+                <span>⚡</span>
+            </div>
+            <div>
+                <span class="text-3xl font-black tracking-tight text-[#4caf50] block leading-none">Echo</span>
+                <span class="text-[10px] font-extrabold text-slate-400 tracking-wider uppercase">AI Telemetry & Assessment Guardian v4.2</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button id="theme-toggle-btn" title="Toggle dark mode" class="w-11 h-11 flex items-center justify-center rounded-2xl border-2 border-black/10 bg-white hover:bg-slate-50 text-base blooket-btn dark:bg-slate-700 dark:border-white/10 dark:text-slate-100">🌙</button>
+            <div id="user-pill" class="hidden items-center space-x-2 px-4 py-2 rounded-2xl text-sm font-bold bg-[#e2ede0] text-[#202124] border border-black/5 dark:bg-slate-700 dark:text-slate-100 dark:border-white/10">
+                <span id="pill-role-icon">👤</span>
+                <span id="pill-user-display">User</span>
+            </div>
+            <div id="session-status" class="hidden md:block text-xs font-bold px-3.5 py-2 rounded-xl bg-black/5 text-[#5f6368] uppercase tracking-wider dark:bg-white/10 dark:text-slate-300">
+                Home
+            </div>
+            <button onclick="showScreen('student-code-view')" id="nav-join-btn" class="bg-[#4caf50] hover:bg-[#43a047] text-white font-extrabold px-6 py-3 rounded-2xl blooket-shadow blooket-btn text-sm flex items-center space-x-2">
+                <span>🎮</span>
+                <span>Join a game</span>
+            </button>
+            <button onclick="showScreen('instructor-login-view')" id="nav-login-btn" class="bg-white hover:bg-slate-50 text-[#202124] font-extrabold px-6 py-3 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn text-sm dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                Log in
+            </button>
+            <button id="signout-btn" class="hidden bg-red-50 hover:bg-red-100 text-[#c5221f] font-extrabold px-5 py-3 rounded-2xl border-2 border-red-200 blooket-shadow-sm blooket-btn text-sm">
+                Exit Session
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Area -->
+    <main class="flex-grow flex flex-col justify-center items-center relative w-full p-4 lg:p-8">
+
+        <!-- 1. Home / Landing View -->
+        <div id="home-view" class="animate-fade w-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center py-12 px-6">
+            <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-center my-6">
+                <div class="hidden md:flex flex-col items-center justify-center p-6 bg-white rounded-3xl border-2 border-black/5 blooket-shadow-sm transform -rotate-2 dark:bg-slate-800 dark:border-white/5">
+                    <div class="w-16 h-16 rounded-2xl bg-[#e2ede0] flex items-center justify-center text-3xl mb-3 shadow-inner dark:bg-slate-700">🛡️</div>
+                    <h3 class="font-black text-lg text-[#202124] dark:text-slate-100">Zero-Exploit Lockdown</h3>
+                    <p class="text-xs text-[#5f6368] mt-1 dark:text-slate-400">Hardened fullscreen, link isolation, right-click & clipboard prevention.</p>
+                </div>
+
+                <div class="space-y-6 px-4">
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest inline-block">AI Telemetry & Proctor Engine</span>
+                    <h1 class="text-4xl sm:text-5xl font-black text-[#202124] tracking-tight leading-tight dark:text-slate-100">
+                        Frictionless testing, <span class="text-[#4caf50]">zero cheating</span>.
+                    </h1>
+                    <div class="pt-2 flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="showScreen('student-code-view')" class="bg-[#4caf50] hover:bg-[#43a047] text-white font-black text-lg px-8 py-4 rounded-2xl blooket-shadow blooket-btn w-full sm:w-auto">
+                            Join Assessment
+                        </button>
+                        <button onclick="showScreen('instructor-login-view')" class="bg-white hover:bg-slate-50 text-[#202124] font-black text-lg px-8 py-4 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn w-full sm:w-auto dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                            Teacher Portal
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex flex-col items-center justify-center p-6 bg-white rounded-3xl border-2 border-black/5 blooket-shadow-sm transform rotate-2 dark:bg-slate-800 dark:border-white/5">
+                    <div class="w-16 h-16 rounded-2xl bg-[#e2ede0] flex items-center justify-center text-3xl mb-3 shadow-inner dark:bg-slate-700">🤖</div>
+                    <h3 class="font-black text-lg text-[#202124] dark:text-slate-100">Echo Proctor AI</h3>
+                    <p class="text-xs text-[#5f6368] mt-1 dark:text-slate-400">Real-time risk scoring, anomaly velocity detection, and diagnostics.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Student Join Game View -->
+        <div id="student-code-view" class="hidden animate-fade bg-white border-2 border-black/5 p-8 sm:p-10 rounded-3xl blooket-shadow w-full max-w-md my-auto dark:bg-slate-800 dark:border-white/5">
+            <div class="flex items-center mb-6">
+                <button onclick="showScreen('home-view')" class="text-xs font-black text-[#5f6368] hover:text-[#202124] flex items-center space-x-1 py-1 px-3 rounded-xl bg-[#e2ede0] transition dark:bg-slate-700 dark:text-slate-300 dark:hover:text-slate-100">
+                    <span>← Back</span>
+                </button>
+            </div>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-[#202124] tracking-tight dark:text-slate-100">Join Assessment</h1>
+                <p class="text-sm text-[#5f6368] font-bold mt-1 dark:text-slate-400">Provide your verified student credentials and code.</p>
+            </div>
+
+            <form id="student-join-form" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">First Name</label>
+                        <input type="text" id="student-first-name" placeholder="Logan" required class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-[#e2ede0]/30 text-[#202124] transition dark:bg-slate-700/40 dark:border-white/10 dark:text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Last Name</label>
+                        <input type="text" id="student-last-name" placeholder="Westlake" required class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-[#e2ede0]/30 text-[#202124] transition dark:bg-slate-700/40 dark:border-white/10 dark:text-slate-100">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Student ID Number</label>
+                    <input type="text" id="student-id-input" placeholder="e.g. 4092" required class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-[#e2ede0]/30 text-[#202124] transition dark:bg-slate-700/40 dark:border-white/10 dark:text-slate-100">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Game ID / Join Code</label>
+                    <input type="text" id="join-code-input" placeholder="ECHO-4821" required class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-base uppercase font-mono tracking-widest font-black text-center bg-[#e2ede0]/30 text-[#202124] transition dark:bg-slate-700/40 dark:border-white/10 dark:text-slate-100">
+                </div>
+                <p id="join-form-error" class="hidden text-xs font-bold text-[#c5221f] text-center"></p>
+
+                <button type="submit" id="join-form-submit" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-black py-4 rounded-2xl blooket-shadow blooket-btn text-base mt-2">
+                    Enter Secure Lobby
+                </button>
+            </form>
+        </div>
+
+        <!-- 3. Instructor Login View -->
+        <div id="instructor-login-view" class="hidden animate-fade w-full h-full flex flex-col lg:flex-row absolute inset-0 bg-white z-20 dark:bg-slate-900">
+            <div class="w-full lg:w-1/2 h-full flex flex-col justify-between p-8 lg:p-16 overflow-y-auto">
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex items-center space-x-3 cursor-pointer group" onclick="showScreen('home-view')">
+                        <div class="bg-[#4caf50] text-white font-black text-xl px-4 py-2 rounded-2xl blooket-shadow-sm flex items-center justify-center">
+                            <span>⚡</span>
+                        </div>
+                        <span class="text-3xl font-black tracking-tight text-[#4caf50]">Echo</span>
+                    </div>
+                    <button onclick="showScreen('instructor-signup-view')" class="bg-white hover:bg-slate-50 text-[#202124] font-extrabold px-6 py-2.5 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn text-sm dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        Sign up
+                    </button>
+                </div>
+
+                <div class="max-w-md w-full mx-auto py-10 space-y-6">
+                    <div class="text-center mb-6">
+                        <h1 class="text-3xl font-extrabold text-[#202124] tracking-tight dark:text-slate-100">Instructor Portal</h1>
+                    </div>
+
+                    <form id="instructor-login-form" class="space-y-4">
+                        <div>
+                            <input type="email" id="instructor-email" placeholder="Teacher email" required class="w-full border-2 border-black/15 rounded-2xl p-4 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition shadow-2xs dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        </div>
+                        <div>
+                            <input type="password" id="instructor-password" placeholder="Password" required class="w-full border-2 border-black/15 rounded-2xl p-4 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition shadow-2xs dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        </div>
+                        <button type="submit" id="instructor-login-submit" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-extrabold py-4 rounded-2xl blooket-shadow blooket-btn text-base">
+                            Log In
+                        </button>
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-black/10"></div>
+                            <span class="flex-shrink mx-4 text-xs font-bold text-slate-400 uppercase tracking-widest">or</span>
+                            <div class="flex-grow border-t border-black/10"></div>
+                        </div>
+                        <button type="button" id="google-login-btn" class="w-full bg-white hover:bg-slate-50 border-2 border-black/15 text-[#202124] font-bold py-3.5 rounded-2xl transition flex items-center justify-center space-x-3 shadow-2xs dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.14C3.15 21.32 7.22 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.18C.43 8.13 0 9.82 0 12s.43 3.87 1.18 5.38l4.09-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.68 1.18 6.62l4.09 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                            <span>Sign in with Google</span>
+                        </button>
+                    </form>
+                </div>
+                <div></div>
+            </div>
+            <div class="hidden lg:flex w-1/2 h-full bg-[#4caf50] relative flex-col justify-end items-center p-12 overflow-hidden shadow-inner">
+                <div class="absolute top-1/3 transform -translate-y-1/2 w-44 h-44 bg-[#e2ede0] rounded-3xl blooket-shadow flex items-center justify-center text-4xl animate-bounce shadow-inner">⚡</div>
+                <div class="text-center z-10 pb-12">
+                    <h2 class="text-3xl font-black text-white tracking-tight drop-shadow-sm">Secure testing & compliance</h2>
+                    <h2 class="text-3xl font-black text-white tracking-tight drop-shadow-sm">for modern classrooms.</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3b. Instructor Signup View -->
+        <div id="instructor-signup-view" class="hidden animate-fade w-full h-full flex flex-col lg:flex-row absolute inset-0 bg-white z-20 dark:bg-slate-900">
+            <div class="w-full lg:w-1/2 h-full flex flex-col justify-between p-8 lg:p-16 overflow-y-auto">
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex items-center space-x-3 cursor-pointer group" onclick="showScreen('home-view')">
+                        <div class="bg-[#4caf50] text-white font-black text-xl px-4 py-2 rounded-2xl blooket-shadow-sm flex items-center justify-center"><span>⚡</span></div>
+                        <span class="text-3xl font-black tracking-tight text-[#4caf50]">Echo</span>
+                    </div>
+                    <button onclick="showScreen('instructor-login-view')" class="bg-white hover:bg-slate-50 text-[#202124] font-extrabold px-6 py-2.5 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn text-sm dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">Log in</button>
+                </div>
+                <div class="max-w-md w-full mx-auto py-10 space-y-6">
+                    <div class="text-center mb-6"><h1 class="text-3xl font-extrabold text-[#202124] tracking-tight dark:text-slate-100">Create Instructor Account</h1></div>
+                    <form id="instructor-signup-form" class="space-y-4">
+                        <div><input type="email" id="signup-email" placeholder="Email address" required class="w-full border-2 border-black/15 rounded-2xl p-4 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition shadow-2xs dark:bg-slate-800 dark:text-slate-100 dark:border-white/10"></div>
+                        <div><input type="password" id="signup-password" placeholder="Password (min 6 chars)" required minlength="6" class="w-full border-2 border-black/15 rounded-2xl p-4 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition shadow-2xs dark:bg-slate-800 dark:text-slate-100 dark:border-white/10"></div>
+                        <button type="submit" id="instructor-signup-submit" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-extrabold py-4 rounded-2xl blooket-shadow blooket-btn text-base">Sign Up</button>
+                    </form>
+                </div>
+                <div></div>
+            </div>
+            <div class="hidden lg:flex w-1/2 h-full bg-[#4caf50] relative flex-col justify-end items-center p-12 overflow-hidden shadow-inner">
+                <div class="absolute top-1/3 transform -translate-y-1/2 w-44 h-44 bg-[#e2ede0] rounded-3xl blooket-shadow flex items-center justify-center text-4xl shadow-inner">🛡️</div>
+                <div class="text-center z-10 pb-12">
+                    <h2 class="text-3xl font-black text-white tracking-tight drop-shadow-sm">Empowering educators</h2>
+                    <h2 class="text-3xl font-black text-white tracking-tight drop-shadow-sm">with absolute testing integrity.</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Instructor Dashboard View -->
+        <div id="setup-view" class="hidden animate-fade bg-white border-2 border-black/5 p-6 sm:p-10 rounded-3xl blooket-shadow w-full max-w-6xl my-auto space-y-8 dark:bg-slate-800 dark:border-white/5">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-black/5 gap-4 dark:border-white/10">
+                <div>
+                    <h1 class="text-2xl font-black text-[#202124] tracking-tight dark:text-slate-100">Teacher Control Center</h1>
+                    <p class="text-xs text-[#5f6368] font-bold mt-0.5 dark:text-slate-400">Manage live lockdown sessions, review the security event log, and inspect AI proctor diagnostics</p>
+                </div>
+                <div class="flex items-center space-x-3 flex-wrap gap-y-2">
+                    <span id="online-count-pill" class="hidden text-xs px-3.5 py-2 rounded-xl font-black bg-blue-50 text-blue-700 border border-blue-200">0 online</span>
+                    <span id="active-session-pill" class="text-xs px-3.5 py-2 rounded-xl font-black bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-white/10">No Active Session</span>
+                    <button id="copy-link-btn" class="hidden bg-white hover:bg-slate-50 text-[#202124] font-black px-4 py-2.5 rounded-xl border-2 border-black/10 text-xs blooket-shadow-sm dark:bg-slate-700 dark:text-slate-100 dark:border-white/10">🔗 Copy Join Link</button>
+                    <button id="export-csv-btn" class="hidden bg-white hover:bg-slate-50 text-[#202124] font-black px-4 py-2.5 rounded-xl border-2 border-black/10 text-xs blooket-shadow-sm dark:bg-slate-700 dark:text-slate-100 dark:border-white/10">⬇️ Export Report (CSV)</button>
+                    <button id="end-session-btn" class="hidden bg-red-50 hover:bg-red-100 text-[#c5221f] font-black px-4 py-2.5 rounded-xl border-2 border-red-200 text-xs blooket-shadow-sm">End Session</button>
+                    <button onclick="openHistoryModal()" class="bg-white hover:bg-slate-50 text-[#202124] font-black px-4 py-2.5 rounded-xl border-2 border-black/10 text-xs blooket-shadow-sm flex items-center space-x-2 dark:bg-slate-700 dark:text-slate-100 dark:border-white/10">
+                        <span>📂</span><span>Session History & Archives</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Host Form Card -->
+                <div class="space-y-4 bg-slate-50/50 p-6 rounded-2xl border border-black/5 dark:bg-slate-700/30 dark:border-white/5">
+                    <h2 class="text-base font-black text-[#202124] dark:text-slate-100">Launch Assessment</h2>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Session Title / Name</label>
+                        <input type="text" id="session-title-input" placeholder="e.g. Period 3 Geometry Midterm" class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Custom Join Code (Optional)</label>
+                        <input type="text" id="custom-join-code" placeholder="Auto ECHO-XXXX if blank" class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm uppercase font-mono tracking-wider font-bold bg-white text-[#202124] transition dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Google Forms / Assessment URL <span style="color: #c5221f;">*</span></label>
+                        <input type="url" id="form-url" placeholder="https://forms.gle/..." class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Strikes to lock</label>
+                            <input type="number" id="strike-threshold-input" min="1" max="10" value="3" class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] mb-1.5 dark:text-slate-400">Duration (min, 0=none)</label>
+                            <input type="number" id="exam-duration-input" min="0" max="480" value="0" class="w-full border-2 border-black/10 rounded-2xl p-3.5 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] transition dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        </div>
+                    </div>
+                    <p id="launch-error" class="hidden text-xs font-bold text-[#c5221f]"></p>
+                    <div id="code-display-box" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                        <div>
+                            <span class="block text-[10px] font-black uppercase tracking-widest text-emerald-800">Active Code Generated</span>
+                            <span id="generated-code-text" class="font-mono font-black text-lg text-emerald-900">ECHO-0000</span>
+                        </div>
+                        <button id="copy-code-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2 rounded-xl text-xs shadow-xs transition">Copy Code</button>
+                    </div>
+                    <button id="start-btn" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-black py-4 rounded-2xl blooket-shadow blooket-btn text-base">
+                        Publish & Broadcast Session
+                    </button>
+                    <button id="update-settings-btn" class="hidden w-full bg-white hover:bg-slate-50 text-[#202124] font-black py-4 rounded-2xl border-2 border-black/15 blooket-shadow-sm blooket-btn text-base dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                        Save Threshold / Duration Changes
+                    </button>
+
+                    <div id="broadcast-box" class="hidden pt-3 border-t border-black/5 space-y-2 dark:border-white/10">
+                        <label class="block text-[10px] font-black uppercase tracking-wider text-[#5f6368] dark:text-slate-400">Broadcast message to all students</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="broadcast-input" placeholder="e.g. 5 minutes remaining" class="flex-grow border-2 border-black/10 rounded-2xl p-3 focus:outline-none focus:border-[#4caf50] text-sm font-bold bg-white text-[#202124] dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                            <button id="broadcast-send-btn" class="bg-[#202124] hover:bg-black text-white font-black px-4 rounded-2xl text-xs">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Roster with AI Telemetry Scoring -->
+                <div class="flex flex-col bg-[#e2ede0]/30 border-2 border-black/5 rounded-2xl p-5 dark:bg-slate-700/20 dark:border-white/5">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center space-x-1.5">
+                            <h2 class="text-base font-black text-[#202124] dark:text-slate-100">Live Roster</h2>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">AI Monitored</span>
+                        </div>
+                        <span class="text-[10px] font-bold text-[#5f6368] dark:text-slate-400">Strikes & AI Risk</span>
+                    </div>
+                    <input type="text" id="roster-search-input" placeholder="Search by name or status..." class="w-full mb-3 border-2 border-black/10 rounded-xl p-2.5 text-xs font-bold bg-white text-[#202124] focus:outline-none focus:border-[#4caf50] dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">
+                    <div id="student-roster-list" class="flex-grow overflow-y-auto space-y-2.5 max-h-72 pr-1">
+                        <p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">Publish a session to see connected students.</p>
+                    </div>
+                </div>
+
+                <!-- Security Event Log -->
+                <div class="flex flex-col bg-[#e2ede0]/30 border-2 border-black/5 rounded-2xl p-5 dark:bg-slate-700/20 dark:border-white/5">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-base font-black text-[#202124] dark:text-slate-100">Security Event Log</h2>
+                        <span class="text-[10px] font-bold text-[#5f6368] dark:text-slate-400">Realtime Feed</span>
+                    </div>
+                    <div id="student-violation-list" class="flex-grow overflow-y-auto space-y-2.5 max-h-72 pr-1">
+                        <p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">Publish a session to track live infractions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Student Lobby View -->
+        <div id="student-lobby-view" class="hidden animate-fade bg-white border-2 border-black/5 p-8 sm:p-10 rounded-3xl blooket-shadow w-full max-w-md text-center space-y-6 my-auto dark:bg-slate-800 dark:border-white/5">
+            <div class="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center text-4xl shadow-inner bg-[#e2ede0] dark:bg-slate-700">🎓</div>
+            <div>
+                <h1 class="text-2xl font-black text-[#202124] tracking-tight dark:text-slate-100">Verified & Connected</h1>
+                <p id="lobby-welcome-text" class="text-sm text-[#5f6368] font-bold mt-1 dark:text-slate-400">Ready to launch secure assessment session.</p>
+            </div>
+            <div class="p-4 rounded-2xl border-2 border-black/5 text-left space-y-3 text-xs bg-[#e2ede0]/30 dark:bg-slate-700/30 dark:border-white/10">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-[#5f6368] dark:text-slate-400">Student:</span>
+                    <span id="lobby-student-name" class="font-black text-[#202124] dark:text-slate-100">-</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-[#5f6368] dark:text-slate-400">Join Code:</span>
+                    <span id="lobby-code-display" class="font-mono font-black text-sm bg-white px-3 py-1.5 rounded-xl border border-black/10 text-[#202124] dark:bg-slate-800 dark:text-slate-100 dark:border-white/10">-</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-[#5f6368] dark:text-slate-400">Security Isolation:</span>
+                    <span class="font-black text-emerald-600 flex items-center space-x-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Full Lockdown & Proctor AI</span>
+                    </span>
+                </div>
+            </div>
+            <p id="lobby-locked-notice" class="hidden text-[11px] font-bold text-[#c5221f] bg-red-50 rounded-xl p-3">Your previous attempt in this session was locked for exceeding the strike limit. Launching will show your locked screen until your instructor unlocks it remotely.</p>
+            <p class="text-[11px] text-[#5f6368] font-semibold dark:text-slate-400">Launching the assessment locks your screen into fullscreen. Copying, right-clicking, switching windows, or exiting fullscreen will be logged as strikes and monitored by Proctor AI.</p>
+            <button id="join-exam-btn" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-black py-4 rounded-2xl blooket-shadow blooket-btn text-base cursor-pointer">
+                Launch Secure Assessment Window
+            </button>
+        </div>
+
+        <!-- 6. Hardened Lockdown Exam View -->
+        <div id="exam-view" class="hidden w-full h-[calc(100vh-85px)] flex flex-col animate-fade absolute inset-x-0 bottom-0 bg-white z-30 exam-locked">
+            <!-- Lockdown Header Bar -->
+            <div class="border-b px-4 sm:px-6 py-3 text-xs flex flex-wrap gap-2 justify-between items-center shadow-xs bg-red-50 text-[#c5221f]" style="border-color: rgba(197, 34, 31, 0.2);">
+                <span class="font-black flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#c5221f] animate-ping"></span>
+                    <span>SECURE ISOLATION ACTIVE — stay in fullscreen, copy & context menus disabled.</span>
+                </span>
+                <div class="flex items-center gap-2">
+                    <span id="exam-timer" class="hidden bg-white text-[#202124] px-3.5 py-1.5 rounded-xl font-black shadow-sm text-[11px] border border-black/10">--:--</span>
+                    <!-- Instant Submission Trigger (No strike-suspension loophole) -->
+                    <button id="finish-assessment-btn" class="bg-[#4caf50] hover:bg-[#43a047] text-white font-black px-4 py-2 rounded-xl text-xs blooket-shadow-sm flex items-center space-x-1.5 transition cursor-pointer">
+                        <span>✅</span>
+                        <span>Submit & Finish Quiz</span>
+                    </button>
+                    <span id="violation-counter" class="text-white px-3.5 py-1.5 rounded-xl font-black shadow-sm" style="background-color: #c5221f;">Strikes: 0 / 3</span>
+                </div>
+            </div>
+
+            <!-- Broadcast Message Banner -->
+            <div id="broadcast-banner" class="hidden bg-blue-50 text-blue-800 text-[11px] font-bold px-6 py-2 border-b border-blue-200"></div>
+
+            <!-- Assessment Frame Container with Link Blocker & Sandboxing -->
+            <div class="relative flex-grow overflow-hidden bg-slate-100">
+                <!-- Sandboxed Iframe: scripts and forms allowed, but POPUPS and TOP-NAVIGATION are strictly blocked -->
+                <iframe id="exam-frame" sandbox="allow-scripts allow-forms allow-same-origin" src="" class="w-full h-full border-none bg-white"></iframe>
+
+                <!-- Physical Footer Shield: Blocks external Google Forms footer links ("Learn More", "Report Abuse", "Privacy") -->
+                <div id="footer-shield" class="absolute bottom-0 inset-x-0 h-9 bg-slate-100/95 backdrop-blur-xs border-t border-black/5 pointer-events-auto select-none z-10 flex items-center justify-between px-6 text-[10px] font-extrabold text-slate-400">
+                    <span>🛡️ Echo Isolation Boundary</span>
+                    <span>External links & popups are strictly disabled</span>
+                </div>
+
+                <!-- Remote Lockout Overlay -->
+                <div id="locked-overlay" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 space-y-4 z-20">
+                    <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-3xl">🔒</div>
+                    <h2 class="text-2xl font-black" style="color:#c5221f;">Assessment Locked</h2>
+                    <p class="text-sm text-[#5f6368] font-bold max-w-sm">You reached the strike limit for this session. Your instructor has been notified and can remotely unlock your assessment — this screen will update automatically the moment they do.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toasts Container -->
+    <div id="toast-container"></div>
+
+    <!-- Fullscreen Lost / Interruption Re-entry Overlay (Captures any click to auto re-enter fullscreen) -->
+    <div id="fullscreen-lost-overlay" class="hidden fixed inset-0 bg-red-950/90 backdrop-blur-md flex flex-col items-center justify-center text-center p-8 z-50 animate-fade cursor-pointer">
+        <div class="w-20 h-20 rounded-2xl bg-red-500/20 border-2 border-red-400 flex items-center justify-center text-4xl mb-4 animate-bounce">⚡</div>
+        <h2 class="text-3xl font-black text-white tracking-tight">Fullscreen Isolation Lost!</h2>
+        <p class="text-sm font-bold text-red-200 mt-2 max-w-md">Security lockdown requires fullscreen mode. Click anywhere on this screen immediately to re-engage fullscreen and resume your assessment.</p>
+        <button class="mt-6 bg-[#4caf50] hover:bg-[#43a047] text-white font-black px-8 py-4 rounded-2xl blooket-shadow blooket-btn text-base pointer-events-none">
+            Click Anywhere to Resume Fullscreen
+        </button>
+    </div>
+
+    <!-- Submission Confirmation Modal (Prevents Cheating on Submission) -->
+    <div id="submission-confirm-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div class="bg-white border-2 border-black/10 rounded-3xl p-8 max-w-md w-full text-center space-y-5 shadow-2xl animate-fade dark:bg-slate-800 dark:border-white/10">
+            <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner bg-emerald-50 text-emerald-600 dark:bg-slate-700">📋</div>
+            <div>
+                <h2 class="text-xl font-black tracking-tight text-[#202124] dark:text-slate-100">Ready to Submit?</h2>
+                <p class="text-sm text-[#5f6368] font-bold mt-2 leading-relaxed dark:text-slate-400">
+                    Make sure you have clicked the purple <strong>"Submit"</strong> button inside your Google Form quiz first!
+                    <br><br>
+                    Clicking confirm below will instantly finalize your assessment, submit your telemetry, and end your test session.
+                </p>
+            </div>
+            <div class="flex flex-col gap-3">
+                <button id="confirm-submit-btn" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-black py-4 rounded-2xl blooket-shadow blooket-btn text-sm">
+                    Yes, Finalize & Submit My Quiz
+                </button>
+                <button id="cancel-submit-btn" class="w-full bg-slate-100 hover:bg-slate-200 text-[#202124] font-bold py-3 rounded-2xl text-xs dark:bg-slate-700 dark:text-slate-200">
+                    No, Return to Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Proctor Diagnostics Modal for Instructors -->
+    <div id="ai-proctor-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div class="bg-white border-2 border-black/10 rounded-3xl p-6 sm:p-8 max-w-xl w-full space-y-5 shadow-2xl animate-fade max-h-[85vh] flex flex-col dark:bg-slate-800 dark:border-white/10">
+            <div class="flex justify-between items-center border-b border-black/5 pb-4 dark:border-white/10">
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🤖</span>
+                    <div>
+                        <h2 class="text-xl font-black tracking-tight text-[#202124] dark:text-slate-100">Echo Proctor AI Report</h2>
+                        <p id="ai-modal-student-name" class="text-xs text-[#5f6368] font-bold mt-0.5 dark:text-slate-400">Student Telemetry Evaluation</p>
+                    </div>
+                </div>
+                <button onclick="closeAiProctorModal()" class="text-slate-400 hover:text-[#202124] font-black text-lg p-2 dark:hover:text-slate-100">✕</button>
+            </div>
+            <div id="ai-modal-content" class="flex-grow overflow-y-auto space-y-4 pr-1">
+                <!-- Dynamically generated by EchoProctorAI -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Session History Modal -->
+    <div id="history-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div class="bg-white border-2 border-black/10 rounded-3xl p-6 sm:p-8 max-w-2xl w-full space-y-5 shadow-2xl animate-fade max-h-[80vh] flex flex-col dark:bg-slate-800 dark:border-white/10">
+            <div class="flex justify-between items-center border-b border-black/5 pb-4 dark:border-white/10">
+                <div>
+                    <h2 class="text-xl font-black tracking-tight text-[#202124] dark:text-slate-100">Instructor Session History</h2>
+                    <p class="text-xs text-[#5f6368] font-bold mt-0.5 dark:text-slate-400">Review past assessments or reactivate them instantly</p>
+                </div>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-[#202124] font-black text-lg p-2 dark:hover:text-slate-100">✕</button>
+            </div>
+            <div id="history-sessions-container" class="flex-grow overflow-y-auto space-y-3 pr-2">
+                <p class="text-xs text-[#5f6368] font-bold italic text-center py-10 dark:text-slate-400">Loading saved session history...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom In-App Modal -->
+    <div id="app-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div class="bg-white border-2 border-black/10 rounded-3xl p-8 max-w-md w-full text-center space-y-5 shadow-2xl animate-fade dark:bg-slate-800 dark:border-white/10">
+            <div id="app-modal-icon" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner bg-[#e2ede0] dark:bg-slate-700">⚡</div>
+            <div>
+                <h2 id="app-modal-title" class="text-xl font-black tracking-tight text-[#202124] dark:text-slate-100">Notification</h2>
+                <p id="app-modal-text" class="text-sm text-[#5f6368] font-bold mt-1.5 leading-relaxed dark:text-slate-400">Message here...</p>
+            </div>
+            <button id="app-modal-dismiss" class="w-full bg-[#4caf50] hover:bg-[#43a047] text-white font-black py-4 rounded-2xl blooket-shadow blooket-btn text-sm">Okay</button>
+        </div>
+    </div>
+
+    <!-- Violation Warning Modal -->
+    <div id="warning-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div class="bg-white border-2 rounded-3xl p-8 max-w-md w-full text-center space-y-5 shadow-2xl animate-fade dark:bg-slate-800 dark:border-red-500" style="border-color: #c5221f;">
+            <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner bg-red-50 dark:bg-red-900/30">⚠️</div>
+            <div>
+                <h2 class="text-xl font-black tracking-tight" style="color: #c5221f;">Security Strike Recorded</h2>
+                <p id="warning-text" class="text-sm text-[#5f6368] font-bold mt-1.5 leading-relaxed dark:text-slate-300">You left the secure assessment window or attempted an unauthorized action.</p>
+            </div>
+            <button id="dismiss-warning" class="w-full text-white font-black py-4 rounded-2xl transition text-sm shadow-md" style="background-color: #c5221f;">Return to Assessment</button>
+        </div>
+    </div>
+
+    <!-- IMMEDIATE ESSENTIAL NAVIGATION SCRIPT (Always available even before modules initialize) -->
+    <script>
+        // Core Navigation & UI Functions
+        window.showScreen = function(screenId) {
+            const screens = ['home-view', 'student-code-view', 'instructor-login-view', 'instructor-signup-view', 'setup-view', 'student-lobby-view', 'exam-view'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            const target = document.getElementById(screenId);
+            if (target) target.classList.remove('hidden');
+
+            const topNavbar = document.getElementById('top-navbar');
+            if (topNavbar) {
+                if (screenId === 'instructor-login-view' || screenId === 'instructor-signup-view') {
+                    topNavbar.classList.add('hidden');
+                } else {
+                    topNavbar.classList.remove('hidden');
+                }
+            }
+
+            const sessionStatus = document.getElementById('session-status');
+            const userPill = document.getElementById('user-pill');
+            const signoutBtn = document.getElementById('signout-btn');
+            const navJoinBtn = document.getElementById('nav-join-btn');
+            const navLoginBtn = document.getElementById('nav-login-btn');
+
+            if (screenId === 'home-view') {
+                if (sessionStatus) sessionStatus.textContent = "Home";
+                if (userPill) userPill.classList.add('hidden');
+                if (signoutBtn) signoutBtn.classList.add('hidden');
+                if (navJoinBtn) navJoinBtn.classList.remove('hidden');
+                if (navLoginBtn) navLoginBtn.classList.remove('hidden');
+            } else if (screenId !== 'instructor-login-view' && screenId !== 'instructor-signup-view') {
+                if (navJoinBtn) navJoinBtn.classList.add('hidden');
+                if (navLoginBtn) navLoginBtn.classList.add('hidden');
+            }
+        };
+
+        window.goToHome = async function() {
+            if (window._echoStudentExitHandler) {
+                const proceed = await window._echoStudentExitHandler();
+                if (!proceed) return;
+            }
+            if (document.fullscreenElement) {
+                try { await document.exitFullscreen(); } catch {}
+            }
+            window.location.reload();
+        };
+
+        window.closeHistoryModal = function() {
+            const m = document.getElementById('history-modal');
+            if (m) m.classList.add('hidden');
+        };
+
+        window.closeAiProctorModal = function() {
+            const m = document.getElementById('ai-proctor-modal');
+            if (m) m.classList.add('hidden');
+        };
+
+        window.showInAppModal = function(title, message) {
+            const appModalTitle = document.getElementById('app-modal-title');
+            const appModalText = document.getElementById('app-modal-text');
+            const appModal = document.getElementById('app-modal');
+            if (appModalTitle) appModalTitle.textContent = title;
+            if (appModalText) appModalText.textContent = message;
+            if (appModal) appModal.classList.remove('hidden');
+        };
+
+        document.getElementById('app-modal-dismiss')?.addEventListener('click', () => {
+            document.getElementById('app-modal')?.classList.add('hidden');
+        });
+    </script>
+
+    <!-- Firebase SDK Scripts, Embedded Proctor AI Engine & Core Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, push, set, update, remove, serverTimestamp, get, child, onValue, off, runTransaction, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        /**
+         * INLINED PROCTOR AI ENGINE
+         * Inlined directly to avoid browser CORS restrictions when opening via file:/// URLs!
+         */
+        class EchoProctorAI {
+            static analyzeStudent(student, violationLogs) {
+                const studentName = student?.name || 'Student';
+                const strikes = student?.strikes || 0;
+                const status = student?.status || 'unknown';
+
+                const logs = [];
+                if (violationLogs) {
+                    if (Array.isArray(violationLogs)) {
+                        logs.push(...violationLogs);
+                    } else if (typeof violationLogs === 'object') {
+                        for (const entry of Object.values(violationLogs)) {
+                            if (entry && typeof entry === 'object') logs.push(entry);
+                        }
+                    }
+                }
+                logs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                let riskScore = 0;
+                const anomalies = [];
+                let clipboardCount = 0;
+                let blurCount = 0;
+                let fullscreenBreakCount = 0;
+                let devtoolsCount = 0;
+                let burstSwitchingEvents = 0;
+
+                riskScore += Math.min(strikes * 20, 50);
+
+                for (const log of logs) {
+                    const reason = (log.reason || '').toLowerCase();
+                    if (reason.includes('copy') || reason.includes('paste') || reason.includes('clipboard')) {
+                        clipboardCount++;
+                    } else if (reason.includes('focus') || reason.includes('minimized') || reason.includes('switched')) {
+                        blurCount++;
+                    } else if (reason.includes('fullscreen')) {
+                        fullscreenBreakCount++;
+                    } else if (reason.includes('developer tools') || reason.includes('devtools')) {
+                        devtoolsCount++;
+                    }
+                }
+
+                if (clipboardCount > 0) {
+                    riskScore += Math.min(clipboardCount * 25, 40);
+                    anomalies.push({
+                        type: 'CLIPBOARD_TAMPER',
+                        title: 'Clipboard Interaction Attempt',
+                        desc: `Attempted to copy, cut, or paste quiz content ${clipboardCount} time(s). Indicates possible search prompt copying.`,
+                        severity: 'high'
+                    });
+                }
+
+                if (devtoolsCount > 0) {
+                    riskScore += 45;
+                    anomalies.push({
+                        type: 'DEVTOOLS_ACCESS',
+                        title: 'Developer Tools Interception',
+                        desc: `Attempted to open browser developer tools or DOM inspector ${devtoolsCount} time(s).`,
+                        severity: 'critical'
+                    });
+                }
+
+                if (fullscreenBreakCount >= 2) {
+                    riskScore += Math.min(fullscreenBreakCount * 12, 30);
+                    anomalies.push({
+                        type: 'REPEATED_FULLSCREEN_BREAK',
+                        title: 'Repeated Fullscreen Escapes',
+                        desc: `Exited fullscreen lockdown ${fullscreenBreakCount} times during active assessment.`,
+                        severity: 'medium'
+                    });
+                }
+
+                for (let i = 1; i < logs.length; i++) {
+                    const prev = logs[i - 1];
+                    const curr = logs[i];
+                    const dt = (curr.timestamp || 0) - (prev.timestamp || 0);
+                    if (dt > 0 && dt <= 45000) {
+                        burstSwitchingEvents++;
+                    }
+                }
+
+                if (burstSwitchingEvents > 0) {
+                    riskScore += Math.min(burstSwitchingEvents * 15, 30);
+                    anomalies.push({
+                        type: 'BURST_SWITCHING',
+                        title: 'Rapid App / Tab Switching Burst',
+                        desc: `Detected ${burstSwitchingEvents} rapid context-switch sequence(s) within 45 seconds, strongly characteristic of fast external answer lookup.`,
+                        severity: 'high'
+                    });
+                }
+
+                riskScore = Math.max(0, Math.min(100, riskScore));
+
+                let riskLevel = 'Low Risk';
+                let riskColor = 'text-emerald-600 bg-emerald-50 border-emerald-200';
+                let badgeColor = 'bg-emerald-500';
+                let recommendations = 'Normal assessment progression. No supervisory intervention required.';
+
+                if (riskScore >= 75 || status === 'locked') {
+                    riskLevel = 'High Anomaly / Critical Risk';
+                    riskColor = 'text-red-700 bg-red-50 border-red-200';
+                    badgeColor = 'bg-red-600';
+                    recommendations = 'Immediate proctor intervention recommended: check student desk/screen or examine violation timestamps.';
+                } else if (riskScore >= 40) {
+                    riskLevel = 'Suspicious Behavior / Elevated Risk';
+                    riskColor = 'text-amber-700 bg-amber-50 border-amber-200';
+                    badgeColor = 'bg-amber-500';
+                    recommendations = 'Review infraction timeline. Monitor student actively for external window switches.';
+                } else if (riskScore > 15) {
+                    riskLevel = 'Minor Disruption / Low-Moderate';
+                    riskColor = 'text-blue-700 bg-blue-50 border-blue-200';
+                    badgeColor = 'bg-blue-500';
+                    recommendations = 'Isolated infraction occurred. Likely accidental notification click or trackpad swipe.';
+                }
+
+                let summary = "";
+                if (riskScore === 0) {
+                    summary = `${studentName} maintained continuous, unbroken focus inside the secure exam environment with zero detected anomalies.`;
+                } else if (riskScore < 40) {
+                    summary = `${studentName} experienced ${strikes} minor interruption(s). Interaction telemetry remains predominantly consistent with legitimate testing.`;
+                } else if (riskScore < 75) {
+                    summary = `Echo AI detected suspicious interaction patterns from ${studentName}: ${blurCount} defocus/tab-switch event(s)${clipboardCount > 0 ? ` and ${clipboardCount} clipboard attempt(s)` : ''}. Pattern indicates potential split-screen browsing or external notification distractions.`;
+                } else {
+                    summary = `CRITICAL INTEGRITY ALERT: ${studentName} accumulated multiple high-confidence infractions (${strikes} strikes). Telemetry shows persistent attempts to leave the isolation boundary or extract quiz content.`;
+                }
+
+                return {
+                    riskScore,
+                    riskLevel,
+                    riskColor,
+                    badgeColor,
+                    summary,
+                    anomalies,
+                    recommendations,
+                    totalLogs: logs.length,
+                    clipboardCount,
+                    blurCount,
+                    fullscreenBreakCount,
+                    burstSwitchingEvents
+                };
+            }
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgM2q2d6_-2f4-sprOISH0KsuGVlayCuE",
+            authDomain: "echo-lockdown-browser.firebaseapp.com",
+            projectId: "echo-lockdown-browser",
+            storageBucket: "echo-lockdown-browser.firebasestorage.app",
+            messagingSenderId: "697456873374",
+            appId: "1:697456873374:web:1c1478c015ccefe4ecd08f",
+            databaseURL: "https://echo-lockdown-browser-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Small helpers
+        function escapeHtml(str) {
+            return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+        function sanitizeKey(str) {
+            return String(str).replace(/[.#$\[\]\/]/g, '_').replace(/\s+/g, '_').slice(0, 200);
+        }
+        function fmtTime(ts) {
+            if (!ts) return '';
+            try { return new Date(ts).toLocaleTimeString(); } catch { return ''; }
+        }
+        function isValidFormUrl(url) {
+            try {
+                const u = new URL(url);
+                if (u.protocol !== 'https:') return false;
+                return /^forms\.gle$/.test(u.hostname) || /^docs\.google\.com$/.test(u.hostname) || u.hostname.endsWith('.google.com');
+            } catch { return false; }
+        }
+        function isValidCustomCode(code) {
+            return /^[A-Z0-9-]{3,20}$/.test(code);
+        }
+        function setBtnLoading(btn, isLoading, loadingLabel, normalLabel) {
+            if (isLoading) {
+                btn.dataset.originalLabel = btn.dataset.originalLabel || normalLabel || btn.textContent;
+                btn.disabled = true;
+                btn.innerHTML = `<span class="spinner"></span>${loadingLabel}`;
+            } else {
+                btn.disabled = false;
+                btn.textContent = normalLabel || btn.dataset.originalLabel || btn.textContent;
+            }
+        }
+        function showToast(message, kind) {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            const palette = kind === 'error'
+                ? "bg-red-600 text-white"
+                : kind === 'warn'
+                ? "bg-amber-500 text-white"
+                : "bg-slate-900 text-white dark:bg-slate-700";
+            el.className = `toast ${palette} px-4 py-3 rounded-xl text-xs font-bold shadow-lg max-w-xs`;
+            el.textContent = message;
+            container.appendChild(el);
+            setTimeout(() => { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 4000);
+        }
+        function csvEscape(val) {
+            const s = String(val ?? '');
+            if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+            return s;
+        }
+        function downloadCsv(filename, rows) {
+            const csv = rows.map(r => r.map(csvEscape).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        // Dark mode setup
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        function applyTheme(theme) {
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+            themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+        applyTheme(localStorage.getItem('echo-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+        themeToggleBtn.addEventListener('click', () => {
+            const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('echo-theme', next);
+            applyTheme(next);
+        });
+
+        // DOM elements
+        const homeView = document.getElementById('home-view');
+        const studentCodeView = document.getElementById('student-code-view');
+        const instructorLoginView = document.getElementById('instructor-login-view');
+        const instructorSignupView = document.getElementById('instructor-signup-view');
+        const setupView = document.getElementById('setup-view');
+        const studentLobbyView = document.getElementById('student-lobby-view');
+        const examView = document.getElementById('exam-view');
+
+        const topNavbar = document.getElementById('top-navbar');
+        const userPill = document.getElementById('user-pill');
+        const pillUserDisplay = document.getElementById('pill-user-display');
+        const pillRoleIcon = document.getElementById('pill-role-icon');
+        const signoutBtn = document.getElementById('signout-btn');
+        const sessionStatus = document.getElementById('session-status');
+        const navJoinBtn = document.getElementById('nav-join-btn');
+        const navLoginBtn = document.getElementById('nav-login-btn');
+
+        const studentJoinForm = document.getElementById('student-join-form');
+        const studentFirstNameInput = document.getElementById('student-first-name');
+        const studentLastNameInput = document.getElementById('student-last-name');
+        const studentIdInput = document.getElementById('student-id-input');
+        const joinCodeInput = document.getElementById('join-code-input');
+        const joinFormError = document.getElementById('join-form-error');
+        const joinFormSubmit = document.getElementById('join-form-submit');
+
+        joinCodeInput.addEventListener('input', () => {
+            joinCodeInput.value = joinCodeInput.value.toUpperCase();
+        });
+
+        try {
+            const remembered = JSON.parse(localStorage.getItem('echo-student-info') || 'null');
+            if (remembered) {
+                studentFirstNameInput.value = remembered.firstName || '';
+                studentLastNameInput.value = remembered.lastName || '';
+                studentIdInput.value = remembered.studentId || '';
+            }
+        } catch {}
+
+        const instructorLoginForm = document.getElementById('instructor-login-form');
+        const instructorEmailInput = document.getElementById('instructor-email');
+        const instructorPasswordInput = document.getElementById('instructor-password');
+        const instructorLoginSubmit = document.getElementById('instructor-login-submit');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const instructorSignupForm = document.getElementById('instructor-signup-form');
+        const signupEmailInput = document.getElementById('signup-email');
+        const signupPasswordInput = document.getElementById('signup-password');
+        const instructorSignupSubmit = document.getElementById('instructor-signup-submit');
+
+        const sessionTitleInput = document.getElementById('session-title-input');
+        const customJoinCodeInput = document.getElementById('custom-join-code');
+        const formUrlInput = document.getElementById('form-url');
+        const strikeThresholdInput = document.getElementById('strike-threshold-input');
+        const examDurationInput = document.getElementById('exam-duration-input');
+        const startBtn = document.getElementById('start-btn');
+        const updateSettingsBtn = document.getElementById('update-settings-btn');
+        const endSessionBtn = document.getElementById('end-session-btn');
+        const launchError = document.getElementById('launch-error');
+        const codeDisplayBox = document.getElementById('code-display-box');
+        const generatedCodeText = document.getElementById('generated-code-text');
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        const activeSessionPill = document.getElementById('active-session-pill');
+        const onlineCountPill = document.getElementById('online-count-pill');
+        const rosterSearchInput = document.getElementById('roster-search-input');
+        const broadcastBox = document.getElementById('broadcast-box');
+        const broadcastInput = document.getElementById('broadcast-input');
+        const broadcastSendBtn = document.getElementById('broadcast-send-btn');
+
+        const lobbyWelcomeText = document.getElementById('lobby-welcome-text');
+        const lobbyStudentName = document.getElementById('lobby-student-name');
+        const lobbyCodeDisplay = document.getElementById('lobby-code-display');
+        const lobbyLockedNotice = document.getElementById('lobby-locked-notice');
+        const joinExamBtn = document.getElementById('join-exam-btn');
+
+        const examFrame = document.getElementById('exam-frame');
+        const lockedOverlay = document.getElementById('locked-overlay');
+        const finishAssessmentBtn = document.getElementById('finish-assessment-btn');
+        const broadcastBanner = document.getElementById('broadcast-banner');
+        const examTimerEl = document.getElementById('exam-timer');
+        const warningModal = document.getElementById('warning-modal');
+        const warningText = document.getElementById('warning-text');
+        const dismissWarningBtn = document.getElementById('dismiss-warning');
+        const violationCounter = document.getElementById('violation-counter');
+        const studentRosterList = document.getElementById('student-roster-list');
+        const studentViolationList = document.getElementById('student-violation-list');
+
+        const fullscreenLostOverlay = document.getElementById('fullscreen-lost-overlay');
+        const submissionConfirmModal = document.getElementById('submission-confirm-modal');
+        const confirmSubmitBtn = document.getElementById('confirm-submit-btn');
+        const cancelSubmitBtn = document.getElementById('cancel-submit-btn');
+        const aiProctorModal = document.getElementById('ai-proctor-modal');
+        const aiModalStudentName = document.getElementById('ai-modal-student-name');
+        const aiModalContent = document.getElementById('ai-modal-content');
+        const historyModal = document.getElementById('history-modal');
+        const historySessionsContainer = document.getElementById('history-sessions-container');
+
+        // App state
+        let currentUser = null;
+        let currentStudentFullName = null;
+        let currentStudentKey = null;
+        let currentRole = null;
+        let sessionActive = false;
+        let isLocked = false;
+        let violationCount = 0;
+        let strikeThreshold = 3;
+        let currentSessionCode = null;
+        let activeFormUrl = "";
+        let rosterUnsub = null;
+        let violationUnsub = null;
+        let selfUnsub = null;
+        let sessionMetaUnsub = null;
+        let broadcastUnsub = null;
+        let graceUntil = 0;
+        let devtoolsOpenLogged = false;
+        let devtoolsCheckHandle = null;
+        let lastViolationAt = 0;
+        let lastRosterData = null;
+        let lastLogsData = null;
+        let examDeadline = null;
+        let examTimerHandle = null;
+        let timeExpiredHandled = false;
+        let broadcastBaseline = 0;
+        let instructorHasActiveSession = false;
+
+        // Bridge student exit handler with global goToHome
+        window._echoStudentExitHandler = async function() {
+            if (sessionActive && currentRole === 'student') {
+                if (!confirm("Leaving the active assessment will register a strike. Exit anyway?")) return false;
+                await logViolation("Exited the assessment via navigation.");
+                sessionActive = false;
+            }
+            return true;
+        };
+
+        signoutBtn.addEventListener('click', async () => {
+            try { await signOut(auth); } catch(e) {}
+            await goToHome();
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user.email || user.displayName || "Instructor";
+                currentRole = 'instructor';
+                topNavbar.classList.remove('hidden');
+                userPill.classList.remove('hidden');
+                userPill.classList.add('flex');
+                pillUserDisplay.textContent = currentUser;
+                pillRoleIcon.textContent = "👨‍🏫";
+                signoutBtn.classList.remove('hidden');
+                sessionStatus.textContent = "Teacher Dashboard";
+                showScreen('setup-view');
+                loadInstructorSessions(user.uid);
+            }
+        });
+
+        instructorLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setBtnLoading(instructorLoginSubmit, true, 'Logging in...', 'Log In');
+            try { await signInWithEmailAndPassword(auth, instructorEmailInput.value.trim(), instructorPasswordInput.value.trim()); }
+            catch (err) { showInAppModal("Login Failed", err.message); }
+            finally { setBtnLoading(instructorLoginSubmit, false, '', 'Log In'); }
+        });
+
+        googleLoginBtn.addEventListener('click', async () => {
+            try { await signInWithPopup(auth, googleProvider); }
+            catch (err) { showInAppModal("Google Sign-In Failed", err.message); }
+        });
+
+        instructorSignupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setBtnLoading(instructorSignupSubmit, true, 'Creating account...', 'Sign Up');
+            try {
+                await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value.trim());
+                showInAppModal("Success", "Account created successfully!");
+            } catch (err) { showInAppModal("Sign Up Failed", err.message); }
+            finally { setBtnLoading(instructorSignupSubmit, false, '', 'Sign Up'); }
+        });
+
+        async function generateUniqueCode(preferred) {
+            if (preferred) {
+                if (!isValidCustomCode(preferred)) {
+                    throw new Error('Custom join codes must be 3-20 characters: letters, numbers, and dashes only.');
+                }
+                const snap = await get(ref(db, 'lockdown_sessions/' + preferred));
+                if (snap.exists()) throw new Error('That join code is already in use. Pick another.');
+                return preferred;
+            }
+            for (let i = 0; i < 8; i++) {
+                const candidate = 'ECHO-' + Math.floor(1000 + Math.random() * 9000);
+                const snap = await get(ref(db, 'lockdown_sessions/' + candidate));
+                if (!snap.exists()) return candidate;
+            }
+            throw new Error('Could not generate a unique join code. Please try again.');
+        }
+
+        // Publish Session
+        startBtn.addEventListener('click', async () => {
+            launchError.classList.add('hidden');
+            if (!auth.currentUser) {
+                launchError.textContent = "You must be logged in as an instructor to publish a session.";
+                launchError.classList.remove('hidden');
+                return;
+            }
+            if (instructorHasActiveSession) {
+                launchError.textContent = "You already have an active session. End it first, or use \"Save Threshold / Duration Changes\" to update it live.";
+                launchError.classList.remove('hidden');
+                return;
+            }
+            const title = sessionTitleInput.value.trim() || "Untitled Assessment";
+            let formUrl = formUrlInput.value.trim();
+            if (!formUrl || !isValidFormUrl(formUrl)) {
+                launchError.textContent = "Please provide a valid, secure (https) Google Forms URL (forms.gle or docs.google.com/forms/...).";
+                launchError.classList.remove('hidden');
+                return;
+            }
+            if (formUrl.includes('viewform') && !formUrl.includes('embedded=true')) {
+                formUrl += (formUrl.includes('?') ? '&' : '?') + 'embedded=true';
+            }
+            const threshold = Math.max(1, Math.min(10, parseInt(strikeThresholdInput.value, 10) || 3));
+            const duration = Math.max(0, Math.min(480, parseInt(examDurationInput.value, 10) || 0));
+            const customCode = customJoinCodeInput.value.trim().toUpperCase();
+
+            setBtnLoading(startBtn, true, 'Publishing...', 'Publish & Broadcast Session');
+            try {
+                const joinCode = await generateUniqueCode(customCode);
+                currentSessionCode = joinCode;
+                activeFormUrl = formUrl;
+
+                const sessionPayload = {
+                    instructorId: auth.currentUser.uid,
+                    instructorName: currentUser,
+                    sessionTitle: title,
+                    formUrl: formUrl,
+                    strikeThreshold: threshold,
+                    examDurationMinutes: duration,
+                    examEndsAt: duration > 0 ? (Date.now() + duration * 60000) : null,
+                    startTime: serverTimestamp(),
+                    status: 'active'
+                };
+
+                await set(ref(db, 'lockdown_sessions/' + joinCode), sessionPayload);
+                await set(ref(db, `instructor_history/${auth.currentUser.uid}/${joinCode}`), sessionPayload);
+
+                generatedCodeText.textContent = joinCode;
+                codeDisplayBox.classList.remove('hidden');
+                setActiveSessionUI(title, joinCode);
+
+                showInAppModal("Session Published", `Assessment successfully published!\nJoin Code: ${joinCode}`);
+                listenToSessionTelemetry(joinCode);
+                loadInstructorSessions(auth.currentUser.uid);
+            } catch (err) {
+                launchError.textContent = err.message || "Failed to publish session.";
+                launchError.classList.remove('hidden');
+            } finally {
+                setBtnLoading(startBtn, false, '', 'Publish & Broadcast Session');
+            }
+        });
+
+        updateSettingsBtn.addEventListener('click', async () => {
+            if (!currentSessionCode) return;
+            const threshold = Math.max(1, Math.min(10, parseInt(strikeThresholdInput.value, 10) || 3));
+            const duration = Math.max(0, Math.min(480, parseInt(examDurationInput.value, 10) || 0));
+            setBtnLoading(updateSettingsBtn, true, 'Saving...', 'Save Threshold / Duration Changes');
+            try {
+                await update(ref(db, `lockdown_sessions/${currentSessionCode}`), {
+                    strikeThreshold: threshold,
+                    examDurationMinutes: duration,
+                    examEndsAt: duration > 0 ? (Date.now() + duration * 60000) : null
+                });
+                showToast("Session settings updated and pushed to connected students.");
+            } catch (err) {
+                showInAppModal("Error", "Failed to update settings: " + err.message);
+            } finally {
+                setBtnLoading(updateSettingsBtn, false, '', 'Save Threshold / Duration Changes');
+            }
+        });
+
+        broadcastSendBtn.addEventListener('click', async () => {
+            if (!currentSessionCode) return;
+            const text = broadcastInput.value.trim();
+            if (!text) return;
+            try {
+                await set(ref(db, `lockdown_sessions/${currentSessionCode}/broadcast`), { text, timestamp: Date.now() });
+                broadcastInput.value = '';
+                showToast("Broadcast sent to all connected students.");
+            } catch (err) {
+                showInAppModal("Error", "Failed to send broadcast: " + err.message);
+            }
+        });
+
+        function setActiveSessionUI(title, code) {
+            instructorHasActiveSession = true;
+            activeSessionPill.textContent = `Active: ${title} (${code})`;
+            activeSessionPill.className = "text-xs px-3.5 py-2 rounded-xl font-black bg-emerald-50 text-emerald-700 border border-emerald-200";
+            endSessionBtn.classList.remove('hidden');
+            copyLinkBtn.classList.remove('hidden');
+            exportCsvBtn.classList.remove('hidden');
+            onlineCountPill.classList.remove('hidden');
+            broadcastBox.classList.remove('hidden');
+            startBtn.classList.add('hidden');
+            updateSettingsBtn.classList.remove('hidden');
+            sessionTitleInput.disabled = true;
+            customJoinCodeInput.disabled = true;
+            formUrlInput.disabled = true;
+        }
+
+        function clearActiveSessionUI() {
+            instructorHasActiveSession = false;
+            activeSessionPill.textContent = "No Active Session";
+            activeSessionPill.className = "text-xs px-3.5 py-2 rounded-xl font-black bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-white/10";
+            endSessionBtn.classList.add('hidden');
+            copyLinkBtn.classList.add('hidden');
+            exportCsvBtn.classList.add('hidden');
+            onlineCountPill.classList.add('hidden');
+            broadcastBox.classList.add('hidden');
+            startBtn.classList.remove('hidden');
+            updateSettingsBtn.classList.add('hidden');
+            codeDisplayBox.classList.add('hidden');
+            sessionTitleInput.disabled = false;
+            customJoinCodeInput.disabled = false;
+            formUrlInput.disabled = false;
+            currentSessionCode = null;
+            lastRosterData = null;
+            lastLogsData = null;
+        }
+
+        endSessionBtn.addEventListener('click', async () => {
+            if (!currentSessionCode) return;
+            if (!confirm(`End session ${currentSessionCode}? Students will no longer be able to join or continue.`)) return;
+            try {
+                await update(ref(db, `lockdown_sessions/${currentSessionCode}`), { status: 'ended', endedAt: serverTimestamp() });
+                if (auth.currentUser) {
+                    await update(ref(db, `instructor_history/${auth.currentUser.uid}/${currentSessionCode}`), { status: 'ended', endedAt: serverTimestamp() });
+                }
+                if (rosterUnsub) rosterUnsub();
+                if (violationUnsub) violationUnsub();
+                studentRosterList.innerHTML = '<p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">Publish a session to see connected students.</p>';
+                studentViolationList.innerHTML = '<p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">Publish a session to track live infractions.</p>';
+                clearActiveSessionUI();
+                showInAppModal("Session Ended", "The assessment session has been closed. Any students still in the exam will be notified automatically.");
+            } catch (err) {
+                showInAppModal("Error", "Failed to end session: " + err.message);
+            }
+        });
+
+        copyCodeBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(generatedCodeText.textContent);
+            copyCodeBtn.textContent = "Copied!";
+            setTimeout(() => copyCodeBtn.textContent = "Copy Code", 2000);
+        });
+
+        copyLinkBtn.addEventListener('click', () => {
+            if (!currentSessionCode) return;
+            const link = `${window.location.origin}${window.location.pathname}?join=${currentSessionCode}`;
+            navigator.clipboard.writeText(link);
+            showToast("Join link copied to clipboard.");
+        });
+
+        exportCsvBtn.addEventListener('click', () => {
+            if (!currentSessionCode) return;
+            const rows = [["Type", "Student", "Detail", "Timestamp"]];
+            for (const [key, s] of Object.entries(lastRosterData || {})) {
+                rows.push(["Roster", s.name || key, `status=${s.status || ''}; strikes=${s.strikes || 0}`, fmtTime(s.joinedAt)]);
+            }
+            for (const [studentKey, entries] of Object.entries(lastLogsData || {})) {
+                for (const entry of Object.values(entries)) {
+                    rows.push(["Violation", entry.student || studentKey, entry.reason || '', fmtTime(entry.timestamp)]);
+                }
+            }
+            downloadCsv(`echo-report-${currentSessionCode}.csv`, rows);
+        });
+
+        window.openHistoryModal = function() {
+            historyModal.classList.remove('hidden');
+            if (auth.currentUser) loadInstructorSessions(auth.currentUser.uid);
+        };
+
+        async function loadInstructorSessions(uid) {
+            if (!uid) return;
+            try {
+                const snapshot = await get(ref(db, `instructor_history/${uid}`));
+                historySessionsContainer.innerHTML = "";
+                if (!snapshot.exists()) {
+                    historySessionsContainer.innerHTML = '<p class="text-xs text-[#5f6368] font-bold italic text-center py-8 dark:text-slate-400">No historical sessions found.</p>';
+                    return;
+                }
+                const sessions = snapshot.val();
+                const entries = Object.entries(sessions).sort((a, b) => {
+                    const at = (typeof a[1].startTime === 'number') ? a[1].startTime : 0;
+                    const bt = (typeof b[1].startTime === 'number') ? b[1].startTime : 0;
+                    return bt - at;
+                });
+                for (const [code, data] of entries) {
+                    const card = document.createElement('div');
+                    card.className = "flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-black/5 dark:bg-slate-700/40 dark:border-white/10 gap-3";
+
+                    const info = document.createElement('div');
+                    info.className = "min-w-0";
+                    const titleEl = document.createElement('span');
+                    titleEl.className = "font-black text-sm text-[#202124] block dark:text-slate-100";
+                    titleEl.textContent = data.sessionTitle || 'Assessment';
+                    const codeEl = document.createElement('span');
+                    codeEl.className = "font-mono text-xs text-[#4caf50] font-extrabold";
+                    codeEl.textContent = code;
+                    const statusEl = document.createElement('span');
+                    statusEl.className = "text-[10px] font-bold ml-2 " + (data.status === 'ended' ? "text-slate-400" : "text-emerald-600");
+                    statusEl.textContent = data.status === 'ended' ? '· ended' : '· active';
+                    const urlEl = document.createElement('span');
+                    urlEl.className = "text-[10px] text-slate-400 block mt-0.5 truncate max-w-xs";
+                    urlEl.textContent = "URL: " + (data.formUrl || '');
+                    info.append(titleEl, document.createElement('br'), codeEl, statusEl, document.createElement('br'), urlEl);
+
+                    const btnCol = document.createElement('div');
+                    btnCol.className = "flex flex-col gap-2 flex-shrink-0";
+
+                    const reactivateBtn = document.createElement('button');
+                    reactivateBtn.className = "bg-[#4caf50] hover:bg-[#43a047] text-white font-extrabold px-4 py-2 rounded-xl text-xs shadow-xs transition";
+                    reactivateBtn.textContent = "Reactivate";
+                    reactivateBtn.addEventListener('click', () => reactivateSession(code, data.sessionTitle || 'Assessment', data.formUrl, data.strikeThreshold || 3, data.examDurationMinutes || 0));
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = "bg-white hover:bg-red-50 text-[#c5221f] font-extrabold px-4 py-2 rounded-xl text-xs border border-red-200 transition dark:bg-slate-800";
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener('click', () => deleteHistorySession(code, data.status));
+
+                    btnCol.append(reactivateBtn, deleteBtn);
+                    card.append(info, btnCol);
+                    historySessionsContainer.appendChild(card);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteHistorySession(code, status) {
+            if (code === currentSessionCode && instructorHasActiveSession) {
+                showInAppModal("Can't Delete", "This session is currently active. End it first, then delete it from history.");
+                return;
+            }
+            if (!confirm(`Permanently delete the record for session ${code}? This cannot be undone.`)) return;
+            try {
+                if (auth.currentUser) await remove(ref(db, `instructor_history/${auth.currentUser.uid}/${code}`));
+                if (status === 'ended') await remove(ref(db, `lockdown_sessions/${code}`));
+                loadInstructorSessions(auth.currentUser.uid);
+            } catch (err) {
+                showInAppModal("Error", "Failed to delete session: " + err.message);
+            }
+        }
+
+        async function reactivateSession(code, title, url, threshold, duration) {
+            if (instructorHasActiveSession && currentSessionCode !== code) {
+                if (!confirm("You already have another active session. Reactivating this one will leave the other running unattended. Continue?")) return;
+            }
+            currentSessionCode = code;
+            activeFormUrl = url;
+            try {
+                await set(ref(db, `lockdown_sessions/${code}`), {
+                    instructorId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                    instructorName: currentUser,
+                    sessionTitle: title,
+                    formUrl: url,
+                    strikeThreshold: threshold || 3,
+                    examDurationMinutes: duration || 0,
+                    examEndsAt: (duration && duration > 0) ? (Date.now() + duration * 60000) : null,
+                    startTime: serverTimestamp(),
+                    status: 'active',
+                    students: null,
+                    violation_logs: null,
+                    broadcast: null
+                });
+                sessionTitleInput.value = title;
+                customJoinCodeInput.value = code;
+                formUrlInput.value = url;
+                strikeThresholdInput.value = threshold || 3;
+                examDurationInput.value = duration || 0;
+                generatedCodeText.textContent = code;
+                codeDisplayBox.classList.remove('hidden');
+                setActiveSessionUI(title, code);
+                closeHistoryModal();
+                showInAppModal("Session Reactivated", `Successfully reactivated session ${code} with a fresh roster.`);
+                listenToSessionTelemetry(code);
+            } catch (err) {
+                showInAppModal("Error", "Failed to reactivate session.");
+            }
+        }
+
+        // AI Proctor Modal Management
+        window.openAiProctorModal = function(studentKey, studentName) {
+            const student = lastRosterData?.[studentKey] || { name: studentName, strikes: 0, status: 'unknown' };
+            const studentLogs = lastLogsData?.[studentKey] || {};
+            const analysis = EchoProctorAI.analyzeStudent(student, studentLogs);
+
+            aiModalStudentName.textContent = `${studentName} — Real-time Diagnostics`;
+            aiModalContent.innerHTML = `
+                <div class="p-4 rounded-2xl border ${analysis.riskColor} flex items-center justify-between">
+                    <div>
+                        <span class="block text-[10px] font-black uppercase tracking-widest opacity-80">AI Risk Assessment</span>
+                        <span class="text-xl font-black">${analysis.riskLevel}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-3xl font-black">${analysis.riskScore}%</span>
+                        <span class="block text-[10px] font-bold opacity-75">Anomaly Score</span>
+                    </div>
+                </div>
+
+                <div class="w-full bg-slate-100 dark:bg-slate-700 h-3 rounded-full overflow-hidden">
+                    <div class="h-full ${analysis.badgeColor} transition-all duration-500" style="width: ${analysis.riskScore}%"></div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-700/40 border border-black/5 dark:border-white/10 space-y-2">
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-300">Echo Proctor AI Summary</h3>
+                    <p class="text-xs font-bold leading-relaxed text-[#202124] dark:text-slate-100">${escapeHtml(analysis.summary)}</p>
+                    <div class="pt-2 border-t border-black/5 dark:border-white/10 text-[11px] font-extrabold text-slate-500 dark:text-slate-400">
+                        Recommendation: <span class="text-[#202124] dark:text-slate-100">${escapeHtml(analysis.recommendations)}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-2">Detected Anomalies (${analysis.anomalies.length})</h3>
+                    ${analysis.anomalies.length === 0 ? `
+                        <p class="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800">✓ No anomalous interaction patterns detected. Normal behavior.</p>
+                    ` : `
+                        <div class="space-y-2">
+                            ${analysis.anomalies.map(a => `
+                                <div class="p-3 rounded-xl border ${a.severity === 'critical' || a.severity === 'high' ? 'bg-red-50/70 border-red-200 dark:bg-red-950/20 dark:border-red-800' : 'bg-amber-50/70 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800'} text-xs">
+                                    <div class="font-black text-[#202124] dark:text-slate-100 flex items-center justify-between">
+                                        <span>⚠️ ${escapeHtml(a.title)}</span>
+                                        <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full ${a.severity === 'critical' ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}">${a.severity}</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-600 dark:text-slate-300 mt-1">${escapeHtml(a.desc)}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+            aiProctorModal.classList.remove('hidden');
+        };
+
+        function renderRoster(students, code) {
+            lastRosterData = students;
+            const search = (rosterSearchInput.value || '').toLowerCase().trim();
+            studentRosterList.innerHTML = "";
+            let entries = Object.entries(students || {});
+            if (search) {
+                entries = entries.filter(([key, s]) =>
+                    (s.name || key).toLowerCase().includes(search) || (s.status || '').toLowerCase().includes(search));
+            }
+            const online = Object.values(students || {}).filter(s => s.status && s.status !== 'disconnected' && s.status !== 'completed' && s.status !== 'kicked').length;
+            onlineCountPill.textContent = `${online} online`;
+            if (entries.length === 0) {
+                studentRosterList.innerHTML = `<p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">${search ? 'No students match your search.' : 'No students connected yet.'}</p>`;
+                return;
+            }
+
+            entries.sort((a, b) => {
+                const rank = (s) => s.status === 'locked' ? 0 : (s.strikes || 0) > 0 ? 1 : 2;
+                return rank(a[1]) - rank(b[1]);
+            });
+
+            for (const [key, s] of entries) {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center p-3 bg-white rounded-xl border border-black/5 text-xs font-bold gap-2 dark:bg-slate-800 dark:border-white/10";
+
+                const studentLogs = lastLogsData?.[key] || {};
+                const ai = EchoProctorAI.analyzeStudent(s, studentLogs);
+
+                const left = document.createElement('div');
+                left.className = "min-w-0";
+                const nameEl = document.createElement('span');
+                nameEl.className = "block text-[#202124] truncate dark:text-slate-100";
+                nameEl.textContent = s.name || key;
+
+                const metaRow = document.createElement('div');
+                metaRow.className = "flex items-center gap-2 mt-0.5";
+                const statusEl = document.createElement('span');
+                statusEl.className = "text-[10px] text-slate-400";
+                statusEl.textContent = `Status: ${s.status || 'unknown'}`;
+
+                const aiRiskPill = document.createElement('span');
+                aiRiskPill.className = `text-[9px] font-black px-2 py-0.5 rounded-md border ${ai.riskColor}`;
+                aiRiskPill.textContent = `AI Risk: ${ai.riskScore}%`;
+
+                metaRow.append(statusEl, aiRiskPill);
+                left.append(nameEl, metaRow);
+
+                const right = document.createElement('div');
+                right.className = "flex items-center gap-1.5 flex-shrink-0";
+
+                const strikeBadge = document.createElement('span');
+                const strikes = s.strikes || 0;
+                strikeBadge.className = "px-2 py-1 rounded-lg font-black text-[11px] " + (strikes > 0 ? "bg-red-50 text-[#c5221f]" : "bg-emerald-50 text-emerald-700");
+                strikeBadge.textContent = strikes > 0 ? `${strikes} Strikes` : "Clean";
+                right.appendChild(strikeBadge);
+
+                const aiBtn = document.createElement('button');
+                aiBtn.className = "bg-purple-50 hover:bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 font-black px-2.5 py-1 rounded-lg text-[10px] border border-purple-200 dark:border-purple-800 transition";
+                aiBtn.textContent = "🤖 AI Report";
+                aiBtn.title = "View AI Proctor Anomaly Diagnostics";
+                aiBtn.addEventListener('click', () => openAiProctorModal(key, s.name || key));
+                right.appendChild(aiBtn);
+
+                if (s.status === 'locked') {
+                    const unlockBtn = document.createElement('button');
+                    unlockBtn.className = "bg-[#4caf50] hover:bg-[#43a047] text-white font-black px-2 py-1 rounded-lg text-[10px]";
+                    unlockBtn.textContent = "Unlock";
+                    unlockBtn.addEventListener('click', () => unlockStudent(code, key, s.name || key));
+                    right.appendChild(unlockBtn);
+                }
+
+                if (!['completed', 'kicked'].includes(s.status)) {
+                    const kickBtn = document.createElement('button');
+                    kickBtn.className = "bg-white hover:bg-red-50 text-[#c5221f] font-black px-2 py-1 rounded-lg text-[10px] border border-red-200 dark:bg-slate-700";
+                    kickBtn.textContent = "Kick";
+                    kickBtn.addEventListener('click', () => kickStudent(code, key, s.name || key));
+                    right.appendChild(kickBtn);
+                }
+
+                item.append(left, right);
+                studentRosterList.appendChild(item);
+            }
+        }
+        rosterSearchInput.addEventListener('input', () => renderRoster(lastRosterData, currentSessionCode));
+
+        async function unlockStudent(code, studentKey, studentName) {
+            try {
+                await update(ref(db, `lockdown_sessions/${code}/students/${studentKey}`), {
+                    status: 'testing',
+                    strikes: 0,
+                    unlockedAt: serverTimestamp()
+                });
+                await push(ref(db, `lockdown_sessions/${code}/violation_logs/${studentKey}`), {
+                    student: studentName,
+                    reason: 'Instructor remotely unlocked the assessment.',
+                    timestamp: Date.now()
+                });
+            } catch (err) {
+                showInAppModal("Error", "Failed to unlock student: " + err.message);
+            }
+        }
+
+        async function kickStudent(code, studentKey, studentName) {
+            if (!confirm(`Remove ${studentName} from this session? They will not be able to rejoin.`)) return;
+            try {
+                await update(ref(db, `lockdown_sessions/${code}/students/${studentKey}`), { status: 'kicked' });
+                await push(ref(db, `lockdown_sessions/${code}/violation_logs/${studentKey}`), {
+                    student: studentName,
+                    reason: 'Removed from the session by the instructor.',
+                    timestamp: Date.now()
+                });
+            } catch (err) {
+                showInAppModal("Error", "Failed to remove student: " + err.message);
+            }
+        }
+
+        function renderEventLog(logs) {
+            lastLogsData = logs;
+            studentViolationList.innerHTML = "";
+            const rows = [];
+            for (const [studentKey, entries] of Object.entries(logs || {})) {
+                for (const entry of Object.values(entries)) {
+                    rows.push(entry);
+                }
+            }
+            if (rows.length === 0) {
+                studentViolationList.innerHTML = '<p class="text-xs text-[#5f6368] font-bold italic text-center py-16 dark:text-slate-400">No security events recorded. Students are focused.</p>';
+                return;
+            }
+            rows.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            for (const row of rows.slice(0, 100)) {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center p-3 bg-white rounded-xl border border-black/5 text-xs font-bold dark:bg-slate-800 dark:border-white/10";
+                const left = document.createElement('div');
+                const nameEl = document.createElement('span');
+                nameEl.className = "block text-[#202124] dark:text-slate-100";
+                nameEl.textContent = row.student || 'Student';
+                const reasonEl = document.createElement('span');
+                reasonEl.className = "text-[10px] text-slate-400";
+                reasonEl.textContent = `${row.reason || ''} · ${fmtTime(row.timestamp)}`;
+                left.append(nameEl, reasonEl);
+                item.appendChild(left);
+                studentViolationList.appendChild(item);
+            }
+        }
+
+        function listenToSessionTelemetry(code) {
+            if (rosterUnsub) rosterUnsub();
+            if (violationUnsub) violationUnsub();
+
+            const rosterRef = ref(db, `lockdown_sessions/${code}/students`);
+            const rosterCallback = (snapshot) => renderRoster(snapshot.val(), code);
+            onValue(rosterRef, rosterCallback);
+            rosterUnsub = () => off(rosterRef, 'value', rosterCallback);
+
+            const logsRef = ref(db, `lockdown_sessions/${code}/violation_logs`);
+            const logsCallback = (snapshot) => renderEventLog(snapshot.val());
+            onValue(logsRef, logsCallback);
+            violationUnsub = () => off(logsRef, 'value', logsCallback);
+        }
+
+        // Student Join Form Handler
+        studentJoinForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            joinFormError.classList.add('hidden');
+            const firstName = studentFirstNameInput.value.trim();
+            const lastName = studentLastNameInput.value.trim();
+            const studentId = studentIdInput.value.trim();
+            const code = joinCodeInput.value.trim().toUpperCase();
+
+            if (!firstName || !lastName || !studentId || !code) return;
+
+            currentStudentFullName = `${firstName} ${lastName} (${studentId})`;
+            currentStudentKey = sanitizeKey(currentStudentFullName);
+            currentUser = currentStudentFullName;
+            currentRole = 'student';
+
+            setBtnLoading(joinFormSubmit, true, 'Verifying...', 'Enter Secure Lobby');
+            try {
+                const sessionSnap = await get(child(ref(db), 'lockdown_sessions/' + code));
+                if (!sessionSnap.exists()) {
+                    joinFormError.textContent = "The session code you entered is invalid or has not been started by an instructor.";
+                    joinFormError.classList.remove('hidden');
+                    return;
+                }
+                const sessionData = sessionSnap.val();
+                if (sessionData.status === 'ended') {
+                    joinFormError.textContent = "This assessment session has ended.";
+                    joinFormError.classList.remove('hidden');
+                    return;
+                }
+                currentSessionCode = code;
+                activeFormUrl = sessionData.formUrl;
+                strikeThreshold = sessionData.strikeThreshold || 3;
+
+                const studentRef = ref(db, `lockdown_sessions/${code}/students/${currentStudentKey}`);
+                const existingSnap = await get(studentRef);
+                let priorStrikes = 0, priorStatus = null;
+                if (existingSnap.exists()) {
+                    const ex = existingSnap.val();
+                    priorStrikes = ex.strikes || 0;
+                    priorStatus = ex.status || null;
+                }
+                if (priorStatus === 'completed') {
+                    joinFormError.textContent = "You have already completed and submitted this assessment.";
+                    joinFormError.classList.remove('hidden');
+                    return;
+                }
+                if (priorStatus === 'kicked') {
+                    joinFormError.textContent = "You have been removed from this session by your instructor and cannot rejoin.";
+                    joinFormError.classList.remove('hidden');
+                    return;
+                }
+
+                await set(studentRef, {
+                    name: currentStudentFullName,
+                    studentId: studentId,
+                    status: priorStatus === 'locked' ? 'locked' : 'joined',
+                    strikes: priorStrikes,
+                    joinedAt: Date.now()
+                });
+                onDisconnect(ref(db, `lockdown_sessions/${code}/students/${currentStudentKey}/status`)).set('disconnected');
+
+                try {
+                    localStorage.setItem('echo-student-info', JSON.stringify({ firstName, lastName, studentId }));
+                } catch {}
+
+                userPill.classList.remove('hidden');
+                userPill.classList.add('flex');
+                pillUserDisplay.textContent = currentUser;
+                pillRoleIcon.textContent = "👨‍🎓";
+                signoutBtn.classList.remove('hidden');
+                sessionStatus.textContent = `Lobby (${code})`;
+
+                lobbyWelcomeText.textContent = `Welcome, ${firstName}. Assessment session hosted by ${sessionData.instructorName || 'Instructor'}.`;
+                lobbyStudentName.textContent = currentUser;
+                lobbyCodeDisplay.textContent = code;
+                lobbyLockedNotice.classList.toggle('hidden', priorStatus !== 'locked');
+
+                showScreen('student-lobby-view');
+            } catch (err) {
+                console.error(err);
+                joinFormError.textContent = "Failed to verify session code with database.";
+                joinFormError.classList.remove('hidden');
+            } finally {
+                setBtnLoading(joinFormSubmit, false, '', 'Enter Secure Lobby');
+            }
+        });
+
+        // Launch Secure Assessment
+        joinExamBtn.addEventListener('click', async () => {
+            if (!activeFormUrl) return;
+            setBtnLoading(joinExamBtn, true, 'Launching...', 'Launch Secure Assessment Window');
+
+            let freshStrikes = 0, freshLocked = false;
+            try {
+                const freshSnap = await get(ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}`));
+                if (freshSnap.exists()) {
+                    const freshData = freshSnap.val();
+                    freshStrikes = freshData.strikes || 0;
+                    freshLocked = freshData.status === 'locked';
+                }
+            } catch {}
+
+            studentLobbyView.classList.add('hidden');
+            sessionStatus.textContent = `Active Assessment (${currentUser})`;
+            sessionActive = true;
+            isLocked = freshLocked;
+            timeExpiredHandled = false;
+            violationCount = freshStrikes;
+            updateViolationCounter();
+            lockedOverlay.classList.toggle('hidden', !freshLocked);
+            finishAssessmentBtn.classList.toggle('hidden', freshLocked);
+            broadcastBanner.classList.add('hidden');
+            examFrame.style.pointerEvents = freshLocked ? 'none' : 'auto';
+
+            graceUntil = Date.now() + 2000;
+
+            examView.classList.remove('hidden');
+            examView.classList.add('exam-locked');
+            examFrame.src = activeFormUrl;
+
+            try {
+                await document.documentElement.requestFullscreen();
+            } catch (err) {
+                showInAppModal("Fullscreen Engaged on Next Click", "Please click anywhere to complete entering fullscreen lockdown mode.");
+            }
+
+            if (!freshLocked) {
+                await update(ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}`), { status: 'testing' });
+            }
+
+            if (selfUnsub) selfUnsub();
+            const selfRef = ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}`);
+            const selfCallback = (snapshot) => {
+                const val = snapshot.val();
+                if (!val) return;
+                if (val.status === 'kicked') {
+                    forceExitStudent("You have been removed from this session by your instructor.");
+                    return;
+                }
+                if (isLocked && val.status !== 'locked') {
+                    unlockExamRemote();
+                }
+            };
+            onValue(selfRef, selfCallback);
+            selfUnsub = () => off(selfRef, 'value', selfCallback);
+
+            if (sessionMetaUnsub) sessionMetaUnsub();
+            const sessionRef = ref(db, `lockdown_sessions/${currentSessionCode}`);
+            const sessionCallback = (snapshot) => {
+                const val = snapshot.val();
+                if (!val) return;
+                if (val.status === 'ended') {
+                    forceExitStudent("Your instructor has ended this session.");
+                    return;
+                }
+                if (typeof val.strikeThreshold === 'number' && val.strikeThreshold !== strikeThreshold) {
+                    strikeThreshold = val.strikeThreshold;
+                    updateViolationCounter();
+                    if (violationCount >= strikeThreshold && !isLocked) lockExam();
+                }
+                setupExamTimer(val.examEndsAt || null);
+            };
+            onValue(sessionRef, sessionCallback);
+            sessionMetaUnsub = () => off(sessionRef, 'value', sessionCallback);
+
+            broadcastBaseline = Date.now();
+            if (broadcastUnsub) broadcastUnsub();
+            const broadcastRef = ref(db, `lockdown_sessions/${currentSessionCode}/broadcast`);
+            const broadcastCallback = (snapshot) => {
+                const val = snapshot.val();
+                if (!val || !val.timestamp || val.timestamp <= broadcastBaseline) return;
+                broadcastBaseline = val.timestamp;
+                broadcastBanner.textContent = `📣 Message from your instructor: ${val.text}`;
+                broadcastBanner.classList.remove('hidden');
+            };
+            onValue(broadcastRef, broadcastCallback);
+            broadcastUnsub = () => off(broadcastRef, 'value', broadcastCallback);
+
+            if (devtoolsCheckHandle) clearInterval(devtoolsCheckHandle);
+            devtoolsCheckHandle = setInterval(checkDevtoolsHeuristic, 1000);
+
+            setBtnLoading(joinExamBtn, false, '', 'Launch Secure Assessment Window');
+        });
+
+        function updateViolationCounter() {
+            violationCounter.textContent = `Strikes: ${violationCount} / ${strikeThreshold}`;
+        }
+
+        function setupExamTimer(endsAt) {
+            examDeadline = endsAt;
+            if (examTimerHandle) { clearInterval(examTimerHandle); examTimerHandle = null; }
+            if (!endsAt) { examTimerEl.classList.add('hidden'); return; }
+            examTimerEl.classList.remove('hidden');
+            const tick = () => {
+                const remainingMs = examDeadline - Date.now();
+                if (remainingMs <= 0) {
+                    examTimerEl.textContent = "00:00";
+                    if (examTimerHandle) { clearInterval(examTimerHandle); examTimerHandle = null; }
+                    handleTimeExpired();
+                    return;
+                }
+                const totalSec = Math.floor(remainingMs / 1000);
+                const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
+                const ss = String(totalSec % 60).padStart(2, '0');
+                examTimerEl.textContent = `${mm}:${ss}`;
+                examTimerEl.classList.toggle('bg-red-100', remainingMs < 60000);
+            };
+            tick();
+            examTimerHandle = setInterval(tick, 1000);
+        }
+
+        function handleTimeExpired() {
+            if (timeExpiredHandled || isLocked) return;
+            timeExpiredHandled = true;
+            showInAppModal("Time's Up!", "The exam duration has expired. Your assessment is being submitted automatically.");
+            setTimeout(() => {
+                finalizeAssessmentSubmission();
+            }, 3000);
+        }
+
+        function forceExitStudent(message) {
+            sessionActive = false;
+            isLocked = false;
+            cleanupExamHandlers();
+            if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
+            examFrame.src = 'about:blank';
+            examView.classList.add('hidden');
+            examView.classList.remove('exam-locked');
+            fullscreenLostOverlay.classList.add('hidden');
+            showScreen('home-view');
+            showInAppModal("Assessment Ended", message);
+        }
+
+        function cleanupExamHandlers() {
+            if (devtoolsCheckHandle) { clearInterval(devtoolsCheckHandle); devtoolsCheckHandle = null; }
+            if (examTimerHandle) { clearInterval(examTimerHandle); examTimerHandle = null; }
+            if (selfUnsub) { selfUnsub(); selfUnsub = null; }
+            if (sessionMetaUnsub) { sessionMetaUnsub(); sessionMetaUnsub = null; }
+            if (broadcastUnsub) { broadcastUnsub(); broadcastUnsub = null; }
+        }
+
+        // Submission Handlers
+        finishAssessmentBtn.addEventListener('click', () => {
+            if (!sessionActive || isLocked) return;
+            submissionConfirmModal.classList.remove('hidden');
+        });
+
+        cancelSubmitBtn.addEventListener('click', () => {
+            submissionConfirmModal.classList.add('hidden');
+        });
+
+        confirmSubmitBtn.addEventListener('click', () => {
+            submissionConfirmModal.classList.add('hidden');
+            finalizeAssessmentSubmission();
+        });
+
+        async function finalizeAssessmentSubmission() {
+            if (!currentSessionCode || !currentStudentKey) return;
+            sessionActive = false;
+            isLocked = false;
+            cleanupExamHandlers();
+
+            if (document.fullscreenElement) {
+                try { await document.exitFullscreen(); } catch (e) {}
+            }
+
+            examFrame.src = "about:blank";
+            examView.classList.add('hidden');
+            examView.classList.remove('exam-locked');
+            fullscreenLostOverlay.classList.add('hidden');
+
+            try {
+                await update(ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}`), {
+                    status: 'completed',
+                    completedAt: Date.now()
+                });
+            } catch (e) {
+                console.error("Submission sync error:", e);
+            }
+
+            showScreen('home-view');
+            showInAppModal("Assessment Submitted!", "Your assessment has been successfully finalized and submitted to your instructor. You may now safely close this window.");
+        }
+
+        // Security Violations & Logging
+        async function logViolation(reason) {
+            if (!sessionActive || !currentSessionCode || currentRole !== 'student' || isLocked) return;
+            if (Date.now() < graceUntil) return;
+            if (Date.now() - lastViolationAt < 700) return;
+            lastViolationAt = Date.now();
+
+            violationCount++;
+            updateViolationCounter();
+            warningText.textContent = `${reason} This infraction has been logged. (Strike ${violationCount} of ${strikeThreshold})`;
+            warningModal.classList.remove('hidden');
+
+            try {
+                await push(ref(db, `lockdown_sessions/${currentSessionCode}/violation_logs/${currentStudentKey}`), {
+                    student: currentUser,
+                    reason: reason,
+                    timestamp: Date.now()
+                });
+                await runTransaction(ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}/strikes`), (current) => (current || 0) + 1);
+            } catch (err) {
+                console.error("Failed to sync violation:", err);
+            }
+
+            if (violationCount >= strikeThreshold) {
+                lockExam();
+            }
+        }
+
+        async function lockExam() {
+            isLocked = true;
+            lockedOverlay.classList.remove('hidden');
+            warningModal.classList.add('hidden');
+            fullscreenLostOverlay.classList.add('hidden');
+            examFrame.style.pointerEvents = 'none';
+            try {
+                await update(ref(db, `lockdown_sessions/${currentSessionCode}/students/${currentStudentKey}`), { status: 'locked' });
+            } catch (err) {}
+        }
+
+        function unlockExamRemote() {
+            isLocked = false;
+            sessionActive = true;
+            violationCount = 0;
+            updateViolationCounter();
+            lockedOverlay.classList.add('hidden');
+            finishAssessmentBtn.classList.remove('hidden');
+            examFrame.style.pointerEvents = 'auto';
+            graceUntil = Date.now() + 1500;
+            showInAppModal("Assessment Unlocked", "Your instructor has unlocked your assessment. You may continue.");
+        }
+
+        // Auto-Re-Enter Fullscreen on Click / Tap
+        async function attemptReenterFullscreen() {
+            if (!sessionActive || currentRole !== 'student' || isLocked) return;
+            if (!document.fullscreenElement) {
+                try {
+                    await document.documentElement.requestFullscreen();
+                    fullscreenLostOverlay.classList.add('hidden');
+                } catch (err) {
+                    console.warn("Fullscreen re-entry failed:", err);
+                }
+            }
+        }
+
+        fullscreenLostOverlay.addEventListener('click', attemptReenterFullscreen);
+
+        window.addEventListener('click', () => {
+            if (sessionActive && currentRole === 'student' && !document.fullscreenElement && !isLocked) {
+                attemptReenterFullscreen();
+            }
+        }, true);
+
+        window.addEventListener('touchstart', () => {
+            if (sessionActive && currentRole === 'student' && !document.fullscreenElement && !isLocked) {
+                attemptReenterFullscreen();
+            }
+        }, { passive: true, capture: true });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!sessionActive || currentRole !== 'student' || isLocked) return;
+            if (!document.fullscreenElement) {
+                fullscreenLostOverlay.classList.remove('hidden');
+                logViolation("Exited fullscreen lockdown mode.");
+            } else {
+                fullscreenLostOverlay.classList.add('hidden');
+            }
+        });
+
+        // Focus-loss detection (Increased debounce to 120ms to prevent false strikes on slow devices)
+        window.addEventListener('blur', () => {
+            if (!sessionActive || currentRole !== 'student' || isLocked) return;
+            if (Date.now() < graceUntil) return;
+            setTimeout(() => {
+                if (document.hasFocus()) return;
+                logViolation("Lost window focus or attempted split-screen application switching.");
+            }, 120);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && sessionActive && currentRole === 'student' && !isLocked) {
+                logViolation("Minimized window or switched browser tabs.");
+            }
+        });
+
+        // Anti-Copy, Anti-Cut, Anti-Paste & Selection Lockdown
+        ['copy', 'cut', 'paste', 'selectstart', 'dragstart'].forEach(evtType => {
+            window.addEventListener(evtType, (e) => {
+                if (sessionActive && currentRole === 'student' && !isLocked) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (evtType === 'copy' || evtType === 'cut' || evtType === 'paste') {
+                        logViolation(`Attempted to ${evtType} quiz content.`);
+                    }
+                }
+            }, true);
+        });
+
+        // Right-Click Context Menu Lockdown (Global capture)
+        window.addEventListener('contextmenu', (e) => {
+            if (sessionActive && currentRole === 'student' && !isLocked) {
+                e.preventDefault();
+                e.stopPropagation();
+                showToast("Right-click context menu is disabled during the assessment.", "warn");
+            }
+        }, true);
+
+        // Shortcut interception
+        window.addEventListener('keydown', (e) => {
+            if (!sessionActive || currentRole !== 'student' || isLocked) return;
+
+            const key = (e.key || '').toUpperCase();
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+            // Clipboard shortcuts
+            if (isCtrlOrCmd && ['C', 'V', 'X', 'A'].includes(key)) {
+                e.preventDefault();
+                e.stopPropagation();
+                logViolation(`Attempted clipboard shortcut (${e.ctrlKey ? 'Ctrl' : 'Cmd'}+${key}).`);
+                return;
+            }
+
+            // Print / Save shortcuts
+            if (isCtrlOrCmd && ['P', 'S'].includes(key)) {
+                e.preventDefault();
+                e.stopPropagation();
+                logViolation(`Attempted print/save shortcut (${e.ctrlKey ? 'Ctrl' : 'Cmd'}+${key}).`);
+                return;
+            }
+
+            // Developer tools shortcuts
+            const blockedDevtoolsCombo =
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(key)) ||
+                (e.metaKey && e.altKey && ['I', 'J', 'C'].includes(key)) ||
+                (e.ctrlKey && key === 'U');
+
+            if (blockedDevtoolsCombo) {
+                e.preventDefault();
+                e.stopPropagation();
+                logViolation("Attempted to open developer tools.");
+            }
+        }, true);
+
+        // Docked Devtools detection heuristic
+        function checkDevtoolsHeuristic() {
+            if (!sessionActive || currentRole !== 'student' || isLocked) return;
+            const threshold = 160;
+            const widthDiff = window.outerWidth - window.innerWidth;
+            const heightDiff = window.outerHeight - window.innerHeight;
+            const likelyOpen = widthDiff > threshold || heightDiff > threshold;
+            if (likelyOpen && !devtoolsOpenLogged) {
+                devtoolsOpenLogged = true;
+                logViolation("Developer tools panel detected as open.");
+            } else if (!likelyOpen) {
+                devtoolsOpenLogged = false;
+            }
+        }
+
+        // Intercept external popup attempts
+        const nativeWindowOpen = window.open;
+        window.open = function(...args) {
+            if (sessionActive && currentRole === 'student') {
+                logViolation("Attempted to open external link or popup window.");
+                return null;
+            }
+            return nativeWindowOpen.apply(this, args);
+        };
+
+        window.addEventListener('beforeunload', (e) => {
+            if (sessionActive && currentRole === 'student' && !isLocked) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        dismissWarningBtn.addEventListener('click', () => warningModal.classList.add('hidden'));
+
+        // Pre-fill join code from URL parameter
+        (function prefillJoinCodeFromUrl() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const joinParam = params.get('join');
+                if (joinParam) {
+                    joinCodeInput.value = joinParam.toUpperCase();
+                    showScreen('student-code-view');
+                }
+            } catch {}
+        })();
+    </script>
+</body>
+</html>
